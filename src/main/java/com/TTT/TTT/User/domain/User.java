@@ -1,6 +1,7 @@
 package com.TTT.TTT.User.domain;
 
 import com.TTT.TTT.Common.Annotation.ForbiddenWords;
+import com.TTT.TTT.Common.BaseTimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -16,42 +17,42 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @Entity
-public class User {
+public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(length = 10, nullable = false)
-    @Size(max = 10, message = "10자 이내로 작성해주세요.")
     private String name;
-    @Pattern(
-            regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,20}$",
-            message = "비밀번호 길이는 8자~20이내, 적어도 하나의 문자와 숫자, 특수기호를 포함해야합니다."
-    )
+
     @Column(length = 20, nullable = false)
     private String password;
-    @Size(max = 255)
-    @NotNull(message = "이메일은 필수입니다.")
-    @Email(message = "이메일 형식에 맞지않습니다.")
+
+    @Column(unique = true, nullable = false)
     private String email;
+
     @Column(length = 11, nullable = false)
-    @NotNull(message = "휴대폰 번호를 적어주세요.")
-    @Pattern(
-            regexp = "^(010|011|016|017|018|019)[0-9]{7,8}$",
-            message = "형식에 맞지않는 휴대폰 번호 입니다."
-    )
     private String phoneNumber;     //api 예정
-    @Size(max = 15, min = 3, message = "닉네임은 3자 이상, 15자 이하여야 합니다.")
-    @ForbiddenWords(words = {"admin", "시발", "씨발"}, message = "닉네임에 금지된 단어가 포함되어 있습니다.")
+
     @Column(nullable = false, unique = true)
-    private String nickname;
+    private String nickName;
+
+    // delYN enum 추가
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private DelYN delYN = DelYN.N;
+
+    // role 기존 스트링타입을 enum타입으로 교체.
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @Column(nullable = false)
-    private String delYN;
-    @Column(nullable = false)
-    private String adminYN;
-    @Column(length = 5, nullable = false)
-    private int batch;//랭크
+    private Integer batch; //기수
+
     @Column(length = 20, nullable = false)
     private String blogLink;
 
-    private String createdTime;
+    // 로그인아이디 최대 50자로 설정.
+    @Column(length = 50, nullable = false, unique = true)
+    private String loginId;
 }
