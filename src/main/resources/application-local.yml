@@ -12,8 +12,10 @@ spring :
     database-platform: org.hibernate.dialect.MariaDBDialect
     generate-ddl: true
     hibernate:
+#      김진영이 편의상 create->update로 수정했음. 필요시 변경하여 사용
       ddl-auto: create
     show_sql: true
 logging:
   level:
-    root: debug
+#    김진영이 편의상 create->update로 수정했음. 필요시 변경하여 사용
+    root: info
