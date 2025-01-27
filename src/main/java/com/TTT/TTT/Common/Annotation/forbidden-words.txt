@@ -1,0 +1,41 @@
+# Explicit English forbidden words
+english_forbidden_words = [
+    "fuck", "shit", "bitch", "asshole", "bastard", "damn", "crap", "dick", "cunt",
+    "piss", "whore", "slut", "faggot", "motherfucker", "douchebag", "prick",
+    "cock", "jackass", "ballsack", "nutsack", "pussy", "dildo", "wanker",
+    "bollocks", "tosser", "bugger", "twat", "git", "arsehole", "retard", "spastic",
+    "shithead", "fuckface", "cocksucker", "shitbag", "shithole", "clusterfuck",
+    "asshat", "fuckwad", "dickhead", "fuckboy", "scumbag", "dickweed", "cum",
+    "cumdumpster", "balllicker", "cockbite", "shitstain", "jizz", "buttplug",
+    "buttlicker", "assmuncher", "rimjob", "blowjob", "skank", "ho", "chode",
+    "knobhead", "bellend", "nonce", "pissflap", "fucktard", "shitfaced",
+    "cumrag", "knobjockey", "arsewipe", "arseclown", "cockwomble", "knobend",
+    "tosspot", "shitstorm", "fuckstick", "shitshow", "assclown", "dicknose",
+    "fuckwit", "pisshead", "scrote", "cumguzzler", "asslicker", "cuntface",
+    "fuckwit", "dickbag", "asswipe", "fuckhole", "jizzrag", "dickbag", "cumbrain",
+    "buttface", "shiteater", "fartknocker", "fartface", "assbandit", "arsebandit"
+]
+
+# Explicit Korean forbidden words
+korean_forbidden_words = [
+    "시발", "씨발", "ㅅㅂ", "ㅆㅂ", "ㅅ1발", "ㅆ1발", "시1발", "씨1발", "병신", "ㅂㅅ",
+    "븅신", "ㅄ", "지랄", "ㅈㄹ", "ㅈ랄", "개새끼", "개색기", "개샊기", "개샛기", "ㅐㅅㅐㄲㅣ",
+    "미친놈", "미친년", "미친새끼", "미친", "ㅁㅊ", "좆", "존나", "ㅈㄴ", "좆같", "좇같",
+    "ㅈ같", "ㅈ1ㄴ", "엿먹어", "닥쳐", "꺼져", "뒤져", "디져", "죽어", "죽을래", "디질래",
+    "자살해", "병1신", "ㅂ1ㅅ", "지1랄", "개같이", "똥멍청이", "똘아이", "멍청이", "바보",
+    "찌질이", "등신", "새끼", "한남충", "김치녀", "꼴페미", "쿵쾅", "틀딱", "느금마",
+    "애미", "애비", "엠창", "좆까", "좇같은", "씹", "씹창", "씹덕", "씹새끼", "샹년",
+    "썅", "썅년", "썅놈", "썅노무", "썅넘", "썅샹", "시팔", "쉬벌", "ㅅ1발놈", "ㅅ1발년",
+    "십팔", "십새끼", "씹할", "썩을놈", "썩을년", "썩을넘", "개같이"
+]
+
+# Write both lists to a text file
+file_path = "/mnt/data/forbidden-words.txt"
+
+with open(file_path, "w", encoding="utf-8") as file:
+    file.write("### English Forbidden Words ###\n")
+    file.write("\n".join(english_forbidden_words))
+    file.write("\n\n### Korean Forbidden Words ###\n")
+    file.write("\n".join(korean_forbidden_words))
+
+file_path
