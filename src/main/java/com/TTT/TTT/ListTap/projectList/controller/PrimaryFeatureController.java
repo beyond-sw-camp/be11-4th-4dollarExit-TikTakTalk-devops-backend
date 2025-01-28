@@ -12,16 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class PrimaryFeatureController {
-//    의존성 주입(중요한 API가 아니라서 오토와이어드로 받음)
-    @Autowired
-    private PrimaryFeatureService primaryFeatureService;
 
-//    프로젝트 리스트에 프로젝트 추가할 때 그 프로젝트에 대한 기능이 뭔지 추가할 때 호출되는 메서드
-//    @GetMapping("/project/create/addfeature")
-//    public ResponseEntity<?> save(PrimaryFeatureSaveReq primaryFeatureSaveReq){
-//        primaryFeatureService.save(primaryFeatureSaveReq);
-//        return new ResponseEntity<>(new CommonDto(HttpStatus.CREATED.value(), "sucess","sucess"),HttpStatus.CREATED);
-//    }
 
 
 

@@ -21,7 +21,7 @@ public class ProjectListRes {
      private String primaryFeatureList;
      private String link;
      private String domain;
-//     프로젝트 추가 필드
+
 
     }
 
