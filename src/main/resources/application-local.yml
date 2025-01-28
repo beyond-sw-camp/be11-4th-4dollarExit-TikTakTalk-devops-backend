@@ -16,4 +16,4 @@ spring :
     show_sql: true
 logging:
   level:
-    root: debug
+    root: info
