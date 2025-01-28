@@ -32,7 +32,7 @@ public class Project extends BaseTimeEntity {
     @Column(nullable = false)
     private String link;
     @Column(nullable = false)
-    private String domain;
+    private String domain; //해당 프로젝트가 대강 어떤 서비스(카테고리 느낌)인지 설명하는 칼럼
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     @Builder.Default// 빌더패턴에서 필드를 초기화할때 @Builder.Default를 붙이지 않으면 무시된다.
     private List<PrimaryFeature> primaryFeatureList= new ArrayList<>();
