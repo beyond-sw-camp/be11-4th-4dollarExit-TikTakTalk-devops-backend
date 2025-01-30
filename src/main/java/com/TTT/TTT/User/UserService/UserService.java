@@ -35,6 +35,6 @@ public class UserService {
         userRepository.save(userCreateDto.toEntity());
     }
     public UserDetailDto findById(Long id){
-        return userRepository.findByIdNameAndDelYN(id,DelYN.N).orElseThrow().detailFromEntity();
+        return userRepository.findByIdAndDelYN(id,DelYN.N).orElseThrow(()->new IllegalArgumentException("없는 아이디입니다")).detailFromEntity();
     }
 }

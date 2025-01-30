@@ -16,5 +16,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByNickNameAndDelYN(String nickName, Enum delYN);
 
-    Optional<User> findByIdNameAndDelYN(Long id, Enum delYN);
+    Optional<User> findByIdAndDelYN(Long id, Enum delYN);
 }

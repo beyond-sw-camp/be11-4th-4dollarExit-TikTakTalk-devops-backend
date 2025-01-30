@@ -20,7 +20,7 @@ public class UserDetailDto {
     private String nickName;
     private String blogLink;
     private String loginId;
-    private DelYN delYN = DelYN.N;
+    private DelYN delYN;
     private Integer batch;
     private LocalDateTime createdTime;
 }
