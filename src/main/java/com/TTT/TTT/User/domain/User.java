@@ -2,6 +2,7 @@ package com.TTT.TTT.User.domain;
 
 import com.TTT.TTT.Common.Annotation.ForbiddenWords;
 import com.TTT.TTT.Common.BaseTimeEntity;
+import com.TTT.TTT.User.dtos.UserDetailDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -55,4 +56,17 @@ public class User extends BaseTimeEntity {
     // 로그인아이디 최대 50자로 설정.
     @Column(length = 50, nullable = false, unique = true)
     private String loginId;
+
+    public UserDetailDto detailFromEntity(){
+        return UserDetailDto.builder()
+                .id(this.id)
+                .name(this.name)
+                .email(this.email)
+                .nickName(this.nickName)
+                .phoneNumber(this.phoneNumber)
+                .batch(this.batch)
+                .delYN(this.delYN)
+                .createdTime(this.getCreatedTime())
+                .build();
+    }
 }
