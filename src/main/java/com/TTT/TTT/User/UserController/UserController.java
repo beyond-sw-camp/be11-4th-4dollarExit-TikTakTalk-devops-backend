@@ -27,7 +27,7 @@ public class UserController {
     @GetMapping("/detail/{id}")
     public ResponseEntity<?> userDetail(@PathVariable Long id ,UserDetailDto dto) {
         UserDetailDto userDetailDto = userService.findById(id);
-        return ResponseEntity.ok(new CommonDto(HttpStatus.OK.value(), "User found", userDetailDto));
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "User found",userDetailDto),HttpStatus.OK);
     }
 
 
