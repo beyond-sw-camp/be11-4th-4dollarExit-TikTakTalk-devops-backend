@@ -4,8 +4,11 @@ import com.TTT.TTT.User.UserRepository.UserRepository;
 import com.TTT.TTT.User.domain.DelYN;
 import com.TTT.TTT.User.domain.User;
 import com.TTT.TTT.User.dtos.UserCreateDto;
+import com.TTT.TTT.User.dtos.UserDetailDto;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -30,5 +33,8 @@ public class UserService {
         }
 
         userRepository.save(userCreateDto.toEntity());
+    }
+    public UserDetailDto findById(Long id){
+        return userRepository.findByIdAndDelYN(id,DelYN.N).orElseThrow(()->new IllegalArgumentException("없는 아이디입니다")).detailFromEntity();
     }
 }
