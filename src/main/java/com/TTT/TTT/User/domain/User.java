@@ -26,7 +26,8 @@ public class User extends BaseTimeEntity {
     @Column(length = 10, nullable = false)
     private String name;
 
-    @Column(length = 20, nullable = false)
+//    암호화로 인해 길이 설정 삭제
+    @Column(nullable = false)
     private String password;
 
     @Column(unique = true, nullable = false)

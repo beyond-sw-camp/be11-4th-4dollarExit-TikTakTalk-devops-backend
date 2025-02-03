@@ -12,8 +12,13 @@ spring :
     database-platform: org.hibernate.dialect.MariaDBDialect
     generate-ddl: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show_sql: true
 logging:
   level:
     root: info
+
+jwt:
+  #  be11-2nd-4dollorExit-TikTakTalkbe11-2nd-4dollorExit-TikTakTalkbe11-2nd-4dollorExit-TikTakTalk
+  secretKey: YmUxMS0ybmQtNGRvbGxvckV4aXQtVGlrVGFrVGFsa2JlMTEtMm5kLTRkb2xsb3JFeGl0LVRpa1Rha1RhbGtiZTExLTJuZC00ZG9sbG9yRXhpdC1UaWtUYWtUYWxr
+  expiration: 3000 #3000?

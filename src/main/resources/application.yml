@@ -1,4 +1,4 @@
 spring:
   profiles:
 #    김진영이 편의상 prod에서 local로 변경해서 사용 필요시 변경하여 사용.
-    active: local
+    active: prod
