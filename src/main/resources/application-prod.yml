@@ -12,8 +12,21 @@ spring :
     database-platform: org.hibernate.dialect.MariaDBDialect
     generate-ddl: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show_sql: true
+  redis:
+    host: localhost
+    port: 6379
 logging:
   level:
     root: info
+
+
+jwt:
+  #  be11-2nd-4dollorExit-TikTakTalkbe11-2nd-4dollorExit-TikTakTalkbe11-2nd-4dollorExit-TikTakTalk
+  secretKey: YmUxMS0ybmQtNGRvbGxvckV4aXQtVGlrVGFrVGFsa2JlMTEtMm5kLTRkb2xsb3JFeGl0LVRpa1Rha1RhbGtiZTExLTJuZC00ZG9sbG9yRXhpdC1UaWtUYWtUYWxr
+  expiration: 3000 #3000?
+#  tttisthecommunitysiteforstudentofhanhwatttisthecommunitysiteforstudentofhanhwatttisthecommunitysiteforstudentofhanhwa
+  secretKeyRt: dHR0aXN0aGVjb21tdW5pdHlzaXRlZm9yc3R1ZGVudG9maGFuaHdhdHR0aXN0aGVjb21tdW5pdHlzaXRlZm9yc3R1ZGVudG9maGFuaHdhdHR0aXN0aGVjb21tdW5pdHlzaXRlZm9yc3R1ZGVudG9maGFuaHdh
+#  200일
+  expirationRt: 288000
