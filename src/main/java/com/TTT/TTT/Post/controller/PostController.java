@@ -17,12 +17,13 @@ public class PostController {
         this.postService = postService;
     }
 
-    // 전체조회
+    // 전체조회 (카테고리 추가 필요)
     @GetMapping
     public List<PostListRes> getAllPost() {
         return postService.findAll();
     }
 
+//    게시글 조회
     @GetMapping("/{id}")
     public PostDetailRes getPostById(@PathVariable Long id) {
         return postService.findById(id); // ID로 게시글 조회 (수정가능)
@@ -34,10 +35,13 @@ public class PostController {
         postService.update(id, dto);
     }
 
-    // 게시글 삭제
+    // 게시글 삭제 (DelYn으로 수정 필요)
     @DeleteMapping("/{id}")
     public void deletePost(@PathVariable Long id) {
         postService.delete(id);
     }
 
+//    검색 추가 필요
+//    게시글 생성
+//
 }

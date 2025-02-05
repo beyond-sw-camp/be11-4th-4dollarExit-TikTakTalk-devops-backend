@@ -40,7 +40,7 @@ public class Post {
     public void getContent() {
     }
 
-
+// DelYn  추가 필요
 //    private int likes; //좋아요는 아직 생략
 
 
