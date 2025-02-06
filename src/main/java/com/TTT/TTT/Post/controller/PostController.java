@@ -27,14 +27,14 @@ public class PostController {
         return postService.findAll();
     }
 
-    //    게시글 조회
-    @GetMapping("/list")
+    //    게시글 상세 조회
+    @GetMapping("/detail/{id}")
     public PostDetailRes getPostById(@PathVariable Long id) {
         return postService.findById(id); // ID로 게시글 조회 (수정가능)
     }
 
     // 게시글 수정
-    @PutMapping("/update/{id}")
+    @PatchMapping("/update/{id}")
     public ResponseEntity<?> updatePost(@PathVariable Long id, @RequestBody PostUpdateReq dto) {
         postService.update(id, dto);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"post update success","ok"), HttpStatus.OK );

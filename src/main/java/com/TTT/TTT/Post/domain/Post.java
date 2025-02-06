@@ -15,14 +15,13 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @Entity
-@Table(name = "post")
 public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(nullable = false, length = 100)
@@ -30,7 +29,6 @@ public class Post extends BaseTimeEntity {
 
     private String contents;
 
-    private LocalDateTime createdTime;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

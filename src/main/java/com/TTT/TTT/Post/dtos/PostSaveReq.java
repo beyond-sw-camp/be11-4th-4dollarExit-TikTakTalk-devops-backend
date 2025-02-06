@@ -3,6 +3,7 @@ package com.TTT.TTT.Post.dtos;
 import com.TTT.TTT.Post.domain.DelYN;
 import com.TTT.TTT.Post.domain.Post;
 import com.TTT.TTT.User.domain.User;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,10 +15,10 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class PostSaveReq {
-    @NotEmpty
+    @NotBlank
     private String title;
 
-    @NotEmpty
+    @NotBlank
     private String content;
 
     public Post toEntity(User user) {
