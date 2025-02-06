@@ -64,10 +64,10 @@ public class UserCreateDto {
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
-    public User toEntity() {
+    public User toEntity(String password) {
         return User.builder().batch(this.batch).blogLink(this.blogLink)
                             .email(this.email).name(this.name).nickName(this.nickName)
-                            .password(this.password).phoneNumber(this.phoneNumber)
+                            .password(password).phoneNumber(this.phoneNumber)
                             .loginId(this.loginId).delYN(this.delYN).role(this.role).build();
     }
 }
