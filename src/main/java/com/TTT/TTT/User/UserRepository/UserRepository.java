@@ -12,9 +12,11 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmailAndDelYN(String email, Enum delYN);
 
-    Optional<User> findByLoginIdAndDelYN(String loginId, Enum delYN);
-
     Optional<User> findByNickNameAndDelYN(String nickName, Enum delYN);
 
     Optional<User> findByIdAndDelYN(Long id, Enum delYN);
+
+    Optional<User> findByPhoneNumberAndDelYN(String phoneNumber,Enum delYN);
+
+    Optional<User> findByLoginIdAndDelYN(String username,Enum delYN);
 }
