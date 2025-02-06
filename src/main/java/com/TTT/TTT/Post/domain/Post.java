@@ -27,7 +27,6 @@ public class Post {
     @Column(nullable = false, length = 100)
     private String title;
 
-    @Column(nullable = false, length = 500) // 대략 500자 설정
     private String contents;
 
     private LocalDateTime createdTime;
@@ -37,8 +36,6 @@ public class Post {
         this.contents=contents;
     }
 
-    public void getContent() {
-    }
 
 // DelYn  추가 필요
 //    private int likes; //좋아요는 아직 생략

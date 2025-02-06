@@ -6,6 +6,8 @@ import com.TTT.TTT.Post.dtos.PostListRes;
 import com.TTT.TTT.Post.dtos.PostSaveReq;
 import com.TTT.TTT.Post.dtos.PostUpdateReq;
 import com.TTT.TTT.Post.repository.PostRepository;
+import com.TTT.TTT.User.UserRepository.UserRepository;
+import com.TTT.TTT.User.domain.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +18,10 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
-
-    public PostService(PostRepository postRepository) {
+    private final UserRepository userRepository;
+    public PostService(PostRepository postRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
     // 모든 게시글 조회
@@ -27,7 +30,7 @@ public class PostService {
                 .map(post -> new PostListRes(
                         post.getId(),
                         post.getTitle(),
-                        post.getContent().substring(0, Math.min(post.getContent().length(), 50)), // 내용 요약
+                        post.getContents().substring(0, Math.min(post.getContents().length(), 50)), // 내용 요약
                         post.getCreatedTime().toString()))
                 .toList();
     }
@@ -39,13 +42,12 @@ public class PostService {
         return new PostDetailRes(
                 post.getId(),
                 post.getTitle(),
-                post.getContent(),
+                post.getContents(),
                 post.getCreatedTime().toString());
     }
 
     // 3. 게시글 생성
     public void save(PostSaveReq dto, Long userId) {
-
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. ID: " + userId));
 
