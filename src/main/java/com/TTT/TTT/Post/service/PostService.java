@@ -1,5 +1,6 @@
 package com.TTT.TTT.Post.service;
 
+import com.TTT.TTT.Post.domain.DelYN;
 import com.TTT.TTT.Post.domain.Post;
 import com.TTT.TTT.Post.dtos.PostDetailRes;
 import com.TTT.TTT.Post.dtos.PostListRes;
@@ -8,6 +9,10 @@ import com.TTT.TTT.Post.dtos.PostUpdateReq;
 import com.TTT.TTT.Post.repository.PostRepository;
 import com.TTT.TTT.User.UserRepository.UserRepository;
 import com.TTT.TTT.User.domain.User;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +31,7 @@ public class PostService {
 
     // 모든 게시글 조회
     public List<PostListRes> findAll() {
-        return postRepository.findAll().stream()
+        return postRepository.findAllByDelYn(DelYN.N).stream()
                 .map(post -> new PostListRes(
                         post.getId(),
                         post.getTitle(),
@@ -37,7 +42,7 @@ public class PostService {
 
     // 2. 특정 게시글 조회
     public PostDetailRes findById(Long id) {
-        Post post = postRepository.findById(id)
+        Post post = postRepository.findByIdAndDelYn(id, DelYN.N)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. ID: " + id));
         return new PostDetailRes(
                 post.getId(),
@@ -47,27 +52,44 @@ public class PostService {
     }
 
     // 3. 게시글 생성
-    public void save(PostSaveReq dto, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. ID: " + userId));
+    public void save(PostSaveReq dto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String loginId = authentication.getName();
+        User user = userRepository.findByLoginIdAndDelYN(loginId,DelYN.N).orElseThrow(() -> new EntityNotFoundException("user is not found"));
 
         Post post = Post.builder()
                 .title(dto.getTitle())
                 .contents(dto.getContent())
+                .user(user)
+                .delYn(DelYN.N)
                 .build();
         postRepository.save(post);
     }
 
     // 4. 게시글 수정
     public void update(Long id, PostUpdateReq dto) {
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다." ));
-        post.update(dto.getTitle(), dto.getContent());
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!(principal instanceof User)) {
+            throw new IllegalArgumentException("사용자 인증 필요");
+        }
+
+        UserDetails userDetails = (UserDetails) principal;
+        String loginId = userDetails.getUsername();
+
+        Post post = postRepository.findByIdAndDelYn(id,DelYN.N).orElseThrow(() -> new EntityNotFoundException("post is not found or deleted"));
+
+        post.update(dto.getTitle(),dto.getContent());
         postRepository.save(post);
     }
 
+
     // 5. 게시글 삭제
     public void delete(Long id) {
-        postRepository.deleteById(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String loginId = authentication.getName();
+        User user = userRepository.findByLoginIdAndDelYN(loginId, DelYN.N).orElseThrow(()-> new EntityNotFoundException("user is not found"));
+        Post post = postRepository.findByIdAndDelYn(id, DelYN.N).orElseThrow(()-> new EntityNotFoundException("post is not found"));
+        post.deletePost();
     }
+
 }

@@ -1,5 +1,6 @@
 package com.TTT.TTT.Post.domain;
 
+import com.TTT.TTT.Common.BaseTimeEntity;
 import com.TTT.TTT.User.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "post")
-public class Post {
+public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,13 +32,20 @@ public class Post {
 
     private LocalDateTime createdTime;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DelYN delYn = DelYN.N;
+
+    public void deletePost(){
+        this.delYn=DelYN.Y;
+    }
+
     public void update(String title,String contents){
         this.title=title;
         this.contents=contents;
     }
 
 
-// DelYn  추가 필요
 //    private int likes; //좋아요는 아직 생략
 
 
