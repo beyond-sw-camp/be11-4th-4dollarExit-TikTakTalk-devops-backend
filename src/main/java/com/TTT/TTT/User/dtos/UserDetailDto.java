@@ -1,6 +1,6 @@
 package com.TTT.TTT.User.dtos;
 
-import com.TTT.TTT.User.domain.DelYN;
+import com.TTT.TTT.Common.DelYN;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
