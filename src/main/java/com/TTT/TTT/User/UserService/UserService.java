@@ -1,6 +1,7 @@
 package com.TTT.TTT.User.UserService;
 
 import com.TTT.TTT.Post.domain.Post;
+import com.TTT.TTT.Common.smsService.SmsService;
 import com.TTT.TTT.User.UserRepository.UserRepository;
 import com.TTT.TTT.User.domain.DelYN;
 import com.TTT.TTT.User.domain.User;
@@ -36,28 +37,37 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final S3Client s3Client;
+    private final SmsService smsService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, S3Client s3Client) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, S3Client s3Client, SmsService smsService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.s3Client = s3Client;
+        this.smsService = smsService;
     }
+  
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
 // 1.회원가입
     public void userCreate(UserCreateDto userCreateDto) throws IllegalArgumentException {
-        if (userRepository.findByEmailAndDelYN(userCreateDto.getEmail(), DelYN.N).isPresent()) {
-            throw new IllegalArgumentException("이미 사용중인 이메일입니다.");
-        }
-
+//        if (!smsService.verifyAuthCode(userCreateDto.getPhoneNumber(), userCreateDto.getPhoneNumberInput())) {
+//            throw new IllegalArgumentException("휴대폰 인증이 완료되지 않았습니다.");
+//        } 휴대폰 검증 로직
         if (userRepository.findByLoginIdAndDelYN(userCreateDto.getLoginId(), DelYN.N).isPresent()) {
             throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
         }
-
         if (userRepository.findByNickNameAndDelYN(userCreateDto.getNickName(), DelYN.N).isPresent()) {
             throw new IllegalArgumentException("이미 사용중인 닉네임입니다.");
         }
+        if (userRepository.findByEmailAndDelYN(userCreateDto.getEmail(), DelYN.N).isPresent()) {
+            throw new IllegalArgumentException("이미 사용중인 이메일입니다.");
+        }
+        //휴대폰검증로직
+//        String phoneNumder = userCreateDto.getPhoneNumber();
+//        String inputNumber = userCreateDto.getPhoneNumberInput();
+//        smsService.sendAuthCode(phoneNumder);
+//        smsService.verifyAuthCode(phoneNumder,inputNumber);
 
         userRepository.save(userCreateDto.toEntity(passwordEncoder.encode(userCreateDto.getPassword())));
     }

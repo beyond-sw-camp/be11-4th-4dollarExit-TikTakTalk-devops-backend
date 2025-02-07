@@ -16,14 +16,13 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @Entity
-@Table(name = "post")
 public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(nullable = false, length = 100)
@@ -31,20 +30,18 @@ public class Post extends BaseTimeEntity {
 
     private String contents;
 
-    private LocalDateTime createdTime;
-
     @Enumerated(EnumType.STRING)
-    private DelYN delYn;
+    @Column(nullable = false)
+    private DelYN delYn = DelYN.N;
+
+    public void deletePost(){
+        this.delYn=DelYN.Y;
+    }
 
     public void update(String title,String contents){
         this.title=title;
         this.contents=contents;
     }
 
-// BaseimeEntity 상속
-// DelYn  추가 필요
 //    private int likes; //좋아요는 아직 생략
-
-
-
 }
