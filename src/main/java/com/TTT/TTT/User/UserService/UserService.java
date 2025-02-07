@@ -1,5 +1,6 @@
 package com.TTT.TTT.User.UserService;
 
+import com.TTT.TTT.Common.smsService.SmsService;
 import com.TTT.TTT.User.UserRepository.UserRepository;
 import com.TTT.TTT.User.domain.DelYN;
 import com.TTT.TTT.User.domain.User;
@@ -18,26 +19,33 @@ import java.util.Optional;
 @Transactional
 public class UserService {
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
+    private final SmsService smsService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, SmsService smsService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.smsService = smsService;
     }
 
     public void userCreate(UserCreateDto userCreateDto) throws IllegalArgumentException {
-        if (userRepository.findByEmailAndDelYN(userCreateDto.getEmail(), DelYN.N).isPresent()) {
-            throw new IllegalArgumentException("이미 사용중인 이메일입니다.");
-        }
-
+//        if (!smsService.verifyAuthCode(userCreateDto.getPhoneNumber(), userCreateDto.getPhoneNumberInput())) {
+//            throw new IllegalArgumentException("휴대폰 인증이 완료되지 않았습니다.");
+//        } 휴대폰 검증 로직
         if (userRepository.findByLoginIdAndDelYN(userCreateDto.getLoginId(), DelYN.N).isPresent()) {
             throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
         }
-
         if (userRepository.findByNickNameAndDelYN(userCreateDto.getNickName(), DelYN.N).isPresent()) {
             throw new IllegalArgumentException("이미 사용중인 닉네임입니다.");
         }
+        if (userRepository.findByEmailAndDelYN(userCreateDto.getEmail(), DelYN.N).isPresent()) {
+            throw new IllegalArgumentException("이미 사용중인 이메일입니다.");
+        }
+        //휴대폰검증로직
+//        String phoneNumder = userCreateDto.getPhoneNumber();
+//        String inputNumber = userCreateDto.getPhoneNumberInput();
+//        smsService.sendAuthCode(phoneNumder);
+//        smsService.verifyAuthCode(phoneNumder,inputNumber);
 
         userRepository.save(userCreateDto.toEntity(passwordEncoder.encode(userCreateDto.getPassword())));
     }
