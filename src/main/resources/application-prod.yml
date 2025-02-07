@@ -12,7 +12,7 @@ spring :
     database-platform: org.hibernate.dialect.MariaDBDialect
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show_sql: true
   redis:
     host: localhost
@@ -30,3 +30,13 @@ jwt:
   secretKeyRt: dHR0aXN0aGVjb21tdW5pdHlzaXRlZm9yc3R1ZGVudG9maGFuaHdhdHR0aXN0aGVjb21tdW5pdHlzaXRlZm9yc3R1ZGVudG9maGFuaHdhdHR0aXN0aGVjb21tdW5pdHlzaXRlZm9yc3R1ZGVudG9maGFuaHdh
 #  200일
   expirationRt: 288000
+
+cloud:
+  aws:
+    credentials:
+      access-key: AKIATCKAR5PYZEBTXKJM
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: ttt-image
