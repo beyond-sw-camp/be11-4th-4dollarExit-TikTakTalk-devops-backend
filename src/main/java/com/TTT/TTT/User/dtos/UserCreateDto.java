@@ -1,10 +1,8 @@
 package com.TTT.TTT.User.dtos;
 
-import com.TTT.TTT.User.domain.DelYN;
+import com.TTT.TTT.Common.DelYN;
 import com.TTT.TTT.User.domain.Role;
 import com.TTT.TTT.User.domain.User;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -3,7 +3,7 @@ package com.TTT.TTT.User.UserService;
 import com.TTT.TTT.Post.domain.Post;
 import com.TTT.TTT.Common.smsService.SmsService;
 import com.TTT.TTT.User.UserRepository.UserRepository;
-import com.TTT.TTT.User.domain.DelYN;
+import com.TTT.TTT.Common.DelYN;
 import com.TTT.TTT.User.domain.User;
 import com.TTT.TTT.User.dtos.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,13 +11,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.core.Response;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -29,7 +27,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional

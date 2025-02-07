@@ -1,23 +1,15 @@
 package com.TTT.TTT.User.domain;
 
-import com.TTT.TTT.Common.Annotation.ForbiddenWords;
 import com.TTT.TTT.Common.BaseTimeEntity;
+import com.TTT.TTT.Common.DelYN;
 import com.TTT.TTT.Post.domain.Post;
 import com.TTT.TTT.User.dtos.*;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -56,10 +48,11 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(nullable = false)
+//    DTO에서 Notnull로 잡으므로 InitialDetaLoader Admin계정 추가를 위해 nullable = false 삭제
     private Integer batch; //기수
 
-    @Column(length = 50, nullable = false)
+//    batch와 마찬가지로 nullable 조건 삭제
+    @Column(length = 50)
     private String blogLink;
 
     // 로그인아이디 최대 50자로 설정.
