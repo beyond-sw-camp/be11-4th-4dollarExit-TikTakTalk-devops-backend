@@ -12,7 +12,7 @@ spring :
     database-platform: org.hibernate.dialect.MariaDBDialect
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show_sql: true
   redis:
     host: localhost
@@ -31,6 +31,18 @@ jwt:
 #  200일
   expirationRt: 288000
 
+
+cloud:
+  aws:
+    credentials:
+      access-key: AKIATCKAR5PYZEBTXKJM
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: ttt-image
+
+# 휴대폰 API 관련설정
 coolsms:
   apiKey: "NCSFPOL1YZABX8MU"
   apiSecret: "A7WZLGJOM2GA1HD4BJHBG6GQVHWFHMWA"
