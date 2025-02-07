@@ -1,6 +1,6 @@
 package com.TTT.TTT.User.dtos;
 
-import com.TTT.TTT.Common.DelYN;
+import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.User.domain.Role;
 import com.TTT.TTT.User.domain.User;
 import jakarta.validation.constraints.*;
