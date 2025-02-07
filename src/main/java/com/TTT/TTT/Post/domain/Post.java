@@ -1,6 +1,7 @@
 package com.TTT.TTT.Post.domain;
 
 import com.TTT.TTT.Common.BaseTimeEntity;
+import com.TTT.TTT.User.domain.DelYN;
 import com.TTT.TTT.User.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,7 +30,6 @@ public class Post extends BaseTimeEntity {
 
     private String contents;
 
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private DelYN delYn = DelYN.N;
@@ -43,9 +43,5 @@ public class Post extends BaseTimeEntity {
         this.contents=contents;
     }
 
-
 //    private int likes; //좋아요는 아직 생략
-
-
-
 }
