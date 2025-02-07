@@ -4,7 +4,7 @@ spring :
       on-profile: prod
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/TTT
+    url: jdbc:mariadb://localhost:3307/TTT
     username: root
     password: 1234
   jpa:
@@ -30,3 +30,8 @@ jwt:
   secretKeyRt: dHR0aXN0aGVjb21tdW5pdHlzaXRlZm9yc3R1ZGVudG9maGFuaHdhdHR0aXN0aGVjb21tdW5pdHlzaXRlZm9yc3R1ZGVudG9maGFuaHdhdHR0aXN0aGVjb21tdW5pdHlzaXRlZm9yc3R1ZGVudG9maGFuaHdh
 #  200일
   expirationRt: 288000
+
+coolsms:
+  apiKey: "NCSFPOL1YZABX8MU"
+  apiSecret: "A7WZLGJOM2GA1HD4BJHBG6GQVHWFHMWA"
+  fromNumber: "01095539812" # 발신번호
