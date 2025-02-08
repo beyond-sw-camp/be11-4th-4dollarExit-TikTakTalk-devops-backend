@@ -1,5 +1,6 @@
-package com.TTT.TTT.Common;
+package com.TTT.TTT.Common.controller;
 
+import com.TTT.TTT.Common.dtos.CommonErrorDto;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

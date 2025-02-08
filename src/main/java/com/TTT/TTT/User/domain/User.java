@@ -1,7 +1,7 @@
 package com.TTT.TTT.User.domain;
 
-import com.TTT.TTT.Common.BaseTimeEntity;
-import com.TTT.TTT.Common.DelYN;
+import com.TTT.TTT.Common.domain.BaseTimeEntity;
+import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.Post.domain.Post;
 import com.TTT.TTT.User.dtos.*;
 import jakarta.persistence.*;
