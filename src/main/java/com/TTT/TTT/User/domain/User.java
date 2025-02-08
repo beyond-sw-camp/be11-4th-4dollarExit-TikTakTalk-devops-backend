@@ -140,4 +140,8 @@ public class User extends BaseTimeEntity {
     public void userDelete(){
         this.delYN=DelYN.Y;
     }
+
+    public void rankingPointUpdate(int point){
+        this.rankingPoint += point;
+    }
 }
