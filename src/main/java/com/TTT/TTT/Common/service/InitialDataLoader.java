@@ -1,7 +1,7 @@
 package com.TTT.TTT.Common.service;
 
 import com.TTT.TTT.User.UserRepository.UserRepository;
-import com.TTT.TTT.Common.DelYN;
+import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.User.domain.Role;
 import com.TTT.TTT.User.domain.User;
 import org.springframework.boot.CommandLineRunner;

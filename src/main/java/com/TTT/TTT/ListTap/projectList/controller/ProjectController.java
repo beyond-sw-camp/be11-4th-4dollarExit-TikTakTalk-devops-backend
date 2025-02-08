@@ -1,7 +1,6 @@
 package com.TTT.TTT.ListTap.projectList.controller;
 
-import com.TTT.TTT.Common.CommonDto;
-import com.TTT.TTT.ListTap.projectList.dtos.PrimaryFeatureSaveReq;
+import com.TTT.TTT.Common.dtos.CommonDto;
 import com.TTT.TTT.ListTap.projectList.dtos.ProjectListRes;
 import com.TTT.TTT.ListTap.projectList.dtos.ProjectSaveReq;
 import com.TTT.TTT.ListTap.projectList.service.ProjectService;
@@ -12,10 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("ttt/project")
