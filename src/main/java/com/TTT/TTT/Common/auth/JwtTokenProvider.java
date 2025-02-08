@@ -32,9 +32,11 @@ public class JwtTokenProvider {
         SECRET_KEY_RT = new SecretKeySpec(java.util.Base64.getDecoder().decode(secretKeyRt), SignatureAlgorithm.HS512.getJcaName());
     }
 
-    public String createToken(String loginId, String role){
+    public String createToken(String loginId, String role, String nickName){
         Claims claims = Jwts.claims().setSubject(loginId);
         claims.put("role", role);
+//        채팅에서 필요한 nickname추가
+        claims.put("nickName", nickName);
         Date now = new Date();
         String token = Jwts.builder()
                 .setClaims(claims)
@@ -45,9 +47,10 @@ public class JwtTokenProvider {
         return token;
     }
 
-    public String createRefreshToken(String loginId, String role){
+    public String createRefreshToken(String loginId, String role, String nickName){
         Claims claims = Jwts.claims().setSubject(loginId);
         claims.put("role", role);
+        claims.put("nickName", nickName);
         Date now = new Date();
 
         String refreshToken = Jwts.builder()

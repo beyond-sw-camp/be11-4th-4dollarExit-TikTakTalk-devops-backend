@@ -59,9 +59,9 @@ public class UserController {
         User user = userService.userLogin(userLoginDto);
 
 //        일치할 경우 access 토큰 발행 및 userId, token 리턴
-        String jwtToken = jwtTokenProvider.createToken(user.getLoginId(), user.getRole().toString());
+        String jwtToken = jwtTokenProvider.createToken(user.getLoginId(), user.getRole().toString(), user.getNickName());
 //        refresh 토큰도 발행
-        String refreshToken = jwtTokenProvider.createRefreshToken(user.getLoginId(),user.getRole().toString());
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getLoginId(),user.getRole().toString(), user.getNickName());
         redisTemplate.opsForValue().set(user.getLoginId(), refreshToken, 200, TimeUnit.DAYS); //레디스db에 키값으로 로그인 아이디, value로 토큰값을 넣겠다. 그리고 200일지나면 삭제하도록 설정
 
         Map<String, Object> loginInfo = new HashMap<>();
@@ -163,7 +163,7 @@ public class UserController {
             return new ResponseEntity<>(new CommonDto(HttpStatus.BAD_REQUEST.value(), "cannot recreate accessToken",null),HttpStatus.BAD_REQUEST);
         }
 
-        String token = jwtTokenProvider.createRefreshToken(claims.getSubject(),claims.get("role").toString());
+        String token = jwtTokenProvider.createRefreshToken(claims.getSubject(),claims.get("role").toString(), claims.get("nickName").toString());
         Map<String, Object> loginInfo = new HashMap<>();
         loginInfo.put("token",token);
         return new ResponseEntity<>(new CommonDto(HttpStatus.CREATED.value(), "accessToken is recreated",loginInfo),HttpStatus.CREATED);
