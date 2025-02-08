@@ -2,7 +2,7 @@ package com.TTT.TTT.Comment.Repository;
 
 
 import com.TTT.TTT.Comment.domain.Comment;
-import com.TTT.TTT.Common.DelYN;
+import com.TTT.TTT.Common.domain.DelYN;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

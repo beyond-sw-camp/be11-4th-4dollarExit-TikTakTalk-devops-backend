@@ -1,9 +1,11 @@
 package com.TTT.TTT.Comment.domain;
 
 import com.TTT.TTT.Comment.Dtos.CommentDetailDto;
-import com.TTT.TTT.Common.BaseTimeEntity;
+
+import com.TTT.TTT.Common.domain.BaseTimeEntity;
+import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.Post.domain.Post;
-import com.TTT.TTT.Common.DelYN;
+
 import com.TTT.TTT.User.domain.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

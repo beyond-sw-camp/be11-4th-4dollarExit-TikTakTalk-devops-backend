@@ -4,7 +4,7 @@ import com.TTT.TTT.Comment.Dtos.CommentCreateDto;
 import com.TTT.TTT.Comment.Dtos.CommentUpdateDto;
 import com.TTT.TTT.Comment.Repository.CommentRepository;
 import com.TTT.TTT.Comment.domain.Comment;
-import com.TTT.TTT.Common.DelYN;
+import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.Post.domain.Post;
 import com.TTT.TTT.Post.repository.PostRepository;
 import com.TTT.TTT.User.UserRepository.UserRepository;
@@ -15,7 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Service
 @Transactional

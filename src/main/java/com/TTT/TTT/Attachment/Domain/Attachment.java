@@ -1,6 +1,8 @@
 package com.TTT.TTT.Attachment.Domain;
 
-import com.TTT.TTT.Common.BaseTimeEntity;
+
+
+import com.TTT.TTT.Common.domain.BaseTimeEntity;
 import com.TTT.TTT.Post.domain.Post;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

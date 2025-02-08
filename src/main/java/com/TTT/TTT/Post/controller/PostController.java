@@ -1,8 +1,6 @@
 package com.TTT.TTT.Post.controller;
 
-import com.TTT.TTT.Common.CommonDto;
-import com.TTT.TTT.Common.DelYN;
-import com.TTT.TTT.Post.domain.Post;
+import com.TTT.TTT.Common.dtos.CommonDto;
 import com.TTT.TTT.Post.dtos.*;
 import com.TTT.TTT.Post.service.PostService;
 import jakarta.validation.Valid;

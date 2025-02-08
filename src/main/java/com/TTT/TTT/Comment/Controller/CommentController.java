@@ -3,7 +3,7 @@ package com.TTT.TTT.Comment.Controller;
 import com.TTT.TTT.Comment.Dtos.CommentCreateDto;
 import com.TTT.TTT.Comment.Dtos.CommentUpdateDto;
 import com.TTT.TTT.Comment.Service.CommentService;
-import com.TTT.TTT.Common.CommonDto;
+import com.TTT.TTT.Common.dtos.CommonDto;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

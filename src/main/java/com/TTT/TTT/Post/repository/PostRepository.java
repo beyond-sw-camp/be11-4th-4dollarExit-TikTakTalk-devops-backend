@@ -1,7 +1,6 @@
 package com.TTT.TTT.Post.repository;
 
-
-import com.TTT.TTT.Common.DelYN;
+import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.Post.domain.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

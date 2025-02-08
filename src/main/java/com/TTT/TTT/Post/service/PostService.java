@@ -2,7 +2,7 @@ package com.TTT.TTT.Post.service;
 
 import com.TTT.TTT.Attachment.Domain.Attachment;
 import com.TTT.TTT.Attachment.Repository.AttachmentRepository;
-import com.TTT.TTT.Common.DelYN;
+import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.Post.domain.Post;
 import com.TTT.TTT.Post.dtos.*;
 import com.TTT.TTT.Post.repository.PostRepository;
@@ -20,6 +20,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,7 +65,7 @@ public class PostService {
                 .title(dto.getTitle())
                 .contents(dto.getContents())
                 .user(user)
-                .delYN(com.TTT.TTT.Common.DelYN.N)
+                .delYN(DelYN.N)
                 .build();
         postRepository.save(post);
         user.rankingPointUpdate(20); // 게시글 작성시 랭킹점수 20점 상승
