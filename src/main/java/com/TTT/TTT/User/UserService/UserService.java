@@ -3,7 +3,7 @@ package com.TTT.TTT.User.UserService;
 import com.TTT.TTT.Post.domain.Post;
 import com.TTT.TTT.Common.smsService.SmsService;
 import com.TTT.TTT.User.UserRepository.UserRepository;
-import com.TTT.TTT.Common.DelYN;
+import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.User.domain.User;
 import com.TTT.TTT.User.dtos.*;
 import jakarta.persistence.EntityNotFoundException;

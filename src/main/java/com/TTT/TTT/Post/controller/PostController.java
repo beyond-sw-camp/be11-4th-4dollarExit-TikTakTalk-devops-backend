@@ -1,6 +1,6 @@
 package com.TTT.TTT.Post.controller;
 
-import com.TTT.TTT.Common.CommonDto;
+import com.TTT.TTT.Common.dtos.CommonDto;
 import com.TTT.TTT.Post.dtos.PostDetailRes;
 import com.TTT.TTT.Post.dtos.PostListRes;
 import com.TTT.TTT.Post.dtos.PostSaveReq;

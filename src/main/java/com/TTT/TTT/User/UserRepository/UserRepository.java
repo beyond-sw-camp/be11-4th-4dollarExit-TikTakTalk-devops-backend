@@ -1,7 +1,6 @@
 package com.TTT.TTT.User.UserRepository;
 
 
-import com.TTT.TTT.Common.BaseTimeEntity;
 import com.TTT.TTT.User.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

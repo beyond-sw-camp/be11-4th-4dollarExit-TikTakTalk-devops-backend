@@ -1,6 +1,6 @@
 package com.TTT.TTT.ListTap.projectList.domain;
 
-import com.TTT.TTT.Common.BaseTimeEntity;
+import com.TTT.TTT.Common.domain.BaseTimeEntity;
 import com.TTT.TTT.ListTap.projectList.dtos.ProjectListRes;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.TTT.TTT.Common;
+package com.TTT.TTT.Common.domain;
 
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
