@@ -1,6 +1,6 @@
 package com.TTT.TTT.Post.service;
 
-import com.TTT.TTT.Post.domain.DelYN;
+import com.TTT.TTT.Common.DelYN;
 import com.TTT.TTT.Post.domain.Post;
 import com.TTT.TTT.Post.dtos.PostDetailRes;
 import com.TTT.TTT.Post.dtos.PostListRes;

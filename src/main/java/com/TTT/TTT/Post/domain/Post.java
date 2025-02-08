@@ -1,15 +1,13 @@
 package com.TTT.TTT.Post.domain;
 
 import com.TTT.TTT.Common.BaseTimeEntity;
-import com.TTT.TTT.User.domain.DelYN;
+import com.TTT.TTT.Common.DelYN;
 import com.TTT.TTT.User.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
