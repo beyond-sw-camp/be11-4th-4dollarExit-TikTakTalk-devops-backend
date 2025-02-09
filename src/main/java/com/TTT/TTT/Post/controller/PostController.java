@@ -26,9 +26,9 @@ public class PostController {
     }
 
 //  1.게시글 생성(폼데이터 방식)
-    @PostMapping("/{id}/create")
-    public ResponseEntity<?> createPost(@PathVariable Long id,@Valid PostCreateDto dto, List<MultipartFile> attachments) {
-        postService.save(id, dto, attachments);
+    @PostMapping("/create")
+    public ResponseEntity<?> createPost(@Valid PostCreateDto dto, List<MultipartFile> attachments) {
+        postService.save(dto, attachments);
         return new ResponseEntity<>(new CommonDto(HttpStatus.CREATED.value(),"post create success","OK"),HttpStatus.CREATED);
     }
 

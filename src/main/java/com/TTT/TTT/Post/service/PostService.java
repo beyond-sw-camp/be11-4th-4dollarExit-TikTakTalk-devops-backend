@@ -60,11 +60,11 @@ public class PostService {
     private String bucket;
 
 //  1.게시글 생성
-    public void save(Long id,PostCreateDto dto, List<MultipartFile> attachments) {
+    public void save(PostCreateDto dto, List<MultipartFile> attachments) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String loginId = authentication.getName();
         User user = userRepository.findByLoginIdAndDelYN(loginId, DelYN.N).orElseThrow(() -> new EntityNotFoundException("없는 아이디입니다"));
-        PostCategory postCategory = postCategoryRepository.findById(id).orElseThrow(()->new EntityNotFoundException("없는 게시판입니다"));
+        PostCategory postCategory = postCategoryRepository.findById(dto.getPostCategoryId()).orElseThrow(()->new EntityNotFoundException("없는 게시판입니다"));
        //첨부파일 속성없이 일단 포스트 레포지토리에 저장
         Post post = Post.builder()
                 .title(dto.getTitle())
