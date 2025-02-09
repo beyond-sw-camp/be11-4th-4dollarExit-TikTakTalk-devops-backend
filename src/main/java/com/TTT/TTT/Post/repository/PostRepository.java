@@ -14,13 +14,13 @@ import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long>{
+//전체게시판 글 조회
     Page<Post> findAllByDelYN(DelYN delYN,Pageable pageable);
 //검색용. delYN은 기본적으로 삭제되지 않은 것 중에 검색되게 specification으로 구현
     Page<Post> findAll(Specification<Post> specification, Pageable pageable);
 
     Optional<Post> findByIdAndDelYN(Long id,DelYN delYN);
 
-
-//    List<Post> findAllByDelYn(DelYN delYn);
-//    Optional<Post> findByIdAndDelYn(Long id, DelYN delYn);
+//자유게시판 글 조회
+    Page<Post> findAllByCategory_IdAndDelYN(Long id,DelYN delYN,Pageable pageable);
 }
