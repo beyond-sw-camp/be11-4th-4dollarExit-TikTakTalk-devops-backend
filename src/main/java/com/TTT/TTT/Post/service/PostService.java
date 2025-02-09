@@ -6,6 +6,8 @@ import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.Post.domain.Post;
 import com.TTT.TTT.Post.dtos.*;
 import com.TTT.TTT.Post.repository.PostRepository;
+import com.TTT.TTT.PostCategory.Repository.PostCategoryRepository;
+import com.TTT.TTT.PostCategory.domain.PostCategory;
 import com.TTT.TTT.User.UserRepository.UserRepository;
 import com.TTT.TTT.User.domain.User;
 import jakarta.persistence.EntityNotFoundException;
@@ -43,12 +45,14 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final AttachmentRepository attachmentRepository;
+    private final PostCategoryRepository postCategoryRepository;
     private final S3Client s3Client;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository, AttachmentRepository attachmentRepository, S3Client s3Client) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, AttachmentRepository attachmentRepository,PostCategoryRepository postCategoryRepository,S3Client s3Client) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.attachmentRepository = attachmentRepository;
+        this.postCategoryRepository = postCategoryRepository;
         this.s3Client = s3Client;
     }
 
@@ -56,16 +60,18 @@ public class PostService {
     private String bucket;
 
 //  1.게시글 생성
-    public void save(PostCreateDto dto, List<MultipartFile> attachments) {
+    public void save(Long id,PostCreateDto dto, List<MultipartFile> attachments) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String loginId = authentication.getName();
         User user = userRepository.findByLoginIdAndDelYN(loginId, DelYN.N).orElseThrow(() -> new EntityNotFoundException("없는 아이디입니다"));
+        PostCategory postCategory = postCategoryRepository.findById(id).orElseThrow(()->new EntityNotFoundException("없는 게시판입니다"));
        //첨부파일 속성없이 일단 포스트 레포지토리에 저장
         Post post = Post.builder()
                 .title(dto.getTitle())
                 .contents(dto.getContents())
                 .user(user)
                 .delYN(DelYN.N)
+                .category(postCategory)
                 .build();
         postRepository.save(post);
         user.rankingPointUpdate(20); // 게시글 작성시 랭킹점수 20점 상승
@@ -108,9 +114,9 @@ public class PostService {
     }
 
 //    2.게시글 조회
- public Page<PostListDto> findAll(Pageable pageable){
+ public Page<PostAllListDto> findAll(Pageable pageable){
      Page<Post> originalPostList =  postRepository.findAllByDelYN(DelYN.N,pageable);
-     return originalPostList.map(p->p.toListDto());
+     return originalPostList.map(p->p.toAllListDto());
     }
 
 
@@ -207,6 +213,12 @@ public class PostService {
         postRepository.deleteById(id);
         User user = userRepository.findByLoginIdAndDelYN(userId,DelYN.N).orElseThrow(()->new EntityNotFoundException("없는 사용자입니다"));
         user.rankingPointUpdate(-20); //게시글 삭제시 다시 20점 회수
+    }
+
+//  7. 특정게시판 조회
+    public Page<PostListDto> selectedBoard(Long id,Pageable pageable){
+        Page<Post> postsOfBoard = postRepository.findAllByCategory_IdAndDelYN(id,DelYN.N,pageable);
+        return postsOfBoard.map(p->p.toListDto());
     }
 
 }

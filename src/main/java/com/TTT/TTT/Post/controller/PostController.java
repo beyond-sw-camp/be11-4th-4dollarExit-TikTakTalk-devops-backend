@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import retrofit2.http.Path;
 
 import java.util.List;
 
@@ -25,16 +26,16 @@ public class PostController {
     }
 
 //  1.게시글 생성(폼데이터 방식)
-    @PostMapping("/create")
-    public ResponseEntity<?> createPost(@Valid PostCreateDto dto, List<MultipartFile> attachments) {
-        postService.save(dto, attachments);
+    @PostMapping("/{id}/create")
+    public ResponseEntity<?> createPost(@PathVariable Long id,@Valid PostCreateDto dto, List<MultipartFile> attachments) {
+        postService.save(id, dto, attachments);
         return new ResponseEntity<>(new CommonDto(HttpStatus.CREATED.value(),"post create success","OK"),HttpStatus.CREATED);
     }
 
 //  2.게시글 조회()
     @GetMapping("/findAll")
     public ResponseEntity<?> findAll(@PageableDefault(size = 20, sort = "createdTime" , direction = Sort.Direction.DESC) Pageable pageable){
-        Page<PostListDto> postPage = postService.findAll(pageable);
+        Page<PostAllListDto> postPage = postService.findAll(pageable);
                 return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "List is uploaded successfully",postPage),HttpStatus.OK);
     }
 
@@ -63,12 +64,17 @@ public class PostController {
     }
 
 
-//    6.게시글 삭제 (DelYn으로 수정 필요)
+//    6.게시글 삭제
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deletePost(@PathVariable Long id) {
         postService.deleteById(id);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "post delete success","OK"), HttpStatus.OK);
     }
 
-
+//    7.특정게시판 조회(1번-자유게시판, 2번-정보게시판)
+    @GetMapping("/category/{id}")
+    public ResponseEntity<?> selectedBoard(@PathVariable Long id,@PageableDefault(size = 20,sort = "createdTime",direction = Sort.Direction.DESC) Pageable pageable){
+       Page<PostListDto> selectedList = postService.selectedBoard(id,pageable);
+       return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "selected board is uploaded successfully",selectedList),HttpStatus.OK);
+    }
 }
