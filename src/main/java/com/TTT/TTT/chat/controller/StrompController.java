@@ -1,6 +1,6 @@
 package com.TTT.TTT.chat.controller;
 
-import com.TTT.TTT.chat.dto.ChatMessageDto;
+import com.TTT.TTT.chat.dto.ChatMessageReqDto;
 import com.TTT.TTT.chat.service.ChatService;
 import com.TTT.TTT.chat.service.RedisPubSubService;
 import com.fasterxml.jackson.core.JsonProcessingException;
