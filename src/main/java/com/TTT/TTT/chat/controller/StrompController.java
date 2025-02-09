@@ -14,21 +14,21 @@ public class StrompController {
     private final ChatService chatService;
     private final RedisPubSubService pubSubService;
 
-    public StompController(SimpMessageSendingOperations messageTemplate, ChatService chatService, RedisPubSubService pubSubService) {
+    public StrompController(SimpMessageSendingOperations messageTemplate, ChatService chatService, RedisPubSubService pubSubService) {
         this.messageTemplate = messageTemplate;
         this.chatService = chatService;
         this.pubSubService = pubSubService;
     }
 
-    @MessageMapping("/{roomId}")
-    public void sendMessage(@DestinationVariable Long roomId, ChatMessageDto chatMessageReqDto) throws JsonProcessingException {
-        System.out.println(chatMessageReqDto.getMessage());
-        chatService.saveMessage(roomId, chatMessageReqDto);
-        chatMessageReqDto.setRoomId(roomId);
-
-//        messageTemplate.convertAndSend("/topic/"+roomId, chatMessageReqDto);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String message = objectMapper.writeValueAsString(chatMessageReqDto);
-        pubSubService.publish("chat", message);
-    }
+//    @MessageMapping("/{roomId}")
+//    public void sendMessage(@DestinationVariable Long roomId, ChatMessageDto chatMessageReqDto) throws JsonProcessingException {
+//        System.out.println(chatMessageReqDto.getMessage());
+//        chatService.saveMessage(roomId, chatMessageReqDto);
+//        chatMessageReqDto.setRoomId(roomId);
+//
+////        messageTemplate.convertAndSend("/topic/"+roomId, chatMessageReqDto);
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        String message = objectMapper.writeValueAsString(chatMessageReqDto);
+//        pubSubService.publish("chat", message);
+//    }
 }
