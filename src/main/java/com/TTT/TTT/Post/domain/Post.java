@@ -3,6 +3,7 @@ package com.TTT.TTT.Post.domain;
 import com.TTT.TTT.Attachment.Domain.Attachment;
 import com.TTT.TTT.Comment.Dtos.CommentDetailDto;
 import com.TTT.TTT.Comment.domain.Comment;
+import com.TTT.TTT.Likes.domain.Likes;
 import com.TTT.TTT.Post.dtos.PostAllListDto;
 import com.TTT.TTT.Post.dtos.PostDetailDto;
 import com.TTT.TTT.Post.dtos.PostListDto;
@@ -16,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,17 +77,27 @@ public class Post extends BaseTimeEntity {
 
 // DTO변환 메서드
 
-    public PostListDto toListDto(){
+    public PostListDto toListDto(RedisTemplate<String,String> redisTemplate){
+        String likeCountKey = "post-" + this.id + "-likeCount";
+        String likeCountValue = redisTemplate.opsForValue().get(likeCountKey);
+        int likesCount = likeCountValue==null || likeCountValue.equals("0") ? 0:Integer.parseInt(likeCountValue);
+
+
         return PostListDto.builder()
                 .title(this.title)
                 .createdTime(this.getCreatedTime())
                 .AuthorNickName(this.user.getNickName())
                 .AuthorImage(this.user.getProfileImagePath())
                 .countOfComment(this.commentList.size())
+                .likesCount(likesCount)
                 .build();
     }
 
-    public PostAllListDto toAllListDto(){
+    public PostAllListDto toAllListDto(RedisTemplate<String,String> redisTemplate){
+        String likeCountKey = "post-" + this.id + "-likeCount"; // 레디스에서 좋아요 수를 가지고 와야하니까 좋아요 수를 넣을 때 만들었던 키와 동일하게 조립
+        String likeCountValue = redisTemplate.opsForValue().get(likeCountKey); //get(key)를 통해 value값을 가지고 옴 //그런데 제일 처음에 좋아요가 없으면 null값이 오게 됨
+        int likeCount = likeCountValue==null || likeCountValue.equals("0") ? 0 : Integer.parseInt(likeCountValue); //레디스는 숫자형이 없이 문자열이다. 레디스에서 0값은 null이다
+
         return PostAllListDto.builder()
                 .title(this.title)
                 .categoryName(this.category.getCategoryName())
@@ -93,10 +105,11 @@ public class Post extends BaseTimeEntity {
                 .AuthorNickName(this.user.getNickName())
                 .AuthorImage(this.user.getProfileImagePath())
                 .countOfComment(this.commentList.size())
+                .LikesCount(likeCount)
                 .build();
     }
 
-    public PostDetailDto toDetailDto(){
+    public PostDetailDto toDetailDto(RedisTemplate<String,String> redisTemplate){
        List<CommentDetailDto> topLevelComments = new ArrayList<>();
 // 게시글 상세보기를 할 때 일단, 대댓글이 아닌 원댓글들만 먼저 조회되게 해준다, 여기서 모든 this.commentList를 조회되게 하면 x
 // 사용자가 게시글 볼 때 댓글-대댓글 계층적으로 보여줘야하기때문에 여기서 parent값이 없는 원댓글들만
@@ -117,19 +130,22 @@ public class Post extends BaseTimeEntity {
              attachmentUrls.add(a.getUrlAdress());
            }
        }
+
+       String likeCountKey = "post-" + this.id + "-likeCount";
+       String likeCountValue = redisTemplate.opsForValue().get(likeCountKey);
+       int likesCount = likeCountValue==null||likeCountValue=="0" ? 0:Integer.parseInt(likeCountValue);
+
             return PostDetailDto.builder()
                     .title(this.title)
                     .contents(this.contents)
                     .AuthorNickName(this.user.getNickName())
                     .ProfileImageOfAuthor(this.user.getProfileImagePath())
                     .rankingPointOfAuthor(this.user.getRankingPoint())
+                    .likesCount(likesCount)
                     .attachmentsUrl(attachmentUrls)
                     .commentList(topLevelComments)
                     .createdTime(this.getCreatedTime())
                     .build();
         }
 
-
-
-//    private int likes; //좋아요는 아직 생략
 }

@@ -48,6 +48,9 @@ dependencies {
 	// coolsms 휴대폰API 관련 의존성 추가
 	implementation 'net.nurigo:sdk:4.3.2'
 
+	//좋아요 rdb에 동기화 작업을 위한 이벤트 기반 비동기작업으로 처리하기 위한 rabbitmp의존성 추가
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'
+
 }
 
 tasks.named('test') {
