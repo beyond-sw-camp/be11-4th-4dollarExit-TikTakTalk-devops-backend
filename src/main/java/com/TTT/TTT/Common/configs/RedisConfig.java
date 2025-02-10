@@ -27,7 +27,7 @@ public class RedisConfig {
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
         configuration.setHostName(host); //레디스 서버의 호스트 이름
         configuration.setPort(port); //레디스 서버의 포트 번호
-        configuration.setDatabase(0); //레디스에 사용할 데이터베이스 인덱스(수업에 0번 데이터베이스를 이용하여 데이터 겹칠 것 같아 1번 사용했습니다)
+        configuration.setDatabase(0); //레디스에 사용할 데이터베이스 인덱스
         return new LettuceConnectionFactory(configuration); //위에서 설정한 configuration을 기반으로 레디스에 연결할 객체
         }
 
