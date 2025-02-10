@@ -71,11 +71,11 @@ public @interface ForbiddenWords {
 
             boolean bool = forbiddenWords.stream()
                     .noneMatch(word -> lowerCaseValue.contains(word.toLowerCase()));
-            if(!bool)
-            {
-                throw new IllegalArgumentException("적절하지 않은 단어가 포함되어 있습니다.");
-
-            }
+//            if(!bool)
+//            {
+//                throw new IllegalArgumentException("적절하지 않은 단어가 포함되어 있습니다.");
+//
+//            }여기에서 에러 터트려줄수있지만 올바른 방법은 아닌거같음 하지만 위 방법도 있다~.
             return bool;
         }
     }
