@@ -1,0 +1,31 @@
+### English Forbidden Words ###
+fuck
+shit
+bitch
+asshole
+bastard
+damn
+crap
+dick
+cunt
+piss
+whore
+slut
+faggot
+motherfucker
+douchebag
+prick
+...
+
+### Korean Forbidden Words ###
+시발
+씨발
+ㅅㅂ
+ㅆㅂ
+ㅅ1발
+ㅆ1발
+시1발
+씨1발
+병신
+ㅂㅅ
+...
