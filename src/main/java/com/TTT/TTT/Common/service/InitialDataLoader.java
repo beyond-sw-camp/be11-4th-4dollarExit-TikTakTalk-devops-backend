@@ -27,7 +27,7 @@ public class InitialDataLoader implements CommandLineRunner {
 
     private void createAdminAccount() {
 //        이메일만 체크하는 이유는 서버가 실행될때 바로 DB에 저장되므로,
-//        다른 검증은 필요하지 않은것으로 보임.
+//        admi다른 검증은 필요하지 않은것으로 보임.
 //        if문 검증을 안할시 서버시작 할 때 에러발생.
         if (!userRepository.findByEmailAndDelYN("admin@naver.com", DelYN.N).isPresent()) {
             User user = User.builder()
