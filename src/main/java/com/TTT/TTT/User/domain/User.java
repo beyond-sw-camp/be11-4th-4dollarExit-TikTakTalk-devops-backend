@@ -1,5 +1,6 @@
 package com.TTT.TTT.User.domain;
 
+import com.TTT.TTT.Common.Annotation.ForbiddenWords;
 import com.TTT.TTT.Common.domain.BaseTimeEntity;
 import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.Post.domain.Post;
@@ -34,7 +35,7 @@ public class User extends BaseTimeEntity {
     private String email;
 
     @Column(length = 11, nullable = false)
-    private String phoneNumber;     //api 예정
+    private String phoneNumber;
 
     @Column(nullable = false, unique = true)
     private String nickName;
