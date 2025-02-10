@@ -15,10 +15,12 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,13 +48,17 @@ public class PostService {
     private final UserRepository userRepository;
     private final AttachmentRepository attachmentRepository;
     private final PostCategoryRepository postCategoryRepository;
+    @Qualifier("likes")
+    private final RedisTemplate<String,String> redisTemplate;
     private final S3Client s3Client;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository, AttachmentRepository attachmentRepository,PostCategoryRepository postCategoryRepository,S3Client s3Client) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, AttachmentRepository attachmentRepository,
+                       PostCategoryRepository postCategoryRepository,@Qualifier("likes") RedisTemplate<String, String> redisTemplate, S3Client s3Client) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.attachmentRepository = attachmentRepository;
         this.postCategoryRepository = postCategoryRepository;
+        this.redisTemplate = redisTemplate;
         this.s3Client = s3Client;
     }
 
@@ -116,7 +122,7 @@ public class PostService {
 //    2.게시글 조회
  public Page<PostAllListDto> findAll(Pageable pageable){
      Page<Post> originalPostList =  postRepository.findAllByDelYN(DelYN.N,pageable);
-     return originalPostList.map(p->p.toAllListDto());
+     return originalPostList.map(p->p.toAllListDto(redisTemplate));
     }
 
 
@@ -142,13 +148,13 @@ public class PostService {
             }
         };
         Page<Post> originalPostList = postRepository.findAll(specification, pageable);
-        return originalPostList.map(p->p.toListDto());
+        return originalPostList.map(p->p.toListDto(redisTemplate));
     }
 
 //    4.게시글 상세보기
     public PostDetailDto findById(Long id){
         Post post = postRepository.findByIdAndDelYN(id,DelYN.N).orElseThrow(()->new EntityNotFoundException("없는 게시글입니다"));
-        return post.toDetailDto();
+        return post.toDetailDto(redisTemplate);
 
     }
 
@@ -218,7 +224,7 @@ public class PostService {
 //  7. 특정게시판 조회
     public Page<PostListDto> selectedBoard(Long id,Pageable pageable){
         Page<Post> postsOfBoard = postRepository.findAllByCategory_IdAndDelYN(id,DelYN.N,pageable);
-        return postsOfBoard.map(p->p.toListDto());
+        return postsOfBoard.map(p->p.toListDto(redisTemplate));
     }
 
 }

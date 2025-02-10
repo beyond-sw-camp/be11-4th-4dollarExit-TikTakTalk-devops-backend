@@ -2,6 +2,7 @@ package com.TTT.TTT.User.domain;
 
 import com.TTT.TTT.Common.domain.BaseTimeEntity;
 import com.TTT.TTT.Common.domain.DelYN;
+import com.TTT.TTT.Likes.domain.Likes;
 import com.TTT.TTT.Post.domain.Post;
 import com.TTT.TTT.User.dtos.*;
 import jakarta.persistence.*;
@@ -10,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -65,6 +67,11 @@ public class User extends BaseTimeEntity {
     //내가 쓴 글
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Post> myPostList;
+
+    //내가 좋아요한 목록
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Likes> myLikes = new ArrayList<>();
 
     //프로필 사진
     private String profileImagePath;
@@ -143,5 +150,9 @@ public class User extends BaseTimeEntity {
 
     public void rankingPointUpdate(int point){
         this.rankingPoint += point;
+    }
+
+    public void addLikeInMyLikes(Likes likes){
+        this.myLikes.add(likes);
     }
 }
