@@ -1,6 +1,7 @@
 package com.TTT.TTT.chat.domain;
 
 import com.TTT.TTT.Common.domain.BaseTimeEntity;
+import com.TTT.TTT.chat.dto.ChatRoomListResDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,7 @@ public class ChatRoom extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private String name;
 
     @Builder.Default
@@ -33,4 +34,8 @@ public class ChatRoom extends BaseTimeEntity {
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @Builder.Default
     private List<ChatMessage> chatMessages = new ArrayList<>();
+
+    public ChatRoomListResDto listResDtoFromEntity() {
+        return ChatRoomListResDto.builder().roomId(this.id).chatPaticipantCount(this.getChatParticipants().size()).roomName(this.name).build();
+    }
 }

@@ -6,11 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class ChatRoomListResDto {
-    private Long roomId;
+public class ChatRoomSearchDto {
     private String roomName;
-    private Integer chatPaticipantCount;
 }

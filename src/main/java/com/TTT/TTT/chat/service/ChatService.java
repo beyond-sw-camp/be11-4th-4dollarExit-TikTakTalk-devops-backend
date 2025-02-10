@@ -7,21 +7,27 @@ import com.TTT.TTT.chat.domain.ChatMessage;
 import com.TTT.TTT.chat.domain.ChatParticipant;
 import com.TTT.TTT.chat.domain.ChatRoom;
 import com.TTT.TTT.chat.domain.ReadStatus;
-import com.TTT.TTT.chat.dto.ChatMessageDto;
-import com.TTT.TTT.chat.dto.ChatRoomListResDto;
-import com.TTT.TTT.chat.dto.MyChatListResDto;
+import com.TTT.TTT.chat.dto.*;
 import com.TTT.TTT.chat.repository.ChatMessageRepository;
 import com.TTT.TTT.chat.repository.ChatParticipantRepository;
 import com.TTT.TTT.chat.repository.ChatRoomRepository;
 import com.TTT.TTT.chat.repository.ReadStatusRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -67,12 +73,15 @@ public class ChatService {
         }
     }
 
-    public void createGroupRoom(String chatRoomName){
-        User user = userRepository.findByLoginIdAndDelYN(SecurityContextHolder.getContext().getAuthentication().getName(),DelYN.N).orElseThrow(()->new EntityNotFoundException("member cannot be found"));
+    public void createGroupRoom(ChatRoomCreateReqDto dto){
+        User user = userRepository.findByLoginIdAndDelYN(SecurityContextHolder.getContext().getAuthentication().getName(),DelYN.N).orElseThrow(()->new EntityNotFoundException("User cannot be found"));
+        if (chatRoomRepository.findByName(dto.getRoomName()).isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 방 이름입니다.");
+        }
 
 //        채팅방 생성
         ChatRoom chatRoom = ChatRoom.builder()
-                .name(chatRoomName)
+                .name(dto.getRoomName())
                 .isGroupChat("Y")
                 .build();
         chatRoomRepository.save(chatRoom);
@@ -84,18 +93,40 @@ public class ChatService {
         chatParticipantRepository.save(chatParticipant);
     }
 
-    public List<ChatRoomListResDto> getGroupchatRooms(){
-        List<ChatRoom> chatRooms = chatRoomRepository.findByIsGroupChat("Y");
-        List<ChatRoomListResDto> dtos = new ArrayList<>();
-        for(ChatRoom c : chatRooms){
-            ChatRoomListResDto dto = ChatRoomListResDto
-                    .builder()
-                    .roomId(c.getId())
-                    .roomName(c.getName())
-                    .build();
-            dtos.add(dto);
-        }
-        return dtos;
+//    그룹채팅방 조회시, 검색 및 참여자 수가 가장 많은 수로 정렬.
+    public Page<ChatRoomListResDto> getGroupchatRooms(ChatRoomSearchDto searchDto, Pageable pageable){
+        Specification<ChatRoom> specification = new Specification<ChatRoom>() {
+            @Override
+            public Predicate toPredicate(Root<ChatRoom> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+                predicates.add(criteriaBuilder.equal(root.get("isGroupChat"), "Y"));
+                if (searchDto.getRoomName() != null) {
+                    predicates.add(criteriaBuilder.like(root.get("name"), "%"+searchDto.getRoomName()+"%"));
+                }
+                Predicate[] predicatesArr = new Predicate[predicates.size()];
+                for (int i = 0; i<predicates.size(); i++) {
+                    predicatesArr[i] = predicates.get(i);
+                }
+                Predicate predicate = criteriaBuilder.and(predicatesArr);
+                return predicate;
+            }
+        };
+
+        Page<ChatRoom> pageRooms = chatRoomRepository.findAll(specification, pageable);
+//        page형식의 pageRoom에서 ChatRoom을 꺼내 ChatRoomListResDto 변환하는 과정을 거쳐 List로 반환.
+//        page형식은 정렬이 불가능하므로 List로 변환해야함.
+        List<ChatRoomListResDto> dtos = pageRooms.getContent().stream()
+                .map(c -> ChatRoomListResDto.builder()
+                        .roomId(c.getId())
+                        .roomName(c.getName())
+                        .chatPaticipantCount(c.getChatParticipants().size())
+                        .build())
+                .collect(Collectors.toList());
+//        참여자가 많은 순서대로 정렬.
+        dtos.sort(Comparator.comparing(ChatRoomListResDto::getChatPaticipantCount).reversed());
+//        List로 변환했던 Page를 다시 Page형식으로 변환.
+        Page<ChatRoomListResDto> sortedPage = new PageImpl<>(dtos, pageRooms.getPageable(), pageRooms.getTotalElements());
+        return sortedPage;
     }
 
     public void addParticipantToGroupChat(Long roomId){
@@ -124,7 +155,7 @@ public class ChatService {
     public List<ChatMessageDto> getChatHistory(Long roomId){
 //        내가 해당 채팅방의 참여자가 아닐경우 에러
         ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(()-> new EntityNotFoundException("room cannot be found"));
-        User user = userRepository.findByLoginIdAndDelYN(SecurityContextHolder.getContext().getAuthentication().getName(), DelYN.N).orElseThrow(()->new EntityNotFoundException("member cannot be found"));
+        User user = userRepository.findByLoginIdAndDelYN(SecurityContextHolder.getContext().getAuthentication().getName(), DelYN.N).orElseThrow(()->new EntityNotFoundException("user cannot be found"));
         List<ChatParticipant> chatParticipants = chatParticipantRepository.findByChatRoom(chatRoom);
         boolean check = false;
         for(ChatParticipant c : chatParticipants){
@@ -138,6 +169,7 @@ public class ChatService {
         List<ChatMessageDto> chatMessageDtos = new ArrayList<>();
         for(ChatMessage c : chatMessages){
             ChatMessageDto chatMessageDto = ChatMessageDto.builder()
+                    .roomId(chatRoom.getId())
                     .message(c.getContent())
                     .senderNickname(c.getUser().getNickName())
                     .build();
@@ -165,6 +197,7 @@ public class ChatService {
         List<ReadStatus> readStatuses = readStatusRepository.findByChatRoomAndUser(chatRoom, user);
         for(ReadStatus r : readStatuses){
             r.updateIsRead(true);
+            System.out.println("check : " + r.getIsRead());
         }
     }
 
