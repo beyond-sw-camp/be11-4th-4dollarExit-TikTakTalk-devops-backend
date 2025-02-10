@@ -3,11 +3,13 @@ package com.TTT.TTT.Post.domain;
 import com.TTT.TTT.Attachment.Domain.Attachment;
 import com.TTT.TTT.Comment.Dtos.CommentDetailDto;
 import com.TTT.TTT.Comment.domain.Comment;
+import com.TTT.TTT.Post.dtos.PostAllListDto;
 import com.TTT.TTT.Post.dtos.PostDetailDto;
 import com.TTT.TTT.Post.dtos.PostListDto;
 import com.TTT.TTT.Post.dtos.PostUpdateDto;
 import com.TTT.TTT.Common.domain.BaseTimeEntity;
 import com.TTT.TTT.Common.domain.DelYN;
+import com.TTT.TTT.PostCategory.domain.PostCategory;
 import com.TTT.TTT.User.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -45,6 +47,10 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Builder.Default
     private List<Comment> commentList = new ArrayList<>();
+//  게시판 카테고리
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private PostCategory category;
 //  삭제 여부
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -72,6 +78,17 @@ public class Post extends BaseTimeEntity {
     public PostListDto toListDto(){
         return PostListDto.builder()
                 .title(this.title)
+                .createdTime(this.getCreatedTime())
+                .AuthorNickName(this.user.getNickName())
+                .AuthorImage(this.user.getProfileImagePath())
+                .countOfComment(this.commentList.size())
+                .build();
+    }
+
+    public PostAllListDto toAllListDto(){
+        return PostAllListDto.builder()
+                .title(this.title)
+                .categoryName(this.category.getCategoryName())
                 .createdTime(this.getCreatedTime())
                 .AuthorNickName(this.user.getNickName())
                 .AuthorImage(this.user.getProfileImagePath())

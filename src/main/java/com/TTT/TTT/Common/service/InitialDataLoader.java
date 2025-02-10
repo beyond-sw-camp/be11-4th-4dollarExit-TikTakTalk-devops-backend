@@ -1,5 +1,7 @@
 package com.TTT.TTT.Common.service;
 
+import com.TTT.TTT.PostCategory.Repository.PostCategoryRepository;
+import com.TTT.TTT.PostCategory.domain.PostCategory;
 import com.TTT.TTT.User.UserRepository.UserRepository;
 import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.User.domain.Role;
@@ -13,16 +15,19 @@ import org.springframework.stereotype.Component;
 public class InitialDataLoader implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PostCategoryRepository postCategoryRepository;
 
-    public InitialDataLoader(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public InitialDataLoader(UserRepository userRepository, PasswordEncoder passwordEncoder, PostCategoryRepository postCategoryRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.postCategoryRepository = postCategoryRepository;
     }
 
     @Override
     public void run(String... args) throws Exception {
         createAdminAccount();
         craeteUserAccount();
+        createCategories();
     }
 
     private void createAdminAccount() {
@@ -58,5 +63,22 @@ public class InitialDataLoader implements CommandLineRunner {
                     .build();
             userRepository.save(user);
         }
+    }
+
+//    프로그램실행하면 기본게시판 만들어두는 것(테스트 편하게 하기 위해 등록)
+    private void createCategories(){
+        if(!postCategoryRepository.findByCategoryName("자유게시판").isPresent()){
+             PostCategory free = PostCategory.builder()
+                .categoryName("자유게시판")
+                .build();
+             postCategoryRepository.save(free);
+    }
+        if(!postCategoryRepository.findByCategoryName("정보게시판").isPresent()){
+            PostCategory information = PostCategory.builder()
+                    .categoryName("정보게시판")
+                    .build();
+            postCategoryRepository.save(information);
+        }
+
     }
 }
