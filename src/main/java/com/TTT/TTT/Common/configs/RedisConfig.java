@@ -19,7 +19,7 @@ public class RedisConfig {
     private String host;
     @Value("${spring.redis.port}")
     private int port;
-// 현재 사용하고 있는 레디스 데이터베이스. 1번-리프레시 토큰 데이터 저장 2번-좋아요 데이터 저장
+// 현재 사용하고 있는 레디스 데이터베이스. 0번-리프레시 토큰 데이터 저장 1번-좋아요 데이터 저장
 
     @Bean
     @Qualifier("rtdb")
@@ -57,7 +57,7 @@ public class RedisConfig {
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
         configuration.setHostName(host);
         configuration.setPort(port);
-        configuration.setDatabase(2);
+        configuration.setDatabase(1);
         return new LettuceConnectionFactory(configuration);
     }
 
