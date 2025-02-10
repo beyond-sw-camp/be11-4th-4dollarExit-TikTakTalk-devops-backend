@@ -28,59 +28,60 @@ import java.util.List;
 @Builder
 @Entity
 public class Post extends BaseTimeEntity {
-//    아이디
+    //    아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-//  작성자
+    //  작성자
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-//  글 제목
+    //  글 제목
     @Column(nullable = false, length = 100)
     private String title;
-//  글 내용
+    //  글 내용
     private String contents;
-//  이미지(첨부파일)
-    @OneToMany(mappedBy = "post" , orphanRemoval = true)
+    //  이미지(첨부파일)
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
     @Builder.Default
     private List<Attachment> attachmentList = new ArrayList<>();
-//  댓글(//eager설정은 원댓글 삭제처리시 대댓글들은 여전히 보이게 설정하려는데, 원댓글의 삭제칼럼이 y로 변경이 되면 이걸 늦게 반영이 되어 대댓글도 삭제처리된 것처럼 한동안 보이게 되어 eager설정으로 두었습니다)
+    //  댓글(//eager설정은 원댓글 삭제처리시 대댓글들은 여전히 보이게 설정하려는데, 원댓글의 삭제칼럼이 y로 변경이 되면 이걸 늦게 반영이 되어 대댓글도 삭제처리된 것처럼 한동안 보이게 되어 eager설정으로 두었습니다)
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Builder.Default
     private List<Comment> commentList = new ArrayList<>();
-//  게시판 카테고리
+    //  게시판 카테고리
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private PostCategory category;
-//  삭제 여부
+    //  삭제 여부
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
-    public void deletePost(){
-        this.delYN=DelYN.Y;
+    public void deletePost() {
+        this.delYN = DelYN.Y;
     }
+
     //게시글 수정
-    public void updateText(PostUpdateDto postUpdateDto){
-        this.title=postUpdateDto.getTitle();
-        this.contents=postUpdateDto.getContents();
+    public void updateText(PostUpdateDto postUpdateDto) {
+        this.title = postUpdateDto.getTitle();
+        this.contents = postUpdateDto.getContents();
     }
+
     //게시글 수정(jpa가 셋 자료 구조의 변경을 인지하기 위해서는 .clear로 싹 삭제하고 addAll을 해야 인지)
-    public void updateAttachment(List<Attachment> newAttachments){
-       this.attachmentList.clear();
+    public void updateAttachment(List<Attachment> newAttachments) {
+        this.attachmentList.clear();
         this.attachmentList.addAll(newAttachments);
     }
 
 
-
 // DTO변환 메서드
 
-    public PostListDto toListDto(RedisTemplate<String,String> redisTemplate){
+    public PostListDto toListDto(RedisTemplate<String, String> redisTemplate) {
         String likeCountKey = "post-" + this.id + "-likeCount";
         String likeCountValue = redisTemplate.opsForValue().get(likeCountKey);
-        int likesCount = likeCountValue==null || likeCountValue.equals("0") ? 0:Integer.parseInt(likeCountValue);
+        int likesCount = likeCountValue == null || likeCountValue.equals("0") ? 0 : Integer.parseInt(likeCountValue);
 
 
         return PostListDto.builder()
@@ -93,10 +94,10 @@ public class Post extends BaseTimeEntity {
                 .build();
     }
 
-    public PostAllListDto toAllListDto(RedisTemplate<String,String> redisTemplate){
+    public PostAllListDto toAllListDto(RedisTemplate<String, String> redisTemplate) {
         String likeCountKey = "post-" + this.id + "-likeCount"; // 레디스에서 좋아요 수를 가지고 와야하니까 좋아요 수를 넣을 때 만들었던 키와 동일하게 조립
         String likeCountValue = redisTemplate.opsForValue().get(likeCountKey); //get(key)를 통해 value값을 가지고 옴 //그런데 제일 처음에 좋아요가 없으면 null값이 오게 됨
-        int likeCount = likeCountValue==null || likeCountValue.equals("0") ? 0 : Integer.parseInt(likeCountValue); //레디스는 숫자형이 없이 문자열이다. 레디스에서 0값은 null이다
+        int likeCount = likeCountValue == null || likeCountValue.equals("0") ? 0 : Integer.parseInt(likeCountValue); //레디스는 숫자형이 없이 문자열이다. 레디스에서 0값은 null이다
 
         return PostAllListDto.builder()
                 .title(this.title)
@@ -110,42 +111,42 @@ public class Post extends BaseTimeEntity {
     }
 
     public PostDetailDto toDetailDto(RedisTemplate<String,String> redisTemplate){
-       List<CommentDetailDto> topLevelComments = new ArrayList<>();
+        List<CommentDetailDto> topLevelComments = new ArrayList<>();
 // 게시글 상세보기를 할 때 일단, 대댓글이 아닌 원댓글들만 먼저 조회되게 해준다, 여기서 모든 this.commentList를 조회되게 하면 x
 // 사용자가 게시글 볼 때 댓글-대댓글 계층적으로 보여줘야하기때문에 여기서 parent값이 없는 원댓글들만
 // comment.toDetailDto로 변환해주면 거기서 재귀적으로 원댓글의 대댓글들을 변환해준다.
 
-       if(this.commentList != null){
-        for(Comment c : this.commentList) {
-            if (c.getParent() == null && c.getDelYN()==DelYN.N) { //원댓글이면서 삭제되지않은 원댓글들
-                topLevelComments.add(c.toDetailDto());
-            } else if(c.getParent()!=null && c.getDelYN()==DelYN.N){
-                topLevelComments.add(c.toDetailDto()); //만약에 원댓글이 삭제되어도 자식댓글들은 계속 볼 수 있게 하기 위해 여기서 자식 댓글들을 추가한다.(그런데 eager타입이어야 즉시 반영됨)
+        if(this.commentList != null){
+            for(Comment c : this.commentList) {
+                if (c.getParent() == null && c.getDelYN()==DelYN.N) { //원댓글이면서 삭제되지않은 원댓글들
+                    topLevelComments.add(c.toDetailDto());}
+//                } else if(c.getParent()!=null && c.getDelYN()==DelYN.N){
+//                    topLevelComments.add(c.toDetailDto()); //만약에 원댓글이 삭제되어도 자식댓글들은 계속 볼 수 있게 하기 위해 여기서 자식 댓글들을 추가한다.(그런데 eager타입이어야 즉시 반영됨)
+//                }
             }
         }
+        List<String> attachmentUrls = new ArrayList<>();
+        if(this.attachmentList != null){
+            for(Attachment a : attachmentList){
+                attachmentUrls.add(a.getUrlAdress());
+            }
         }
-       List<String> attachmentUrls = new ArrayList<>();
-       if(this.attachmentList != null){
-           for(Attachment a : attachmentList){
-             attachmentUrls.add(a.getUrlAdress());
-           }
-       }
 
-       String likeCountKey = "post-" + this.id + "-likeCount";
-       String likeCountValue = redisTemplate.opsForValue().get(likeCountKey);
-       int likesCount = likeCountValue==null||likeCountValue=="0" ? 0:Integer.parseInt(likeCountValue);
+        String likeCountKey = "post-" + this.id + "-likeCount";
+        String likeCountValue = redisTemplate.opsForValue().get(likeCountKey);
+        int likesCount = likeCountValue==null||likeCountValue=="0" ? 0:Integer.parseInt(likeCountValue);
 
-            return PostDetailDto.builder()
-                    .title(this.title)
-                    .contents(this.contents)
-                    .AuthorNickName(this.user.getNickName())
-                    .ProfileImageOfAuthor(this.user.getProfileImagePath())
-                    .rankingPointOfAuthor(this.user.getRankingPoint())
-                    .likesCount(likesCount)
-                    .attachmentsUrl(attachmentUrls)
-                    .commentList(topLevelComments)
-                    .createdTime(this.getCreatedTime())
-                    .build();
-        }
+        return PostDetailDto.builder()
+                .title(this.title)
+                .contents(this.contents)
+                .AuthorNickName(this.user.getNickName())
+                .ProfileImageOfAuthor(this.user.getProfileImagePath())
+                .rankingPointOfAuthor(this.user.getRankingPoint())
+                .likesCount(likesCount)
+                .attachmentsUrl(attachmentUrls)
+                .commentList(topLevelComments)
+                .createdTime(this.getCreatedTime())
+                .build();
+    }
 
 }

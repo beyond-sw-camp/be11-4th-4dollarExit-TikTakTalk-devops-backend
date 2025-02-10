@@ -4,15 +4,18 @@ package com.TTT.TTT.User.UserService;
 import com.TTT.TTT.Common.smsService.SmsService;
 import com.TTT.TTT.Post.domain.Post;
 //import com.TTT.TTT.Common.smsService.SmsService;
+import com.TTT.TTT.Post.dtos.PostDetailDto;
 import com.TTT.TTT.User.UserRepository.UserRepository;
 import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.User.domain.User;
 import com.TTT.TTT.User.dtos.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,12 +40,16 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final S3Client s3Client;
     private final SmsService smsService;
+    @Qualifier("likes")
+    private final RedisTemplate<String,String> redisTemplate;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, S3Client s3Client, SmsService smsService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, S3Client s3Client, SmsService smsService,
+                       @Qualifier("likes") RedisTemplate<String, String> redisTemplate) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.s3Client = s3Client;
         this.smsService = smsService;
+        this.redisTemplate = redisTemplate;
     }
   
     @Value("${cloud.aws.s3.bucket}")
@@ -89,10 +96,11 @@ public class UserService {
     }
 
 // 4. 내가 쓴 게시글 조회
-    public List<Post> myPostList(){
+    public List<PostDetailDto> myPostList(){
       String userLogin =  SecurityContextHolder.getContext().getAuthentication().getName();
       User user = userRepository.findByLoginIdAndDelYN(userLogin,DelYN.N).orElseThrow(()-> new EntityNotFoundException("없는 아이디입니다"));
-      return user.getMyPostList();
+      List<Post> originalPostList = user.getMyPostList();
+      return originalPostList.stream().map(p->p.toDetailDto(redisTemplate)).toList();
     }
 
 //  5. 내 정보 수정
