@@ -119,10 +119,10 @@ public class Post extends BaseTimeEntity {
         if(this.commentList != null){
             for(Comment c : this.commentList) {
                 if (c.getParent() == null && c.getDelYN()==DelYN.N) { //원댓글이면서 삭제되지않은 원댓글들
-                    topLevelComments.add(c.toDetailDto());}
-//                } else if(c.getParent()!=null && c.getDelYN()==DelYN.N){
-//                    topLevelComments.add(c.toDetailDto()); //만약에 원댓글이 삭제되어도 자식댓글들은 계속 볼 수 있게 하기 위해 여기서 자식 댓글들을 추가한다.(그런데 eager타입이어야 즉시 반영됨)
-//                }
+                    topLevelComments.add(c.toDetailDto());
+                } else if(c.getParent()==null && c.getDelYN()==DelYN.Y){
+                    topLevelComments.add(c.toDetailDto().pretendToDelete()); //만약에 원댓글이 삭제되어도 자식댓글들은 계속 볼 수 있게 하기 위해 여기서 자식 댓글들을 추가한다.(그런데 eager타입이어야 즉시 반영됨)
+                }
             }
         }
         List<String> attachmentUrls = new ArrayList<>();
