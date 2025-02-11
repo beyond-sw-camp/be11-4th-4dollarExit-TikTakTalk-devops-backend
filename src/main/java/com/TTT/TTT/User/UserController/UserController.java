@@ -171,7 +171,7 @@ public class UserController {
             return new ResponseEntity<>(new CommonDto(HttpStatus.BAD_REQUEST.value(), "cannot recreate accessToken",null),HttpStatus.BAD_REQUEST);
         }
 
-        String token = jwtTokenProvider.createRefreshToken(claims.getSubject(),claims.get("role").toString(), claims.get("nickName"));
+        String token = jwtTokenProvider.createRefreshToken(claims.getSubject(),claims.get("role").toString(), claims.get("nickName").toString());
         Map<String, Object> loginInfo = new HashMap<>();
         loginInfo.put("token",token);
         return new ResponseEntity<>(new CommonDto(HttpStatus.CREATED.value(), "accessToken is recreated",loginInfo),HttpStatus.CREATED);
