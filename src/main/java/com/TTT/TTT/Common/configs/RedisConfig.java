@@ -31,9 +31,19 @@ public class RedisConfig {
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
         configuration.setHostName(host); //레디스 서버의 호스트 이름
         configuration.setPort(port); //레디스 서버의 포트 번호
-        configuration.setDatabase(0); //레디스에 사용할 데이터베이스 인덱스
+        configuration.setDatabase(0); //레디스에 사용할 데이터베이스 인덱스(refreshToken 관리 인덱스)
         return new LettuceConnectionFactory(configuration); //위에서 설정한 configuration을 기반으로 레디스에 연결할 객체
-        }
+    }
+
+    @Bean
+    @Qualifier("sms")
+    public RedisConnectionFactory redisConnectionFactoryForSms(){ //레디스 연결을 설정하는 ConnectonFactory객체를 생성하고 반환
+        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
+        configuration.setHostName(host); //레디스 서버의 호스트 이름
+        configuration.setPort(port); //레디스 서버의 포트 번호
+        configuration.setDatabase(2); //레디스에 사용할 데이터베이스 인덱스
+        return new LettuceConnectionFactory(configuration); //위에서 설정한 configuration을 기반으로 레디스에 연결할 객체
+    }
 
     @Bean(name = "redisTemplate")
     @Qualifier("rtdb")
@@ -59,10 +69,10 @@ public class RedisConfig {
     }
 
     //    publish객체
-    @Bean(name = "stringRedisTemplate")
+    @Bean(name = "chattingRedisTemplate")
     @Qualifier("chatPubSub")
 //    일반적으로 RedisTemplate<key데이터타입, value데이터타입>을 사용
-    public StringRedisTemplate stringRedisTemplate(@Qualifier("chatPubSub") RedisConnectionFactory redisConnectionFactory){
+    public StringRedisTemplate chattingRedisTemplate(@Qualifier("chatPubSub") RedisConnectionFactory redisConnectionFactory){
         return  new StringRedisTemplate(redisConnectionFactory);
     }
 
@@ -80,18 +90,20 @@ public class RedisConfig {
 
     //    redis에서 수신된 메시지를 처리하는 객체 생성
     @Bean
-    public MessageListenerAdapter messageListenerAdapter(RedisPubSubService redisPubSubService){
+    public MessageListenerAdapter messageListenerAdapter(RedisPubSubService redisPubSubService) {
 //        RedisPubSubService의 특정 메서드가 수신된 메시지를 처리할수 있도록 지정
         return new MessageListenerAdapter(redisPubSubService, "onMessage");
+    }
 
-//sms기능 간섭안하는지 체크---------------------------------------------------------------------------------------------
+    //sms기능 간섭안하는지 체크---------------------------------------------------------------------------------------------
     @Bean
-    public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+    @Qualifier("sms")
+    public StringRedisTemplate stringRedisTemplateforSms(@Qualifier("sms") RedisConnectionFactory redisConnectionFactory) {
         StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
         stringRedisTemplate.setConnectionFactory(redisConnectionFactory);
         return stringRedisTemplate;
     }
-//    ----------------------------------------------------------------------------------------------------------
+//    ------------------------
 
     @Bean
     @Qualifier("likes")

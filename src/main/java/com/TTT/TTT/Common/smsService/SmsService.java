@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class SmsService {
 
     private final StringRedisTemplate redisTemplate;
-    public SmsService(StringRedisTemplate redisTemplate) {
+    public SmsService(@Qualifier("stringRedisTemplateforSms") StringRedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
     // 변수 주입.
