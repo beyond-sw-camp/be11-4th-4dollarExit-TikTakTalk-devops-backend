@@ -7,12 +7,12 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 
-public class StrompController {
+public class StompController {
     private final SimpMessageSendingOperations messageTemplate;
     private final ChatService chatService;
     private final RedisPubSubService pubSubService;
 
-    public StrompController(SimpMessageSendingOperations messageTemplate, ChatService chatService, RedisPubSubService pubSubService) {
+    public StompController(SimpMessageSendingOperations messageTemplate, ChatService chatService, RedisPubSubService pubSubService) {
         this.messageTemplate = messageTemplate;
         this.chatService = chatService;
         this.pubSubService = pubSubService;

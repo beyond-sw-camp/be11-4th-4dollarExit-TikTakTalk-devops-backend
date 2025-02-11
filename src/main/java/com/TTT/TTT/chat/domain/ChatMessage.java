@@ -1,6 +1,7 @@
 package com.TTT.TTT.chat.domain;
 
 import com.TTT.TTT.Common.domain.BaseTimeEntity;
+import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.User.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,4 +36,7 @@ public class ChatMessage extends BaseTimeEntity {
     @OneToMany(mappedBy = "chatMessage", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @Builder.Default
     private List<ReadStatus> readStatuses = new ArrayList<>();
+
+    @Builder.Default
+    private DelYN delYN = DelYN.N;
 }

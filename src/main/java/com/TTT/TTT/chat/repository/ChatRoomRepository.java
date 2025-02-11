@@ -16,4 +16,5 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     Page<ChatRoom> findByIsGroupChat(Specification<ChatRoom> specification, String isGroupChat, Pageable pageable);
     Page<ChatRoom> findAll(Specification<ChatRoom> specification, Pageable pageable);
     Optional<ChatRoom> findByName(String roomName);
+    Optional<ChatRoom> findByIdAndExitYN(Long id, Enum exitYN);
 }

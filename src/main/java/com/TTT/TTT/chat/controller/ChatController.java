@@ -71,4 +71,18 @@ public class ChatController {
         List<MyChatListResDto> myChatListResDtos = chatService.getMyChatRooms();
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "rooms found successfully", myChatListResDtos), HttpStatus.OK);
     }
+
+//    개인 채팅방 개설 또는 기존roomId return
+    @PostMapping("/room/private/create")
+    public ResponseEntity<?> getOrCreatePrivateRoom(@RequestParam Long otherUserId) {
+        Long roomId = chatService.getOrCreatePrivateRoom(otherUserId);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.CREATED.value(), "private room is create!", roomId), HttpStatus.CREATED);
+    }
+
+//    그룹채팅방나가기
+    @DeleteMapping("/room/group/{roomId}/leave")
+    public ResponseEntity<?> leaveGroupChatRoom(@PathVariable Long roomId) {
+        chatService.leaveGroupChatRoom(roomId);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "room leave is successful", "leave"), HttpStatus.OK);
+    }
 }

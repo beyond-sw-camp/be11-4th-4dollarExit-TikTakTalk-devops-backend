@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface ChatParticipantRepository extends JpaRepository<ChatParticipant, Long> {
-    List<ChatParticipant> findByChatRoom(ChatRoom chatRoom);
+    List<ChatParticipant> findByChatRoomAndExitYN(ChatRoom chatRoom, Enum exitYN);
     Optional<ChatParticipant> findByChatRoomAndUser(ChatRoom chatRoom, User user);
     List<ChatParticipant> findAllByUser(User user);
 

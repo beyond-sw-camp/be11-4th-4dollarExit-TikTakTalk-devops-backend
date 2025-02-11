@@ -1,6 +1,7 @@
 package com.TTT.TTT.chat.domain;
 
 import com.TTT.TTT.Common.domain.BaseTimeEntity;
+import com.TTT.TTT.Common.domain.ExitYN;
 import com.TTT.TTT.User.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,4 +26,11 @@ public class ChatParticipant extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Builder.Default
+    private ExitYN exitYN = ExitYN.N;
+
+    public void paticipantExit() {
+        this.exitYN = ExitYN.Y;
+    }
 }

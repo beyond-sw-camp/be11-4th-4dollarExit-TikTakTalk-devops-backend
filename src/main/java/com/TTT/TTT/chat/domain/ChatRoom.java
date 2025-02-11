@@ -1,6 +1,8 @@
 package com.TTT.TTT.chat.domain;
 
 import com.TTT.TTT.Common.domain.BaseTimeEntity;
+import com.TTT.TTT.Common.domain.DelYN;
+import com.TTT.TTT.Common.domain.ExitYN;
 import com.TTT.TTT.chat.dto.ChatRoomListResDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -37,5 +39,12 @@ public class ChatRoom extends BaseTimeEntity {
 
     public ChatRoomListResDto listResDtoFromEntity() {
         return ChatRoomListResDto.builder().roomId(this.id).chatPaticipantCount(this.getChatParticipants().size()).roomName(this.name).build();
+    }
+
+    @Builder.Default
+    private ExitYN exitYN = ExitYN.N;
+
+    public void chatRoomExit() {
+        this.exitYN = ExitYN.Y;
     }
 }
