@@ -1,5 +1,6 @@
 package com.TTT.TTT.User.dtos;
 
+import com.TTT.TTT.Common.Annotation.ForbiddenWords;
 import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.User.domain.Role;
 import com.TTT.TTT.User.domain.User;
@@ -49,7 +50,8 @@ public class UserCreateDto {
     private String phoneNumberInput;
 
     @NotBlank(message = "닉네임은 필수입니다.")
-    @Size(max = 15, min = 3, message = "닉네임은 3자 이상, 15자 이하여야 합니다.")
+    @Size(max = 8, min = 2, message = "닉네임은 2자 이상, 8자 이하여야 합니다.")
+    @ForbiddenWords(words = {"admin", "root", "superuser"}, message = "욕설이 포함되어있습니다.") // 추가 금지어 설정 가능
     private String nickName;
 
     @NotBlank(message = "블로그링크는 필수입니다.")

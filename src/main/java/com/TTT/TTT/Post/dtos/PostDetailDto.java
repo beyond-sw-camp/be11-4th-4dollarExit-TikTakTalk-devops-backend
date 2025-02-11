@@ -20,6 +20,7 @@ public class PostDetailDto {
     private String title;
     private String contents;
     private LocalDateTime createdTime;
+    private int likesCount;
     private List<CommentDetailDto> commentList;
     private List<String> attachmentsUrl;
 }

@@ -4,6 +4,8 @@ package com.TTT.TTT.User.UserController;
 import com.TTT.TTT.Common.dtos.CommonDto;
 import com.TTT.TTT.Common.auth.JwtTokenProvider;
 import com.TTT.TTT.Post.domain.Post;
+import com.TTT.TTT.Post.dtos.PostAllListDto;
+import com.TTT.TTT.Post.dtos.PostDetailDto;
 import com.TTT.TTT.User.UserService.UserService;
 import com.TTT.TTT.User.domain.User;
 import com.TTT.TTT.User.dtos.*;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -80,7 +83,7 @@ public class UserController {
 //    4.내가 쓴 게시글 조회(**포스트 쪽 들어오면 포스트아닌 조회용DTO리턴하도록 수정 계획)
     @GetMapping("/myPostList")
     public ResponseEntity<?> myPostList(){
-        List<Post> myPostList = userService.myPostList();
+        List<PostDetailDto> myPostList = userService.myPostList();
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "my postList upload sueccess",myPostList),HttpStatus.OK);
     }
 
@@ -119,6 +122,12 @@ public class UserController {
              return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"deletion success","success"),HttpStatus.OK);
     }
 
+//    10.내가 좋아요한 목록 조회
+    @GetMapping("/myLikeList")
+    public ResponseEntity<?> myLikeList(@PageableDefault(size = 10) Pageable pageable){
+        Page<PostAllListDto> myListForLikes = userService. myLikeList(pageable);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "myLikeList is uploaded successfully",myListForLikes),HttpStatus.OK);
+    }
 
 
     //유저 개인정보조회
