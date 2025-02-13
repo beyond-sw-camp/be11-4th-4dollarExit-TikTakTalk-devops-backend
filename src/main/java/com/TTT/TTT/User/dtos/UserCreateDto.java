@@ -46,12 +46,14 @@ public class UserCreateDto {
             message = "올바르지 않은 휴대폰 번호 입니다."
     )
     private String phoneNumber;
-    @NotBlank(message = "휴대폰인증필요")
-    private String phoneNumberInput;
+//    @NotBlank(message = "휴대폰인증필요")
+//    private String phoneNumberInput;
 
     @NotBlank(message = "닉네임은 필수입니다.")
     @Size(max = 8, min = 2, message = "닉네임은 2자 이상, 8자 이하여야 합니다.")
-    @ForbiddenWords(words = {"admin", "root", "superuser"}, message = "욕설이 포함되어있습니다.") // 추가 금지어 설정 가능
+//    닉네임을 admin으로 설정하려해도 욕설이 포함되어있습니다로 출력되어
+//    욕설 혹은 사용이 금지된 닉네임입니다로 메세지변경.
+    @ForbiddenWords(words = {"admin", "root", "superuser"}, message = "욕설 혹은 사용이 금지된 닉네임입니다.") // 추가 금지어 설정 가능
     private String nickName;
 
     @NotBlank(message = "블로그링크는 필수입니다.")
