@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class PostCategoryListDto {
+    private Long categoryId;
     private String categoryName;
 }

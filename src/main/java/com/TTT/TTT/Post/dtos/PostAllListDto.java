@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class PostAllListDto {
+    private Long postId;
     private String title;
     private LocalDateTime createdTime;
     private String AuthorNickName;
