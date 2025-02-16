@@ -74,16 +74,20 @@ public class ChatService {
         }
     }
 
-    public void createGroupRoom(ChatRoomCreateReqDto dto){
+    public void createGroupRoom(String roomName){
         User user = userRepository.findByLoginIdAndDelYN(SecurityContextHolder.getContext().getAuthentication().getName(),DelYN.N).orElseThrow(()->new EntityNotFoundException("User cannot be found"));
 //        이미 방이름이 존재한다면 에러
-        if (chatRoomRepository.findByName(dto.getRoomName()).isPresent()) {
+        if (roomName.length() < 2 || roomName.length() > 20) {
+            throw new IllegalArgumentException("방제목은 최소 2글자 최대 20글자 입니다.");
+        }
+
+        if (chatRoomRepository.findByName(roomName).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 방 이름입니다.");
         }
 
 //        채팅방 생성
         ChatRoom chatRoom = ChatRoom.builder()
-                .name(dto.getRoomName())
+                .name(roomName)
 //                그룹채팅방이므로 Y
                 .isGroupChat("Y")
                 .build();

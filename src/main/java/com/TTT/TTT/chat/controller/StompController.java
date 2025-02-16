@@ -3,6 +3,8 @@ package com.TTT.TTT.chat.controller;
 import com.TTT.TTT.chat.dto.ChatMessageDto;
 import com.TTT.TTT.chat.service.ChatService;
 import com.TTT.TTT.chat.service.RedisPubSubService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -19,8 +21,12 @@ public class StompController {
     }
 
     @MessageMapping("/{roomId}")
-    public void sendMessage(@DestinationVariable Long roomId, ChatMessageDto dto) {
+    public void sendMessage(@DestinationVariable Long roomId, ChatMessageDto dto) throws JsonProcessingException {
         System.out.println(dto.getMessage());
-        messageTemplate.convertAndSend("/topic"+roomId, dto);
+        chatService.saveMessage(roomId, dto);
+        dto.setRoomId(roomId);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String message = objectMapper.writeValueAsString(dto);
+        pubSubService.publish("chat", message);
     }
 }

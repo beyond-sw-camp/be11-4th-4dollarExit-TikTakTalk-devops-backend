@@ -24,8 +24,8 @@ public class ChatController {
 
 //    그룹채팅방 개설
     @PostMapping("/room/group/create")
-    public ResponseEntity<?> createGroupRoom(@RequestBody @Valid ChatRoomCreateReqDto dto){
-        chatService.createGroupRoom(dto);
+    public ResponseEntity<?> createGroupRoom(@RequestParam String roomName){
+        chatService.createGroupRoom(roomName);
         return new ResponseEntity<>(new CommonDto(HttpStatus.CREATED.value(), "group room is created", "group room is created"), HttpStatus.CREATED);
     }
 
