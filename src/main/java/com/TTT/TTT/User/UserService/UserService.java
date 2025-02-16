@@ -1,16 +1,26 @@
 package com.TTT.TTT.User.UserService;
 
-import com.TTT.TTT.Post.domain.Post;
+//import com.TTT.TTT.Common.smsService.SmsService;
 import com.TTT.TTT.Common.smsService.SmsService;
+import com.TTT.TTT.Post.domain.Post;
+//import com.TTT.TTT.Common.smsService.SmsService;
+import com.TTT.TTT.Post.dtos.PostAllListDto;
+import com.TTT.TTT.Post.dtos.PostDetailDto;
+import com.TTT.TTT.Post.repository.PostRepository;
 import com.TTT.TTT.User.UserRepository.UserRepository;
 import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.User.domain.User;
 import com.TTT.TTT.User.dtos.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,21 +36,31 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
 
 @Service
 @Transactional
 public class UserService {
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
     private final PasswordEncoder passwordEncoder;
     private final S3Client s3Client;
     private final SmsService smsService;
+    @Qualifier("likes")
+    private final RedisTemplate<String,String> redisTemplate;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, S3Client s3Client, SmsService smsService) {
+    public UserService(UserRepository userRepository, PostRepository postRepository, PasswordEncoder passwordEncoder, S3Client s3Client, SmsService smsService,
+                       @Qualifier("likes") RedisTemplate<String, String> redisTemplate) {
         this.userRepository = userRepository;
+        this.postRepository = postRepository;
         this.passwordEncoder = passwordEncoder;
         this.s3Client = s3Client;
         this.smsService = smsService;
+        this.redisTemplate = redisTemplate;
     }
   
     @Value("${cloud.aws.s3.bucket}")
@@ -87,10 +107,11 @@ public class UserService {
     }
 
 // 4. 내가 쓴 게시글 조회
-    public List<Post> myPostList(){
+    public List<PostDetailDto> myPostList(){
       String userLogin =  SecurityContextHolder.getContext().getAuthentication().getName();
       User user = userRepository.findByLoginIdAndDelYN(userLogin,DelYN.N).orElseThrow(()-> new EntityNotFoundException("없는 아이디입니다"));
-      return user.getMyPostList();
+      List<Post> originalPostList = user.getMyPostList();
+      return originalPostList.stream().map(p->p.toDetailDto(redisTemplate)).toList();
     }
 
 //  5. 내 정보 수정
@@ -150,10 +171,27 @@ public class UserService {
         user.userDelete();
 }
 
+    //   10.내가 좋아요한 목록 조회
+    public Page<PostAllListDto> myLikeList(Pageable pageable){
+        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+        String likeMyListKey = "user-"+ loginId + "-myLikeList"; //레디스에 한 유저가 좋아요 한 post의 id들이 저장된 키값
+        Set<String> myLikeListInRedis=redisTemplate.opsForSet().members(likeMyListKey);
+//        레디스에서 셋자료구조에 대해서는 해당 키가 없거나 데이터가 없어도 null을 반환하는게 아니라 빈 set을 반환함. 따라서 null에러 발생x
+        List<PostAllListDto> myLikeListOfList = new ArrayList<>();
 
+            for(String s : myLikeListInRedis){
+                Post post = postRepository.findById(Long.parseLong(s)).orElseThrow(()->new EntityNotFoundException("없는 게시글입니다"));
+                PostAllListDto postAllListDto = post.toAllListDto(redisTemplate);
+                myLikeListOfList.add(postAllListDto);
+            }
 
-
-
+        // 레디스에서 가지고온 Set자료를 List로 변환해주었음(페이지로 리턴하기 위해서 페이지를 수동으로 만들어야하는데 그때 리스트가 필요하기 때문에)
+        int start =(int)pageable.getOffset(); //.getOffset은 현재 페이지의 시작 인덱스를 반환,데이터 리스트에서 몇 번째부터 가져올 지 결정
+        int end = Math.min(start+pageable.getPageSize(),myLikeListOfList.size());//요청한 페이지에 대한 끝 인덱스를 계산, 그런데 전체 리스트 사이즈보다는 작아야 하니까 min메서드 사용
+        List<PostAllListDto> pagedList = myLikeListOfList.subList(start,end);// subList(a,b)는 a번째부터 b-1번째 데이터를 포함한 리스트를 반환
+        return new PageImpl<>(pagedList,pageable,myLikeListOfList.size());
+        //페이지 만드는 객체 PageImpl<>: (content-페이지에 해당하는 데이터 리스트, pageable(페이지번호,페이지 크기를 전달),전체 데이터 개수)
+    }
 
 
     //유저 개인 정보 조회

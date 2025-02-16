@@ -4,6 +4,8 @@ package com.TTT.TTT.User.UserController;
 import com.TTT.TTT.Common.dtos.CommonDto;
 import com.TTT.TTT.Common.auth.JwtTokenProvider;
 import com.TTT.TTT.Post.domain.Post;
+import com.TTT.TTT.Post.dtos.PostAllListDto;
+import com.TTT.TTT.Post.dtos.PostDetailDto;
 import com.TTT.TTT.User.UserService.UserService;
 import com.TTT.TTT.User.domain.User;
 import com.TTT.TTT.User.dtos.*;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -58,9 +61,9 @@ public class UserController {
         User user = userService.userLogin(userLoginDto);
 
 //        일치할 경우 access 토큰 발행 및 userId, token 리턴
-        String jwtToken = jwtTokenProvider.createToken(user.getLoginId(), user.getRole().toString());
+        String jwtToken = jwtTokenProvider.createToken(user.getLoginId(), user.getRole().toString(), user.getNickName());
 //        refresh 토큰도 발행
-        String refreshToken = jwtTokenProvider.createRefreshToken(user.getLoginId(),user.getRole().toString());
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getLoginId(),user.getRole().toString(), user.getNickName());
         redisTemplate.opsForValue().set(user.getLoginId(), refreshToken, 200, TimeUnit.DAYS); //레디스db에 키값으로 로그인 아이디, value로 토큰값을 넣겠다. 그리고 200일지나면 삭제하도록 설정
 
         Map<String, Object> loginInfo = new HashMap<>();
@@ -80,7 +83,7 @@ public class UserController {
 //    4.내가 쓴 게시글 조회(**포스트 쪽 들어오면 포스트아닌 조회용DTO리턴하도록 수정 계획)
     @GetMapping("/myPostList")
     public ResponseEntity<?> myPostList(){
-        List<Post> myPostList = userService.myPostList();
+        List<PostDetailDto> myPostList = userService.myPostList();
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "my postList upload sueccess",myPostList),HttpStatus.OK);
     }
 
@@ -119,6 +122,12 @@ public class UserController {
              return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"deletion success","success"),HttpStatus.OK);
     }
 
+//    10.내가 좋아요한 목록 조회
+    @GetMapping("/myLikeList")
+    public ResponseEntity<?> myLikeList(@PageableDefault(size = 10) Pageable pageable){
+        Page<PostAllListDto> myListForLikes = userService. myLikeList(pageable);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "myLikeList is uploaded successfully",myListForLikes),HttpStatus.OK);
+    }
 
 
     //유저 개인정보조회
@@ -162,7 +171,7 @@ public class UserController {
             return new ResponseEntity<>(new CommonDto(HttpStatus.BAD_REQUEST.value(), "cannot recreate accessToken",null),HttpStatus.BAD_REQUEST);
         }
 
-        String token = jwtTokenProvider.createRefreshToken(claims.getSubject(),claims.get("role").toString());
+        String token = jwtTokenProvider.createRefreshToken(claims.getSubject(),claims.get("role").toString(), claims.get("nickName").toString());
         Map<String, Object> loginInfo = new HashMap<>();
         loginInfo.put("token",token);
         return new ResponseEntity<>(new CommonDto(HttpStatus.CREATED.value(), "accessToken is recreated",loginInfo),HttpStatus.CREATED);

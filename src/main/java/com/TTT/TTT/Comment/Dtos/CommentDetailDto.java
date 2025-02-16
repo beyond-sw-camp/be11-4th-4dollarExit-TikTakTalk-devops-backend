@@ -21,4 +21,13 @@ public class CommentDetailDto {
     private int rankingPointOfCommentAuthor;
     @Builder.Default
     private List<CommentDetailDto> childCommentList=new ArrayList<>();
+
+
+    public CommentDetailDto pretendToDelete(){
+        this.contents="삭제된 댓글입니다";
+        return this;
+    }
+
+
+
 }
