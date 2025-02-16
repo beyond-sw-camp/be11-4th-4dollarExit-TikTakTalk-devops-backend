@@ -26,7 +26,7 @@ public class PostCategoryController {
 //  1.카테고리 리스트 조회
     @GetMapping("/all")
     public ResponseEntity<?> categoryList(){
-      List<String> list=postCategoryService.findAll();
+      List<PostCategoryListDto> list=postCategoryService.findAll();
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "list is uploaded successfully",list),HttpStatus.OK);
     }
 

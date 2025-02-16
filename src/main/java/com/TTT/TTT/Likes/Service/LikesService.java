@@ -15,6 +15,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Service
@@ -39,7 +41,7 @@ public class LikesService {
         this.redisTemplate = redisTemplate;
     }
 
-    public void toggleLike(Long postId){
+    public Map<String, Object> toggleLike(Long postId){
         String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
         User loginUser = userRepository.findByLoginIdAndDelYN(loginId, DelYN.N).orElseThrow(()->new EntityNotFoundException("없는 사용자입니다"));
         Post post = postRepository.findById(postId).orElseThrow(()-> new EntityNotFoundException("없는 게시글입니다"));
@@ -67,6 +69,12 @@ public class LikesService {
                 AuthorOfPost.rankingPointUpdate(10);// 좋아요 받은 글작성자 점수 +10(자기 글에 좋아요 눌러도 점수 안오름)
             }
         }
+        boolean liked = redisTemplate.opsForSet().isMember(likeUserKey,loginUser.getLoginId()); // 해당 유저가 좋아요 눌렀는지 아닌 지 불린값
+        Map<String,Object> likeStatus = new HashMap<>();
+        likeStatus.put("likesCount",Long.parseLong(redisTemplate.opsForValue().get(likeCountKey)));
+        likeStatus.put("liked",liked);
+
+        return likeStatus;
     }
 }
 

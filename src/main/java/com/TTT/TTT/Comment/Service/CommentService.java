@@ -80,11 +80,12 @@ public class CommentService {
     public void delete(Long id){
         String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
         User loginUser = userRepository.findByLoginIdAndDelYN(loginId,DelYN.N).orElseThrow(()->new EntityNotFoundException("존재하지 않는 유저입니다"));
-        Comment comment = commentRepository.findByIdAndDelYN(id,DelYN.N).orElseThrow(()->new EntityNotFoundException("존재 하지않는 댓글입니다"));
+        Comment comment = commentRepository.findById(id).orElseThrow(()->new EntityNotFoundException("존재 하지않는 댓글입니다"));
         if(!loginUser.equals(comment.getUser())){
             throw new AccessDeniedException("해당 댓글의 작성자만이 댓글을 수정할 수 있습니다");
         }
         comment.delete();
+        commentRepository.save(comment);
         loginUser.rankingPointUpdate(-10);//댓글 삭제시 10점 회수
     }
     }

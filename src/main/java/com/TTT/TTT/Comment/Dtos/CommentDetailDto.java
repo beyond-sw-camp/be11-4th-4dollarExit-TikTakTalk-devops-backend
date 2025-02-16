@@ -14,9 +14,11 @@ import java.util.List;
 @Data
 @Builder
 public class CommentDetailDto {
+    private Long commentId;
     private String contents;
     private String profileImageOfCommentAuthor;
     private String nickNameOfCommentAuthor;
+    private String loginIdOfCommentAuthor;
     private LocalDateTime createdTime;
     private int rankingPointOfCommentAuthor;
     @Builder.Default
@@ -24,7 +26,7 @@ public class CommentDetailDto {
 
 
     public CommentDetailDto pretendToDelete(){
-        this.contents="삭제된 댓글입니다";
+        this.contents="[삭제된 댓글입니다]";
         return this;
     }
 

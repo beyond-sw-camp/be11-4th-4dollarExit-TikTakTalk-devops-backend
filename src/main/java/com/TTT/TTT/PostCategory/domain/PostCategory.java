@@ -2,6 +2,7 @@ package com.TTT.TTT.PostCategory.domain;
 
 import com.TTT.TTT.Common.domain.BaseTimeEntity;
 import com.TTT.TTT.Post.domain.Post;
+import com.TTT.TTT.PostCategory.Dtos.PostCategoryListDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,4 +25,11 @@ public class PostCategory extends BaseTimeEntity {
     @OneToMany(mappedBy = "category")
     @Builder.Default
     List<Post> posts = new ArrayList<>();
+
+    public PostCategoryListDto toDto(){
+        return new PostCategoryListDto(this.id,this.categoryName);
+    }
+
+
+
 }

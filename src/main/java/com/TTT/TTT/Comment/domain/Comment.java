@@ -63,11 +63,16 @@ public class Comment extends BaseTimeEntity {
         for(Comment childC : this.childs) {
             if(childC.getDelYN()==DelYN.N) {
                 childDetailList.add(childC.toDetailDto()); //재귀호출!!
+            } else if(childC.getDelYN()==DelYN.Y){
+                childDetailList.add(childC.toDetailDto().pretendToDelete()); //삭제된것 처럼 처리하여 또 대댓글도 보일 수 있도록
+            }
 
-            } }
+        }
                 return CommentDetailDto.builder()
-                        .contents(this.contents)
+                        .commentId(this.id)
+                        .contents(this.delYN == DelYN.Y ? "[삭제된 댓글입니다]" : this.contents) // 삭제처리한 댓글이라면 [삭제된 댓글]표시 아니면 원래 내용표시
                         .profileImageOfCommentAuthor(this.user.getProfileImagePath())
+                        .loginIdOfCommentAuthor(this.user.getLoginId())
                         .nickNameOfCommentAuthor(this.user.getNickName())
                         .rankingPointOfCommentAuthor(this.user.getRankingPoint())
                         .childCommentList(childDetailList)
