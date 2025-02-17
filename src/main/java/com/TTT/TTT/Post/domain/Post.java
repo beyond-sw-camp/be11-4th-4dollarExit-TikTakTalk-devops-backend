@@ -18,6 +18,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +87,7 @@ public class Post extends BaseTimeEntity {
 
 
         return PostListDto.builder()
+                .postId(this.id)
                 .title(this.title)
                 .createdTime(this.getCreatedTime())
                 .AuthorNickName(this.user.getNickName())
@@ -100,6 +103,7 @@ public class Post extends BaseTimeEntity {
         int likeCount = likeCountValue == null || likeCountValue.equals("0") ? 0 : Integer.parseInt(likeCountValue); //레디스는 숫자형이 없이 문자열이다. 레디스에서 0값은 null이다
 
         return PostAllListDto.builder()
+                .postId(this.id)
                 .title(this.title)
                 .categoryName(this.category.getCategoryName())
                 .createdTime(this.getCreatedTime())
@@ -133,16 +137,21 @@ public class Post extends BaseTimeEntity {
         }
 
         String likeCountKey = "post-" + this.id + "-likeCount";
+        String likeUserKey = "post-" + this.id +"-likeUsers";
         String likeCountValue = redisTemplate.opsForValue().get(likeCountKey);
         int likesCount = likeCountValue==null||likeCountValue=="0" ? 0:Integer.parseInt(likeCountValue);
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        boolean liked = redisTemplate.opsForSet().isMember(likeUserKey,userId);
 
         return PostDetailDto.builder()
                 .title(this.title)
                 .contents(this.contents)
-                .AuthorNickName(this.user.getNickName())
-                .ProfileImageOfAuthor(this.user.getProfileImagePath())
+                .authorId(this.user.getLoginId())
+                .authorNickName(this.user.getNickName())
+                .profileImageOfAuthor(this.user.getProfileImagePath())
                 .rankingPointOfAuthor(this.user.getRankingPoint())
                 .likesCount(likesCount)
+                .liked(liked)
                 .attachmentsUrl(attachmentUrls)
                 .commentList(topLevelComments)
                 .createdTime(this.getCreatedTime())

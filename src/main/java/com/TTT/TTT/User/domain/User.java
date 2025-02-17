@@ -4,6 +4,7 @@ import com.TTT.TTT.Common.Annotation.ForbiddenWords;
 import com.TTT.TTT.Common.domain.BaseTimeEntity;
 import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.Likes.domain.Likes;
+import com.TTT.TTT.ListTap.blogList.dtos.BlogLinkResponseDto;
 import com.TTT.TTT.Post.domain.Post;
 import com.TTT.TTT.User.dtos.*;
 import jakarta.persistence.*;
@@ -109,6 +110,7 @@ public class User extends BaseTimeEntity {
                 .email(this.email)
                 .phoneNumber(this.phoneNumber)
                 .nickName(this.nickName)
+                .rankingPoint(this.rankingPoint)
                 .batch(this.batch)
                 .blogLink(this.blogLink)
                 .build();
@@ -120,6 +122,15 @@ public class User extends BaseTimeEntity {
                 .batch(this.batch)
                 .rankingPoint(this.rankingPoint)
                 .profileImagePath(this.profileImagePath)
+                .build();
+    }
+
+//    블로그 링크 를 위해
+    public BlogLinkResponseDto  toBlogDto(){
+        return BlogLinkResponseDto.builder()
+                .userId(this.id)
+                .blogUrl(this.blogLink)
+                .batch(this.batch)
                 .build();
     }
 

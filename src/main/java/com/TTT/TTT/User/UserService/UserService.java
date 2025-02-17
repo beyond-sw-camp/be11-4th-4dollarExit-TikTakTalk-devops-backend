@@ -87,6 +87,11 @@ public class UserService {
 //        smsService.verifyAuthCode(phoneNumder,inputNumber);
 
         userRepository.save(userCreateDto.toEntity(passwordEncoder.encode(userCreateDto.getPassword())));
+
+
+//
+//        User user = new User(userCreateDto.getLoginId(),userCreateDto.getName())
+
     }
 // 2.로그인
     public User userLogin(UserLoginDto userLoginDto){
