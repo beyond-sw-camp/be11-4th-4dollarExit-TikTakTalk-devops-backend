@@ -1,10 +1,6 @@
 package com.TTT.TTT.Common.smsController;
 
-import com.TTT.TTT.Common.dtos.PhoneRequest;
 import com.TTT.TTT.Common.smsService.SmsService;
-import net.nurigo.sdk.message.exception.NurigoEmptyResponseException;
-import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
-import net.nurigo.sdk.message.exception.NurigoUnknownException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,8 +15,8 @@ public class SmsController {
 
     // 인증번호 전송 API (휴대폰 번호 입력 시 전송)
     @PostMapping("/send-auth")
-    public String sendAuthCode(@RequestBody PhoneRequest request) {
-        return smsService.sendAuthCode(request.getPhoneNumber());
+    public String sendAuthCode(@RequestBody String phoneNumber) {
+        return smsService.sendAuthCode(phoneNumber);
     }
 
     // 인증번호 검증 API

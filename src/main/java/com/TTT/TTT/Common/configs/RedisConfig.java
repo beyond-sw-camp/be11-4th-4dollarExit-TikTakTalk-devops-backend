@@ -45,14 +45,6 @@ public class RedisConfig {
         return new LettuceConnectionFactory(configuration); //위에서 설정한 configuration을 기반으로 레디스에 연결할 객체
     }
 
-    //sms기능 간섭안하는지 체크---------------------------------------------------------------------------------------------
-    @Bean
-    @Qualifier("sms")
-    public StringRedisTemplate stringRedisTemplateforSms(@Qualifier("sms") RedisConnectionFactory redisConnectionFactory) {
-        return new StringRedisTemplate(redisConnectionFactory);
-    }
-//    ------------------------
-
     @Bean(name = "redisTemplate")
     @Qualifier("rtdb")
 //    RedisTemplate는 레디스DB와의 데이터 입출력작업을 간편하게 도와주는 스프링 클래스
@@ -103,7 +95,15 @@ public class RedisConfig {
         return new MessageListenerAdapter(redisPubSubService, "onMessage");
     }
 
-
+    //sms기능 간섭안하는지 체크---------------------------------------------------------------------------------------------
+    @Bean
+    @Qualifier("sms")
+    public StringRedisTemplate stringRedisTemplateforSms(@Qualifier("sms") RedisConnectionFactory redisConnectionFactory) {
+        StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
+        stringRedisTemplate.setConnectionFactory(redisConnectionFactory);
+        return stringRedisTemplate;
+    }
+//    ------------------------
 
     @Bean
     @Qualifier("likes")
