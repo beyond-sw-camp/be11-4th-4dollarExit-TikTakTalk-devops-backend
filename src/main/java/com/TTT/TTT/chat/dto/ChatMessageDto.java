@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class ChatMessageDto {
     private Long roomId;
     private String message;
-    private String senderNickname;
+    private String senderNickName;
 }

@@ -51,7 +51,7 @@ public class ChatService {
         ChatRoom chatRoom = chatRoomRepository.findByIdAndExitYN(roomId, ExitYN.N).orElseThrow(()-> new EntityNotFoundException("room cannot be found"));
 
 //        보낸사람조회
-        User sender = userRepository.findByNickNameAndDelYN(chatMessageReqDto.getSenderNickname(),DelYN.N).orElseThrow(()-> new EntityNotFoundException("user cannot be found"));
+        User sender = userRepository.findByNickNameAndDelYN(chatMessageReqDto.getSenderNickName(),DelYN.N).orElseThrow(()-> new EntityNotFoundException("user cannot be found"));
 
 //        메시지저장
         ChatMessage chatMessage = ChatMessage.builder()
@@ -186,7 +186,7 @@ public class ChatService {
                     .roomId(chatRoom.getId())
                     .message(c.getContent())
 //                    ChatMessage에 메세지를 보낸 User의 정보에서 닉네임을 꺼내 senderNickname에 세팅.
-                    .senderNickname(c.getUser().getNickName())
+                    .senderNickName(c.getUser().getNickName())
                     .build();
             chatMessageDtos.add(chatMessageDto);
         }

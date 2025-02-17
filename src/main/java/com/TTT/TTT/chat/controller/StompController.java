@@ -8,7 +8,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.stereotype.Controller;
 
+@Controller
 public class StompController {
     private final SimpMessageSendingOperations messageTemplate;
     private final ChatService chatService;
@@ -22,9 +24,9 @@ public class StompController {
 
     @MessageMapping("/{roomId}")
     public void sendMessage(@DestinationVariable Long roomId, ChatMessageDto dto) throws JsonProcessingException {
-        System.out.println(dto.getMessage());
         chatService.saveMessage(roomId, dto);
         dto.setRoomId(roomId);
+//        messageTemplate.convertAndSend("/topic/" + roomId, dto);
         ObjectMapper objectMapper = new ObjectMapper();
         String message = objectMapper.writeValueAsString(dto);
         pubSubService.publish("chat", message);
