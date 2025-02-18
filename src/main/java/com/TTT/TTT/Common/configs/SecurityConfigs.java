@@ -37,7 +37,7 @@ public class SecurityConfigs {
                 .authorizeHttpRequests(a->a.requestMatchers(
                         "/sms/**","/ttt/user/"
                         , "/ttt/user/create", "/ttt/user/login","ttt/user/refresh-token"
-                        ,"ttt/category/all").permitAll().anyRequest().authenticated())
+                        ,"ttt/category/all","/connect/**").permitAll().anyRequest().authenticated())
                 .sessionManagement(s-> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //세션방식을 사용하지 않겠다라는 의미
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

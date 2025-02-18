@@ -151,7 +151,7 @@ public class ChatService {
 //        이미 참여자인지 검증
         Optional<ChatParticipant> participant = chatParticipantRepository.findByChatRoomAndUser(chatRoom, user);
 //        참여자가 아닐 경우에만 참여자로 유저추가.
-        if (participant.isPresent()) {
+        if (!participant.isPresent()) {
             addParticipantToRoom(chatRoom, user); //addParticipantToRoom 메서드는 바로 밑에서 정의
         }
     }
