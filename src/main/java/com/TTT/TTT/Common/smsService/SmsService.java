@@ -58,6 +58,7 @@ public class SmsService {
     public boolean verifyAuthCode(String phoneNumber, String inputCode) {
         //Redis에서 해당 phoneNumber 키에 저장된 인증번호를 가져온다.
         String savedCode = redisTemplate.opsForValue().get(phoneNumber);
+        System.out.println("savedCode : " + savedCode);
         return savedCode != null && savedCode.equals(inputCode);
     }
 
