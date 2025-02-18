@@ -2,6 +2,9 @@ package com.TTT.TTT.Common.smsController;
 
 import com.TTT.TTT.Common.dtos.AutoCodeDto;
 import com.TTT.TTT.Common.smsService.SmsService;
+import net.nurigo.sdk.message.exception.NurigoEmptyResponseException;
+import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
+import net.nurigo.sdk.message.exception.NurigoUnknownException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
