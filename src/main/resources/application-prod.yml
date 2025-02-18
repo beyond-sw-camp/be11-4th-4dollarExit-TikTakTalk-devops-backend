@@ -50,6 +50,6 @@ cloud:
 
 # 휴대폰 API 관련설정
 coolsms:
-  apiKey: "NCSFPOL1YZABX8MU"
-  apiSecret: "A7WZLGJOM2GA1HD4BJHBG6GQVHWFHMWA"
-  fromNumber: "01095539812" # 발신번호
+  apiKey: "NCSCSP7I4XPD9MBJ"
+  apiSecret: "G2M6XS65E22ZUMTRNISYQ3QXZFGRIRCT"
+  fromNumber: "01024982285" # 발신번호
