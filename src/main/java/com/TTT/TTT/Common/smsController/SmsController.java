@@ -1,6 +1,10 @@
 package com.TTT.TTT.Common.smsController;
 
+import com.TTT.TTT.Common.dtos.AutoCodeDto;
 import com.TTT.TTT.Common.smsService.SmsService;
+import net.nurigo.sdk.message.exception.NurigoEmptyResponseException;
+import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
+import net.nurigo.sdk.message.exception.NurigoUnknownException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,14 +19,14 @@ public class SmsController {
 
     // 인증번호 전송 API (휴대폰 번호 입력 시 전송)
     @PostMapping("/send-auth")
-    public String sendAuthCode(@RequestBody String phoneNumber) {
-        return smsService.sendAuthCode(phoneNumber);
+    public String sendAuthCode(@RequestBody AutoCodeDto dto) {
+        return smsService.sendAuthCode(dto.getPhoneNumber());
     }
 
     // 인증번호 검증 API
     @PostMapping("/verify-auth")
-    public String verifyAuthCode(@RequestBody String phoneNumber, @RequestBody String authCode) {
-        boolean isValid = smsService.verifyAuthCode(phoneNumber, authCode);
+    public String verifyAuthCode(@RequestBody AutoCodeDto dto) {
+        boolean isValid = smsService.verifyAuthCode(dto.getPhoneNumber(), dto.getAuthCode());
         //실패하면 다시 돌아가야하는 메서드 생각해야함.
         return isValid ? "인증 성공!" : "인증 실패!";
     }
