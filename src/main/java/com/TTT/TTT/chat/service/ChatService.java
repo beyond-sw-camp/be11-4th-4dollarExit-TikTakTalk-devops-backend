@@ -191,6 +191,7 @@ public class ChatService {
                     .message(c.getContent())
 //                    ChatMessage에 메세지를 보낸 User의 정보에서 닉네임을 꺼내 senderNickname에 세팅.
                     .senderNickName(c.getUser().getNickName())
+                    .sendTime(c.getCreatedTime())
                     .build();
             chatMessageDtos.add(chatMessageDto);
         }
