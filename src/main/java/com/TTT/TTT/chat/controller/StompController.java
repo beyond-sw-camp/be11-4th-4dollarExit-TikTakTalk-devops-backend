@@ -31,4 +31,6 @@ public class StompController {
         String message = objectMapper.writeValueAsString(dto);
         pubSubService.publish("chat", message);
     }
+
+
 }
