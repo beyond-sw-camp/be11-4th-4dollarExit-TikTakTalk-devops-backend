@@ -68,7 +68,7 @@ public class UserService {
 
 // 1.회원가입
     public void userCreate(UserCreateDto userCreateDto) throws IllegalArgumentException {
-        if (!smsService.verifyAuthCode(userCreateDto.getPhoneNumber(), userCreateDto.getPhoneNumberInput())) {
+        if (!smsService.verifyAuthCode(userCreateDto.getPhoneNumber(), userCreateDto.getAuthCode())) {
             throw new IllegalArgumentException("휴대폰 인증이 완료되지 않았습니다.");
         }
         if (userRepository.findByLoginIdAndDelYN(userCreateDto.getLoginId(), DelYN.N).isPresent()) {
@@ -82,9 +82,9 @@ public class UserService {
         }
         //휴대폰검증로직
         String phoneNumder = userCreateDto.getPhoneNumber();
-        String inputNumber = userCreateDto.getPhoneNumberInput();
+        String authCode = userCreateDto.getAuthCode();
         smsService.sendAuthCode(phoneNumder);
-        smsService.verifyAuthCode(phoneNumder,inputNumber);
+        smsService.verifyAuthCode(phoneNumder,authCode);
 
         userRepository.save(userCreateDto.toEntity(passwordEncoder.encode(userCreateDto.getPassword())));
 
