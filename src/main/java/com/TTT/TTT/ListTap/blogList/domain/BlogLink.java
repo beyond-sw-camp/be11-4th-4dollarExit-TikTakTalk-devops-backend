@@ -31,11 +31,4 @@ public class BlogLink {
     @Column(nullable = false, length = 255)
     private String blogUrl;
 
-    public void setBlogUrl(String blogUrl) {
-        if (!blogUrl.startsWith("http://") && !blogUrl.startsWith("https://")) {
-            this.blogUrl = "https://" + blogUrl;
-        }else {
-            this.blogUrl = blogUrl;
-        }
-    }
 }
