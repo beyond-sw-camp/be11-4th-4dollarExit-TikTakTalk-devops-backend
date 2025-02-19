@@ -25,6 +25,17 @@ public class BlogLink {
     @Column(nullable = false)
     private String name; // 유저 이름 (검색 용)
 
+    @Column
+    private String nickName;// 유저 닉네임
+
     @Column(nullable = false, length = 255)
     private String blogUrl;
+
+    public void setBlogUrl(String blogUrl) {
+        if (!blogUrl.startsWith("http://") && !blogUrl.startsWith("https://")) {
+            this.blogUrl = "https://" + blogUrl;
+        }else {
+            this.blogUrl = blogUrl;
+        }
+    }
 }

@@ -129,6 +129,8 @@ public class User extends BaseTimeEntity {
     public BlogLinkResponseDto  toBlogDto(){
         return BlogLinkResponseDto.builder()
                 .userId(this.id)
+                .name(this.name)
+                .nickName(this.nickName)
                 .blogUrl(this.blogLink)
                 .batch(this.batch)
                 .build();
