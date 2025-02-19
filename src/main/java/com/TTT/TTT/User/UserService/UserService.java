@@ -70,9 +70,9 @@ public class UserService {
 
 // 1.회원가입
     public void userCreate(UserCreateDto userCreateDto) throws IllegalArgumentException {
-//        if (!smsService.verifyAuthCode(userCreateDto.getPhoneNumber(), userCreateDto.getPhoneNumberInput())) {
-//            throw new IllegalArgumentException("휴대폰 인증이 완료되지 않았습니다.");
-//        } 휴대폰 검증 로직
+        if (!smsService.verifyAuthCode(userCreateDto.getPhoneNumber(), userCreateDto.getAuthCode())) {
+            throw new IllegalArgumentException("휴대폰 인증이 완료되지 않았습니다.");
+        }
         if (userRepository.findByLoginIdAndDelYN(userCreateDto.getLoginId(), DelYN.N).isPresent()) {
             throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
         }
@@ -83,10 +83,10 @@ public class UserService {
             throw new IllegalArgumentException("이미 사용중인 이메일입니다.");
         }
         //휴대폰검증로직
-//        String phoneNumder = userCreateDto.getPhoneNumber();
-//        String inputNumber = userCreateDto.getPhoneNumberInput();
-//        smsService.sendAuthCode(phoneNumder);
-//        smsService.verifyAuthCode(phoneNumder,inputNumber);
+        String phoneNumder = userCreateDto.getPhoneNumber();
+        String authCode = userCreateDto.getAuthCode();
+        smsService.sendAuthCode(phoneNumder);
+        smsService.verifyAuthCode(phoneNumder,authCode);
 
         userRepository.save(userCreateDto.toEntity(passwordEncoder.encode(userCreateDto.getPassword())));
 
