@@ -75,6 +75,12 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Likes> myLikes = new ArrayList<>();
 
+//    로그인 타입
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType;
+
+    private String socialId;
+
     //프로필 사진
     private String profileImagePath;
 

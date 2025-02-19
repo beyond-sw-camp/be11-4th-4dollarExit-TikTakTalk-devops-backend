@@ -53,3 +53,10 @@ coolsms:
   apiKey: "NCSFPOL1YZABX8MU"
   apiSecret: "A7WZLGJOM2GA1HD4BJHBG6GQVHWFHMWA"
   fromNumber: "01095539812" # 발신번호
+
+# oauth 로그인 설정
+oauth:
+  google:
+    client-id: 906300369324-bj1gkpi8ltlkr4jjq40pq8orl90ulvbg.apps.googleusercontent.com
+    client-secret : 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
+    redirect-url: http://localhost:3000/oauth/google/redirect

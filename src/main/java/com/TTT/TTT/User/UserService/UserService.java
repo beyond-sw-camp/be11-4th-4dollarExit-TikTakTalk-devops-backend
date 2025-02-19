@@ -9,6 +9,8 @@ import com.TTT.TTT.Post.dtos.PostDetailDto;
 import com.TTT.TTT.Post.repository.PostRepository;
 import com.TTT.TTT.User.UserRepository.UserRepository;
 import com.TTT.TTT.Common.domain.DelYN;
+import com.TTT.TTT.User.domain.Role;
+import com.TTT.TTT.User.domain.SocialType;
 import com.TTT.TTT.User.domain.User;
 import com.TTT.TTT.User.dtos.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -227,6 +229,23 @@ public class UserService {
         User user = userRepository.findByLoginIdAndDelYN(dto.getLoginId(), DelYN.N).orElseThrow(()->new EntityNotFoundException("없는 사용자입니다"));
         // 아직 로그인 안넣었음 .
 //        user.updateUserPassword(passwordEncoder.encode(dto.getNewPassword()));
+    }
+
+
+    public User userOauthCreate(String socialId, SocialType socialType, String email){
+
+        User newUser = User.builder().batch(0).blogLink("")
+                .email(email).name("").nickName(email)
+                .password(passwordEncoder.encode("1q2w3e4r")).phoneNumber("")
+                .loginId(email).delYN(DelYN.N).role(Role.USER)
+                .socialType(socialType).socialId(socialId)
+                .build();
+        return userRepository.save(newUser);
+    }
+
+    public User getUserByOauthId(String socialId) {
+        User user = userRepository.findBySocialId(socialId).orElse(null);
+        return user;
     }
 
 
