@@ -3,12 +3,17 @@ package com.TTT.TTT.User.UserController;
 
 import com.TTT.TTT.Common.dtos.CommonDto;
 import com.TTT.TTT.Common.auth.JwtTokenProvider;
-import com.TTT.TTT.Post.domain.Post;
+import com.TTT.TTT.Oauth.Service.GoogleService;
+import com.TTT.TTT.Oauth.dtos.GoogleProfile;
+import com.TTT.TTT.Oauth.dtos.OAuthToken;
+import com.TTT.TTT.User.dtos.RedirectCode;
 import com.TTT.TTT.Post.dtos.PostAllListDto;
 import com.TTT.TTT.Post.dtos.PostDetailDto;
 import com.TTT.TTT.User.UserService.UserService;
+import com.TTT.TTT.User.domain.SocialType;
 import com.TTT.TTT.User.domain.User;
 import com.TTT.TTT.User.dtos.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.validation.Valid;
@@ -16,7 +21,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -38,11 +42,13 @@ public class UserController {
     private final JwtTokenProvider jwtTokenProvider;
     @Qualifier("rtdb")
     private final RedisTemplate<String,Object> redisTemplate;
+    private final GoogleService googleService;
 
-    public UserController(UserService userService, JwtTokenProvider jwtTokenProvider, @Qualifier("rtdb") RedisTemplate<String, Object> redisTemplate) {
+    public UserController(UserService userService, JwtTokenProvider jwtTokenProvider, @Qualifier("rtdb") RedisTemplate<String, Object> redisTemplate, GoogleService googleService) {
         this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
         this.redisTemplate = redisTemplate;
+        this.googleService = googleService;
     }
 
     @Value("${jwt.secretKeyRt}")
@@ -175,5 +181,30 @@ public class UserController {
         Map<String, Object> loginInfo = new HashMap<>();
         loginInfo.put("token",token);
         return new ResponseEntity<>(new CommonDto(HttpStatus.CREATED.value(), "accessToken is recreated",loginInfo),HttpStatus.CREATED);
+    }
+
+//    google oauth 로그인 (Oauth 로그인시 Role은 USER로 고정
+    @PostMapping("/google/doLogin")
+    public ResponseEntity<?> googleLogin(@RequestBody RedirectCode redirectCode) throws JsonProcessingException {
+        OAuthToken oAuthToken = googleService.getAccessToken(redirectCode.getCode());
+        GoogleProfile googleProfile = googleService.getGoogleProfile(oAuthToken.getAccess_token());
+
+        User user = userService.getUserByOauthId(googleProfile.getSub());
+        if(user == null) {
+            user = userService.userOauthCreate(googleProfile.getSub(), SocialType.GOOGLE, googleProfile.getEmail());
+        }
+
+        String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString(), user.getNickName());
+        //        refresh 토큰도 발행
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getLoginId(),user.getRole().toString(), user.getNickName());
+        redisTemplate.opsForValue().set(user.getLoginId(), refreshToken, 200, TimeUnit.DAYS); //레디스db에 키값으로 로그인 아이디, value로 토큰값을 넣겠다. 그리고 200일지나면 삭제하도록 설정
+
+        System.out.println(jwtToken);
+        Map<String,Object> loginInfo = new HashMap<>();
+        loginInfo.put("id", user.getId());
+        loginInfo.put("token", jwtToken);
+        loginInfo.put("refreshToken", refreshToken);
+//            로그인 처리
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "oauth login success", loginInfo),HttpStatus.OK);
     }
 }

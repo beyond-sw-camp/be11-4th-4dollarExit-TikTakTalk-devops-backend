@@ -3,6 +3,7 @@ package com.TTT.TTT.User.dtos;
 import com.TTT.TTT.Common.Annotation.ForbiddenWords;
 import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.User.domain.Role;
+import com.TTT.TTT.User.domain.SocialType;
 import com.TTT.TTT.User.domain.User;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -68,10 +69,17 @@ public class UserCreateDto {
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
+    @Builder.Default
+    private SocialType socialType = SocialType.NONE;
+
+    private String socialId;
+
     public User toEntity(String password) {
         return User.builder().batch(this.batch).blogLink(this.blogLink)
                             .email(this.email).name(this.name).nickName(this.nickName)
                             .password(password).phoneNumber(this.phoneNumber)
-                            .loginId(this.loginId).delYN(this.delYN).role(this.role).build();
+                            .loginId(this.loginId).delYN(this.delYN).role(this.role)
+                            .socialType(this.socialType).socialId(this.socialId)
+                            .build();
     }
 }
