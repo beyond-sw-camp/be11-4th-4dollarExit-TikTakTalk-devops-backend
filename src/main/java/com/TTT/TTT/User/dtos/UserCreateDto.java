@@ -46,8 +46,8 @@ public class UserCreateDto {
             message = "올바르지 않은 휴대폰 번호 입니다."
     )
     private String phoneNumber;
-//    @NotBlank(message = "휴대폰인증필요")
-//    private String phoneNumberInput;
+    @NotBlank(message = "휴대폰인증필요")
+    private String authCode;
 
     @NotBlank(message = "닉네임은 필수입니다.")
     @Size(max = 8, min = 2, message = "닉네임은 2자 이상, 8자 이하여야 합니다.")
