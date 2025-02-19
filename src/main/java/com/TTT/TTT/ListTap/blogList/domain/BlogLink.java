@@ -1,6 +1,5 @@
 package com.TTT.TTT.ListTap.blogList.domain;
 
-import com.TTT.TTT.User.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,9 +14,6 @@ public class BlogLink {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", nullable = false)
-//    private User user;
 
     @Column(nullable = false)
     private Integer batch; // 기수 (검색 용)

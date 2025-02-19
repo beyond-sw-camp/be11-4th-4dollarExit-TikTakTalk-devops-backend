@@ -1,13 +1,9 @@
 package com.TTT.TTT.ListTap.blogList.service;
 
-import com.TTT.TTT.ListTap.blogList.domain.BlogLink;
 import com.TTT.TTT.ListTap.blogList.dtos.BlogLinkResponseDto;
 import com.TTT.TTT.ListTap.blogList.dtos.BlogLinkSearchDto;
 import com.TTT.TTT.User.UserRepository.UserRepository;
 import com.TTT.TTT.User.domain.User;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 @Service
 @Transactional
