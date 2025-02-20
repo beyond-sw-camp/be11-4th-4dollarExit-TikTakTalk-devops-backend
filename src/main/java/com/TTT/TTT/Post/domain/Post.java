@@ -105,6 +105,7 @@ public class Post extends BaseTimeEntity {
         return PostAllListDto.builder()
                 .postId(this.id)
                 .title(this.title)
+                .contents(this.contents)
                 .categoryName(this.category.getCategoryName())
                 .createdTime(this.getCreatedTime())
                 .AuthorNickName(this.user.getNickName())
