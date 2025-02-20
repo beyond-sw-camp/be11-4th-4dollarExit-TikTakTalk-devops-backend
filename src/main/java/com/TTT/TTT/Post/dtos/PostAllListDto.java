@@ -17,6 +17,7 @@ public class PostAllListDto {
     private LocalDateTime createdTime;
     private String AuthorNickName;
     private String AuthorImage;
+    private String contents;
     //  댓글 안달리면 0개 초기값 주기 위해 int로 설정
     private int countOfComment;
     private int LikesCount;
