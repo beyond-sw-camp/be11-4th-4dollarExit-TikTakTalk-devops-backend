@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @Data
 public class UserProfileUpdateDto {
+    private String email;
     private String phoneNumber;
     private String nickName;
     private String blogLink;

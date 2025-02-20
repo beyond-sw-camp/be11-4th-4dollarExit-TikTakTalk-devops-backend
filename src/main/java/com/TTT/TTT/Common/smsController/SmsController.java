@@ -2,6 +2,7 @@ package com.TTT.TTT.Common.smsController;
 
 import com.TTT.TTT.Common.dtos.AutoCodeDto;
 import com.TTT.TTT.Common.smsService.SmsService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,11 +24,14 @@ public class SmsController {
 
     // 인증번호 검증 API
     @PostMapping("/verify-auth")
-    public String verifyAuthCode(@RequestBody AutoCodeDto dto) {
+    public ResponseEntity<String> verifyAuthCode(@RequestBody AutoCodeDto dto) {
         System.out.println("authCode " + dto.getAuthCode());
         boolean isValid = smsService.verifyAuthCode(dto.getPhoneNumber(), dto.getAuthCode());
-        //실패하면 다시 돌아가야하는 메서드 생각해야함.
-        return isValid ? "인증 성공!" : "인증 실패!";
+        if (isValid) {
+            return ResponseEntity.ok("인증 성공!"); // 200 OK
+        } else {
+            return ResponseEntity.badRequest().body("인증 실패!"); // 400 Bad Request
+        }
     }
 }
 
