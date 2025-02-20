@@ -75,6 +75,12 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Likes> myLikes = new ArrayList<>();
 
+//    로그인 타입
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType;
+
+    private String socialId;
+
     //프로필 사진
     private String profileImagePath;
 
@@ -137,18 +143,21 @@ public class User extends BaseTimeEntity {
 
 //    유저 회원정보 변경
     public void updateUser(UserProfileUpdateDto dto,String newPw){
-     if(dto.getNickName() != null){
+        if(dto.getEmail() != null){
+            this.email = dto.getEmail();
+        }
+        if(dto.getNickName() != null){
          this.nickName = dto.getNickName();
-     }
-     if(dto.getPhoneNumber() != null){
-         this.phoneNumber = dto.getPhoneNumber();
-     }
-     if(dto.getBlogLink() != null){
-         this.blogLink = dto.getBlogLink();
-     }
-     if(newPw != null){
-         this.password = newPw;
-     }
+        }
+        if(dto.getPhoneNumber() != null){
+            this.phoneNumber = dto.getPhoneNumber();
+        }
+        if(dto.getBlogLink() != null){
+            this.blogLink = dto.getBlogLink();
+        }
+        if(newPw != null){
+            this.password = newPw;
+        }
 
     }
 

@@ -14,6 +14,7 @@ import java.util.List;
 @Data
 @Builder
 public class PostDetailDto {
+    private Long postUserId;
     private String authorId;
     private String authorNickName;
     private String profileImageOfAuthor;

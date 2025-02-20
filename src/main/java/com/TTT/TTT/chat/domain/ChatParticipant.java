@@ -30,7 +30,7 @@ public class ChatParticipant extends BaseTimeEntity {
     @Builder.Default
     private ExitYN exitYN = ExitYN.N;
 
-    public void paticipantExit() {
-        this.exitYN = ExitYN.Y;
+    public void paticipantExitUpdate(ExitYN exitYN) {
+        this.exitYN = exitYN;
     }
 }

@@ -3,6 +3,7 @@ package com.TTT.TTT.User.dtos;
 import com.TTT.TTT.Common.Annotation.ForbiddenWords;
 import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.User.domain.Role;
+import com.TTT.TTT.User.domain.SocialType;
 import com.TTT.TTT.User.domain.User;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -46,8 +47,8 @@ public class UserCreateDto {
             message = "올바르지 않은 휴대폰 번호 입니다."
     )
     private String phoneNumber;
-//    @NotBlank(message = "휴대폰인증필요")
-//    private String phoneNumberInput;
+    @NotBlank(message = "휴대폰인증필요")
+    private String authCode;
 
     @NotBlank(message = "닉네임은 필수입니다.")
     @Size(max = 8, min = 2, message = "닉네임은 2자 이상, 8자 이하여야 합니다.")
@@ -68,10 +69,17 @@ public class UserCreateDto {
     @Builder.Default
     private DelYN delYN = DelYN.N;
 
+    @Builder.Default
+    private SocialType socialType = SocialType.NONE;
+
+    private String socialId;
+
     public User toEntity(String password) {
         return User.builder().batch(this.batch).blogLink(this.blogLink)
                             .email(this.email).name(this.name).nickName(this.nickName)
                             .password(password).phoneNumber(this.phoneNumber)
-                            .loginId(this.loginId).delYN(this.delYN).role(this.role).build();
+                            .loginId(this.loginId).delYN(this.delYN).role(this.role)
+                            .socialType(this.socialType).socialId(this.socialId)
+                            .build();
     }
 }
