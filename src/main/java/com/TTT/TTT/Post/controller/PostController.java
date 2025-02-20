@@ -79,10 +79,10 @@ public class PostController {
     }
 
 //    +이미지 업로드(드래그 앤 드롭 했을때 이미지 바로 저장)
-    @PostMapping("/drag-image")
-    public ResponseEntity<?> dragImages(@RequestParam MultipartFile attachments){
-
-    }
+//    @PostMapping("/drag-image")
+//    public ResponseEntity<?> dragImages(@RequestParam MultipartFile attachments){
+//
+//    }
 
 
 
