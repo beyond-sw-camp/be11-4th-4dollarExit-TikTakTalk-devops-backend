@@ -233,4 +233,12 @@ public class UserController {
 //            로그인 처리
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "google oauth login success", loginInfo), HttpStatus.OK);
     }
+
+//    채팅에 뿌려줄 프로필이미지 조회 엔드포인트.
+    @GetMapping("/{userId}/profile-image")
+    public ResponseEntity<?> getProfileImage(@PathVariable Long userId) {
+        String imageUrl = userService.getProfileImage(userId);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "url found successfully", imageUrl), HttpStatus.OK);
+    }
+
 }
