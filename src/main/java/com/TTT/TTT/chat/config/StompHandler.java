@@ -40,6 +40,7 @@ public class StompHandler implements ChannelInterceptor {
                     .getBody();
             System.out.println("토큰 검증 완료");
         }
+
         if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
             System.out.println("subscribe 검증");
             String bearerToken = accessor.getFirstNativeHeader("Authorization");
