@@ -18,12 +18,14 @@ public class StompController {
     private final ChatService chatService;
     private final RedisPubSubService pubSubService;
     private final ObjectMapper objectMapper;
+    private final SseController sseController;
 
-    public StompController(SimpMessageSendingOperations messageTemplate, ChatService chatService, RedisPubSubService pubSubService, ObjectMapper objectMapper) {
+    public StompController(SimpMessageSendingOperations messageTemplate, ChatService chatService, RedisPubSubService pubSubService, ObjectMapper objectMapper, SseController sseController) {
         this.messageTemplate = messageTemplate;
         this.chatService = chatService;
         this.pubSubService = pubSubService;
         this.objectMapper = objectMapper;
+        this.sseController = sseController;
     }
 
     @MessageMapping("/{roomId}")
@@ -33,6 +35,8 @@ public class StompController {
         dto.setSendTime(LocalDateTime.now());
         String message = objectMapper.writeValueAsString(dto);
         pubSubService.publish("chat", message);
+
+        sseController.publishMessage(dto, roomId);
     }
 
 

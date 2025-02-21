@@ -4,6 +4,7 @@ import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.Common.domain.ExitYN;
 import com.TTT.TTT.User.UserRepository.UserRepository;
 import com.TTT.TTT.User.domain.User;
+import com.TTT.TTT.chat.controller.SseController;
 import com.TTT.TTT.chat.domain.ChatMessage;
 import com.TTT.TTT.chat.domain.ChatParticipant;
 import com.TTT.TTT.chat.domain.ChatRoom;
@@ -37,13 +38,15 @@ public class ChatService {
     private final ChatMessageRepository chatMessageRepository;
     private final ReadStatusRepository readStatusRepository;
     private final UserRepository userRepository;
+    private final SseController sseController;
 
-    public ChatService(ChatRoomRepository chatRoomRepository, ChatParticipantRepository chatParticipantRepository, ChatMessageRepository chatMessageRepository, ReadStatusRepository readStatusRepository, UserRepository userRepository) {
+    public ChatService(ChatRoomRepository chatRoomRepository, ChatParticipantRepository chatParticipantRepository, ChatMessageRepository chatMessageRepository, ReadStatusRepository readStatusRepository, UserRepository userRepository, SseController sseController) {
         this.chatRoomRepository = chatRoomRepository;
         this.chatParticipantRepository = chatParticipantRepository;
         this.chatMessageRepository = chatMessageRepository;
         this.readStatusRepository = readStatusRepository;
         this.userRepository = userRepository;
+        this.sseController = sseController;
     }
 
     public void saveMessage(Long roomId, ChatMessageDto chatMessageReqDto){
@@ -293,6 +296,13 @@ public class ChatService {
         addParticipantToRoom(newRoom, otherUser);
 
         return newRoom.getId();
+    }
+
+//    채팅방 커넥션 여부 업데이트
+    public void updateUserConnectionStatus(boolean isConnected, String nickName) {
+        User user = userRepository.findByNickNameAndDelYN(nickName, DelYN.N).orElseThrow(()-> new EntityNotFoundException("user is not found"));
+        ChatParticipant chatParticipant = chatParticipantRepository.findByUserAndExitYN(user, ExitYN.N).orElseThrow(()->new EntityNotFoundException("participant is not found"));
+        chatParticipant.updateConnectionStatus(isConnected);
     }
 }
 
