@@ -227,4 +227,41 @@ public class PostService {
         return postsOfBoard.map(p->p.toListDto(redisTemplate));
     }
 
+
+//  +이미지 업로드
+    public String dragImages(MultipartFile attachments){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String loginId = authentication.getName();
+        User user = userRepository.findByLoginIdAndDelYN(loginId,DelYN.N).orElseThrow(()-> new EntityNotFoundException("없는 아이디입니다"));
+//        Post post = postRepository.findById(postId).orElseThrow(()->new EntityNotFoundException("없는 게시물입니다"));
+
+        String returnUrl="";
+
+        try{
+            byte[] bytes = attachments.getBytes();
+            String fileName = attachments.getOriginalFilename(); // 한 포스트에 동일한 파일네임이 올라온다면? uuid처리가 필요할 듯하다..
+            Path path = Paths.get("C:/Users/Playdata/Desktop/tmp/", fileName);
+            Files.write(path,bytes, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(fileName)
+                    .build();
+            s3Client.putObject(putObjectRequest,RequestBody.fromFile(path));
+            returnUrl = s3Client.utilities().getUrl(a->a.bucket(bucket).key(fileName)).toExternalForm();
+
+            Attachment attachment = Attachment.builder()
+                    .fileName(fileName)
+                    .urlAdress(returnUrl)
+//                    .post(post)
+                    .build();
+            attachmentRepository.save(attachment);
+        }catch(IOException e){
+            throw new RuntimeException("이미지 저장 실패");
+        }
+
+        return returnUrl;
+
+    }
+
 }
