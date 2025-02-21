@@ -29,4 +29,5 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     List<User> findTop5ByOrderByRankingPointDesc();
 
     Optional<User> findBySocialId(String socialId);
+
 }
