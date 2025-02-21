@@ -1,7 +1,5 @@
 package com.TTT.TTT.ListTap.projectList.dtos;
 
-import com.TTT.TTT.ListTap.projectList.domain.PrimaryFeature;
-import com.TTT.TTT.ListTap.projectList.domain.Project;
 import com.TTT.TTT.ListTap.projectList.domain.ProjectType;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -28,8 +26,9 @@ public class ProjectSaveReq {
     private String link;
     @NotEmpty
     private String domain;
-    private List<PrimaryFeatureSaveReq> primaryFeatureSaveReqList= new ArrayList<>();
 
+//    주요 구현 기능 리스트로 받기
+    private List<PrimaryFeatureSaveReq> primaryFeatureSaveReqList = new ArrayList<>();
 
 
 }
