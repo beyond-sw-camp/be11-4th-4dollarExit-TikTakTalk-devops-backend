@@ -4,7 +4,9 @@ package com.TTT.TTT.User.UserController;
 import com.TTT.TTT.Common.dtos.CommonDto;
 import com.TTT.TTT.Common.auth.JwtTokenProvider;
 import com.TTT.TTT.Oauth.Service.GoogleService;
+import com.TTT.TTT.Oauth.Service.KakaoService;
 import com.TTT.TTT.Oauth.dtos.GoogleProfile;
+import com.TTT.TTT.Oauth.dtos.KakaoProfile;
 import com.TTT.TTT.Oauth.dtos.OAuthToken;
 import com.TTT.TTT.User.dtos.RedirectCode;
 import com.TTT.TTT.Post.dtos.PostAllListDto;
@@ -43,12 +45,14 @@ public class UserController {
     @Qualifier("rtdb")
     private final RedisTemplate<String, Object> redisTemplate;
     private final GoogleService googleService;
+    private final KakaoService kakaoService;
 
-    public UserController(UserService userService, JwtTokenProvider jwtTokenProvider, @Qualifier("rtdb") RedisTemplate<String, Object> redisTemplate, GoogleService googleService) {
+    public UserController(UserService userService, JwtTokenProvider jwtTokenProvider, @Qualifier("rtdb") RedisTemplate<String, Object> redisTemplate, GoogleService googleService, KakaoService kakaoService) {
         this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
         this.redisTemplate = redisTemplate;
         this.googleService = googleService;
+        this.kakaoService = kakaoService;
     }
 
     @Value("${jwt.secretKeyRt}")
@@ -199,12 +203,42 @@ public class UserController {
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getLoginId(), user.getRole().toString(), user.getNickName());
         redisTemplate.opsForValue().set(user.getLoginId(), refreshToken, 200, TimeUnit.DAYS); //레디스db에 키값으로 로그인 아이디, value로 토큰값을 넣겠다. 그리고 200일지나면 삭제하도록 설정
 
+        Map<String,Object> loginInfo = new HashMap<>();
+        loginInfo.put("id", user.getId());
+        loginInfo.put("token", jwtToken);
+        loginInfo.put("refreshToken", refreshToken);
+//            로그인 처리
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "oauth login success", loginInfo),HttpStatus.OK);
+    }
+
+//    kakao oauth 로그인 (Oauth 로그인시 Role은 USER로 고정)
+    @PostMapping("/kakao/doLogin")
+    public ResponseEntity<?> kakaoLogin(@RequestBody RedirectCode redirectCode) throws JsonProcessingException {
+        OAuthToken oAuthToken = kakaoService.getAccessToken(redirectCode.getCode());
+        KakaoProfile kakaoProfile = kakaoService.getKakaoProfile(oAuthToken.getAccess_token());
+
+        User user = userService.getUserByOauthId(kakaoProfile.getId());
+        if(user == null) {
+            user = userService.userOauthCreate(kakaoProfile.getId(), SocialType.KAKAO, kakaoProfile.getKakao_account().getEmail());
+        }
+        String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString(), user.getNickName());
+        //        refresh 토큰도 발행
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getLoginId(),user.getRole().toString(), user.getNickName());
+        redisTemplate.opsForValue().set(user.getLoginId(), refreshToken, 200, TimeUnit.DAYS); //레디스db에 키값으로 로그인 아이디, value로 토큰값을 넣겠다. 그리고 200일지나면 삭제하도록 설정
+
         Map<String, Object> loginInfo = new HashMap<>();
         loginInfo.put("id", user.getId());
         loginInfo.put("token", jwtToken);
         loginInfo.put("refreshToken", refreshToken);
 //            로그인 처리
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "google oauth login success", loginInfo), HttpStatus.OK);
+    }
+
+//    채팅에 뿌려줄 프로필이미지 조회 엔드포인트.
+    @GetMapping("/{userId}/profile-image")
+    public ResponseEntity<?> getProfileImage(@PathVariable Long userId) {
+        String imageUrl = userService.getProfileImage(userId);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "url found successfully", imageUrl), HttpStatus.OK);
     }
 
 }

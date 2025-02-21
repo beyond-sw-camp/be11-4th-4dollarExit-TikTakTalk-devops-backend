@@ -14,6 +14,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -125,4 +126,24 @@ public class RedisConfig {
         return redisTemplate;
     }
 
+//    채팅화면에서 사용자의 이미지를 뿌려주기 위한 캐싱작업으로 레디스 추가.
+    @Bean
+    @Qualifier("chatProfileImage")
+    public RedisConnectionFactory redisConnectionFactoryForChatImage(){ //레디스 연결을 설정하는 ConnectonFactory객체를 생성하고 반환
+        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
+        configuration.setHostName(host); //레디스 서버의 호스트 이름
+        configuration.setPort(port); //레디스 서버의 포트 번호
+        configuration.setDatabase(3); //레디스에 사용할 데이터베이스 인덱스(refreshToken 관리 인덱스)
+        return new LettuceConnectionFactory(configuration); //위에서 설정한 configuration을 기반으로 레디스에 연결할 객체
+    }
+
+    @Bean
+    @Qualifier("chatProfileImage")
+    public RedisTemplate<String, Object> redisTemplateForChatProfileImage() {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactoryForChatImage());
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        return template;
+    }
 }

@@ -60,6 +60,10 @@ public class ChatService {
                 .content(chatMessageReqDto.getMessage())
                 .build();
         chatMessageRepository.save(chatMessage);
+
+        String profileUrl = sender.getProfileImagePath();
+        chatMessageReqDto.setSenderImagePath(profileUrl);
+
 //        사용자별로 읽음여부 저장
 //        보낸 사람은 보내자마자 바로 읽음처리.
         List<ChatParticipant> chatParticipants = chatParticipantRepository.findByChatRoomAndExitYN(chatRoom,ExitYN.N);
@@ -192,6 +196,7 @@ public class ChatService {
 //                    ChatMessage에 메세지를 보낸 User의 정보에서 닉네임을 꺼내 senderNickname에 세팅.
                     .senderNickName(c.getUser().getNickName())
                     .sendTime(c.getCreatedTime())
+                    .senderImagePath(c.getUser().getProfileImagePath())
                     .build();
             chatMessageDtos.add(chatMessageDto);
         }
@@ -259,7 +264,7 @@ public class ChatService {
 //        단체채팅의 경우 모든 사람이 나가어 참여자가 0명이 될 경우 단체채팅방 자동삭제.
         List<ChatParticipant> chatParticipants = chatParticipantRepository.findByChatRoomAndExitYN(chatRoom,ExitYN.N);
         if(chatParticipants.isEmpty()){
-            chatRoom.chatRoomExit();
+            chatRoomRepository.delete(chatRoom);
         }
     }
 

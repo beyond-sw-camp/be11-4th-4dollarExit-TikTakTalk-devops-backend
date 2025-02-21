@@ -3,6 +3,7 @@ package com.TTT.TTT.chat.service;
 import com.TTT.TTT.chat.dto.ChatMessageDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -15,10 +16,13 @@ public class RedisPubSubService implements MessageListener {
 
     private final StringRedisTemplate stringRedisTemplate;
     private final SimpMessageSendingOperations messageTemplate;
+    private final ObjectMapper objectMapper;
 
-    public RedisPubSubService(@Qualifier("chatPubSub") StringRedisTemplate stringRedisTemplate, SimpMessageSendingOperations messageTemplate) {
+    public RedisPubSubService(@Qualifier("chatPubSub") StringRedisTemplate stringRedisTemplate, SimpMessageSendingOperations messageTemplate, ObjectMapper objectMapper) {
         this.stringRedisTemplate = stringRedisTemplate;
         this.messageTemplate = messageTemplate;
+        this.objectMapper = objectMapper;
+        this.objectMapper.registerModule(new JavaTimeModule());
     }
 
     public void publish(String channel, String message){
@@ -29,7 +33,6 @@ public class RedisPubSubService implements MessageListener {
 //    pattern에는 topic의 이름의 패턴이 담겨있고, 이 패턴을 기반으로 다이나믹한 코딩
     public void onMessage(Message message, byte[] pattern) {
         String payload = new String(message.getBody());
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
             ChatMessageDto chatMessageDto = objectMapper.readValue(payload, ChatMessageDto.class);
             messageTemplate.convertAndSend("/topic/"+chatMessageDto.getRoomId(), chatMessageDto);

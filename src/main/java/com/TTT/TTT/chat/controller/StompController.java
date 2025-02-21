@@ -10,24 +10,27 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
+import java.time.LocalDateTime;
+
 @Controller
 public class StompController {
     private final SimpMessageSendingOperations messageTemplate;
     private final ChatService chatService;
     private final RedisPubSubService pubSubService;
+    private final ObjectMapper objectMapper;
 
-    public StompController(SimpMessageSendingOperations messageTemplate, ChatService chatService, RedisPubSubService pubSubService) {
+    public StompController(SimpMessageSendingOperations messageTemplate, ChatService chatService, RedisPubSubService pubSubService, ObjectMapper objectMapper) {
         this.messageTemplate = messageTemplate;
         this.chatService = chatService;
         this.pubSubService = pubSubService;
+        this.objectMapper = objectMapper;
     }
 
     @MessageMapping("/{roomId}")
     public void sendMessage(@DestinationVariable Long roomId, ChatMessageDto dto) throws JsonProcessingException {
         chatService.saveMessage(roomId, dto);
         dto.setRoomId(roomId);
-//        messageTemplate.convertAndSend("/topic/" + roomId, dto);
-        ObjectMapper objectMapper = new ObjectMapper();
+        dto.setSendTime(LocalDateTime.now());
         String message = objectMapper.writeValueAsString(dto);
         pubSubService.publish("chat", message);
     }
