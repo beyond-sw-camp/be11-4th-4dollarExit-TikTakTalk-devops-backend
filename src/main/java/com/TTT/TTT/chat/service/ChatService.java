@@ -259,7 +259,7 @@ public class ChatService {
 //        단체채팅의 경우 모든 사람이 나가어 참여자가 0명이 될 경우 단체채팅방 자동삭제.
         List<ChatParticipant> chatParticipants = chatParticipantRepository.findByChatRoomAndExitYN(chatRoom,ExitYN.N);
         if(chatParticipants.isEmpty()){
-            chatRoom.chatRoomExit();
+            chatRoomRepository.delete(chatRoom);
         }
     }
 
