@@ -22,4 +22,8 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 
 //자유게시판 글 조회
     Page<Post> findAllByCategory_IdAndDelYN(Long id,DelYN delYN,Pageable pageable);
+
+//전체게시글 중에 인기게시글 조회
+    List<Post> findTop10ByOrderByLikesCountDesc();
+
 }

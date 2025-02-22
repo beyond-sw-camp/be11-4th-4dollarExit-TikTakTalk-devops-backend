@@ -78,7 +78,7 @@ public class PostController {
        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "selected board is uploaded successfully",selectedList),HttpStatus.OK);
     }
 
-//    +이미지 업로드(드래그 앤 드롭 했을때 이미지 바로 저장)
+//   8.이미지 업로드(드래그 앤 드롭 했을때 이미지 바로 저장)
 
     @PostMapping("/drag-image")
     public ResponseEntity<?> dragImages(@RequestParam MultipartFile attachments){
@@ -86,6 +86,12 @@ public class PostController {
       return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"image upload sucess",url),HttpStatus.OK);
     }
 
+//    9.게시글 전체 중에 상위 10개 인기순으로 조회
+    @GetMapping("/popular")
+    public ResponseEntity<?> popularPost(){
+              List<PostListDto> popularPost=postService.popularPost();
+              return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "populat list is uploaded successfully",popularPost),HttpStatus.OK);
+    }
 
 
 

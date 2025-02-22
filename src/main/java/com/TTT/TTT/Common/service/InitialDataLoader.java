@@ -80,5 +80,12 @@ public class InitialDataLoader implements CommandLineRunner {
             postCategoryRepository.save(information);
         }
 
+        if(!postCategoryRepository.findByCategoryName("알고리즘게시판").isPresent()){
+            PostCategory information = PostCategory.builder()
+                    .categoryName("알고리즘게시판")
+                    .build();
+            postCategoryRepository.save(information);
+        }
+
     }
 }
