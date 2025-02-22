@@ -1,6 +1,5 @@
 package com.TTT.TTT.chat.config;
 
-
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
@@ -21,16 +20,14 @@ public class StompEventListener {
     @EventListener
     public void connectHandle(SessionConnectEvent event){
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
-        sessions.add(accessor.getSessionId());
-        System.out.println("connect sessiond ID" + accessor.getSessionId());
-        System.out.println("total session : " + sessions.size());
+            System.out.println("connect sessiond ID :" + accessor.getSessionId());
+            System.out.println("total session : " + sessions.size());
     }
 
     @EventListener
     public void disconnectHandle(SessionDisconnectEvent event){
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
-        sessions.remove(accessor.getSessionId());
-        System.out.println("disconnect sessiond ID" + accessor.getSessionId());
+        System.out.println("disconnect sessiond ID :" + accessor.getSessionId());
         System.out.println("total session : " + sessions.size());
     }
 }
