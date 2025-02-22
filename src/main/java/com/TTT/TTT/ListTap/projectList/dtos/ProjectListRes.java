@@ -1,6 +1,5 @@
 package com.TTT.TTT.ListTap.projectList.dtos;
 
-import com.TTT.TTT.ListTap.projectList.domain.Project;
 import com.TTT.TTT.ListTap.projectList.domain.ProjectType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,10 +17,8 @@ public class ProjectListRes {
      private ProjectType projectType;
      private String teamName;
      private String serviceName;
-     private String primaryFeatureList;
      private String link;
      private String domain;
-
-
+     private List<PrimaryFeatureRes> primaryFeatureList;
     }
 
