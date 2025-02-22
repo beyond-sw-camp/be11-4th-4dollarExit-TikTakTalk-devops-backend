@@ -228,7 +228,7 @@ public class PostService {
     }
 
 
-//  +이미지 업로드
+// 8. 이미지 업로드
     public String dragImages(MultipartFile attachments){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String loginId = authentication.getName();
@@ -262,6 +262,12 @@ public class PostService {
 
         return returnUrl;
 
+    }
+
+//    9.게시글 전체 중에 상위 10개 인기순으로 조회
+    public List<PostListDto> popularPost(){
+      List<Post> top10List =  postRepository.findTop10ByOrderByLikesCountDesc();
+     return top10List.stream().map(p->p.toListDto(redisTemplate)).toList();
     }
 
 }

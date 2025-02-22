@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -60,6 +61,11 @@ public class Post extends BaseTimeEntity {
     @Column(nullable = false)
     @Builder.Default
     private DelYN delYN = DelYN.N;
+    //좋아요 개수(각 게시글의 좋아요 개수를 계산 하는 서브 쿼리)
+    @Formula("(SELECT COUNT(*) FROM likes l WHERE l.post_id = id )")
+    private int likesCount;
+
+
 
     public void deletePost() {
         this.delYN = DelYN.Y;
