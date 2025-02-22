@@ -52,8 +52,22 @@ public class StompHandler implements ChannelInterceptor {
                     .getBody();
             String nickName = claims.get("nickName").toString();
             String roomId = accessor.getDestination().split("/")[2];
+            accessor.getSessionAttributes().put("nickName", nickName);
+            accessor.getSessionAttributes().put("roomId", roomId);
             if (!chatService.isRoomPaticipant(nickName, Long.parseLong(roomId))) {
                 throw new AuthenticationServiceException("해당 room에 권한이 없습니다.");
+            }
+            chatService.updateUserConnectionStatus(true, nickName, Long.parseLong(roomId));
+        }
+
+        if (StompCommand.DISCONNECT == accessor.getCommand()) {
+            System.out.println("DISCONNECT 검증");
+            Object nickNameObj = accessor.getSessionAttributes().get("nickName");
+            Object roomIdObj = accessor.getSessionAttributes().get("roomId");
+            if (nickNameObj != null && roomIdObj != null) {
+                String nickName = nickNameObj.toString();
+                String roomId = roomIdObj.toString();
+                chatService.updateUserConnectionStatus(false, nickName, Long.parseLong(roomId));
             }
         }
 

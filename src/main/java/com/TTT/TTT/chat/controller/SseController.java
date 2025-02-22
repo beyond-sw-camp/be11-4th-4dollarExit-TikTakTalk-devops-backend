@@ -42,6 +42,8 @@ public class SseController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
         return sseEmitter;
     }
 
@@ -69,3 +71,6 @@ public class SseController {
         }
     }
 }
+
+
+
