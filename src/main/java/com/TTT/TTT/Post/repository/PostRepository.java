@@ -6,7 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,5 +29,11 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 
 //전체게시글 중에 인기게시글 조회
     List<Post> findTop10ByOrderByLikesCountDesc();
+
+    @Modifying // 업데이트,딜리트 쿼리를 실행하기 위한 JPA어노테이션
+    @Query("Update Post p SET p.viewCount = :newview WHERE p.id = :postId") //매개변수로 준 게시물 id에 해당하는 게시물의 조회수칼럼을 매개변수로 준 newview로 업데이트한다는 말
+    @Transactional
+//    여기서 Param은 쿼리 내의 :postId와 :increment와 매핑되기 위해 사용한다.
+    public void increaseViewCountByValue(@Param("postId")Long postId, @Param("newview")Integer newview);
 
 }

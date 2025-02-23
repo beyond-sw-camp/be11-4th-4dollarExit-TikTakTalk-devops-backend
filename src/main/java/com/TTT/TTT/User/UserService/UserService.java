@@ -7,6 +7,7 @@ import com.TTT.TTT.Post.domain.Post;
 import com.TTT.TTT.Post.dtos.PostAllListDto;
 import com.TTT.TTT.Post.dtos.PostDetailDto;
 import com.TTT.TTT.Post.repository.PostRepository;
+import com.TTT.TTT.Post.service.RedisServiceForViewCount;
 import com.TTT.TTT.User.UserRepository.UserRepository;
 import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.User.domain.Role;
@@ -55,9 +56,10 @@ public class UserService {
     private final SmsService smsService;
     private final RedisTemplate<String,String> redisTemplate;
     private final RedisTemplate<String, Object> chatRedisTemplate;
+    private final RedisServiceForViewCount redisServiceForViewCount;
 
     public UserService(UserRepository userRepository, PostRepository postRepository, PasswordEncoder passwordEncoder, S3Client s3Client, SmsService smsService,
-                       @Qualifier("likes") RedisTemplate<String, String> redisTemplate, @Qualifier("chatProfileImage") RedisTemplate<String, Object> chatRedisTemplate) {
+                       @Qualifier("likes") RedisTemplate<String, String> redisTemplate, @Qualifier("chatProfileImage") RedisTemplate<String, Object> chatRedisTemplate, RedisServiceForViewCount redisServiceForViewCount) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.passwordEncoder = passwordEncoder;
@@ -65,6 +67,7 @@ public class UserService {
         this.smsService = smsService;
         this.redisTemplate = redisTemplate;
         this.chatRedisTemplate = chatRedisTemplate;
+        this.redisServiceForViewCount = redisServiceForViewCount;
     }
   
     @Value("${cloud.aws.s3.bucket}")
@@ -120,7 +123,7 @@ public class UserService {
       String userLogin =  SecurityContextHolder.getContext().getAuthentication().getName();
       User user = userRepository.findByLoginIdAndDelYN(userLogin,DelYN.N).orElseThrow(()-> new EntityNotFoundException("없는 아이디입니다"));
       List<Post> originalPostList = user.getMyPostList();
-      return originalPostList.stream().map(p->p.toDetailDto(redisTemplate)).toList();
+      return originalPostList.stream().map(p->p.toDetailDto(redisTemplate, redisServiceForViewCount.getViewCount(p.getId()))).toList();
     }
 
 //  5. 내 정보 수정
@@ -195,7 +198,7 @@ public class UserService {
 
             for(String s : myLikeListInRedis){
                 Post post = postRepository.findById(Long.parseLong(s)).orElseThrow(()->new EntityNotFoundException("없는 게시글입니다"));
-                PostAllListDto postAllListDto = post.toAllListDto(redisTemplate);
+                PostAllListDto postAllListDto = post.toAllListDto(redisTemplate, redisServiceForViewCount.getViewCount(post.getId()));
                 myLikeListOfList.add(postAllListDto);
             }
 
