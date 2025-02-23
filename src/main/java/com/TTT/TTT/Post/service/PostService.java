@@ -51,15 +51,17 @@ public class PostService {
     @Qualifier("likes")
     private final RedisTemplate<String,String> redisTemplate;
     private final S3Client s3Client;
+    private final RedisServiceForViewCount redisServiceForViewCount;
 
     public PostService(PostRepository postRepository, UserRepository userRepository, AttachmentRepository attachmentRepository,
-                       PostCategoryRepository postCategoryRepository,@Qualifier("likes") RedisTemplate<String, String> redisTemplate, S3Client s3Client) {
+                       PostCategoryRepository postCategoryRepository, @Qualifier("likes") RedisTemplate<String, String> redisTemplate, S3Client s3Client,RedisServiceForViewCount redisServiceForViewCount) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.attachmentRepository = attachmentRepository;
         this.postCategoryRepository = postCategoryRepository;
         this.redisTemplate = redisTemplate;
         this.s3Client = s3Client;
+        this.redisServiceForViewCount = redisServiceForViewCount;
     }
 
     @Value("${cloud.aws.s3.bucket}")
@@ -122,7 +124,7 @@ public class PostService {
 //    2.게시글 조회
  public Page<PostAllListDto> findAll(Pageable pageable){
      Page<Post> originalPostList =  postRepository.findAllByDelYN(DelYN.N,pageable);
-     return originalPostList.map(p->p.toAllListDto(redisTemplate));
+     return originalPostList.map(p->p.toAllListDto(redisTemplate, redisServiceForViewCount.getViewCount(p.getId())));
     }
 
 
@@ -148,13 +150,15 @@ public class PostService {
             }
         };
         Page<Post> originalPostList = postRepository.findAll(specification, pageable);
-        return originalPostList.map(p->p.toListDto(redisTemplate));
+        return originalPostList.map(p->p.toListDto(redisTemplate, redisServiceForViewCount.getViewCount(p.getId())));
     }
 
 //    4.게시글 상세보기
     public PostDetailDto findById(Long id){
         Post post = postRepository.findByIdAndDelYN(id,DelYN.N).orElseThrow(()->new EntityNotFoundException("없는 게시글입니다"));
-        return post.toDetailDto(redisTemplate);
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        redisServiceForViewCount.increaseViewCount(post.getId(),userId); //해당 포스트에 대해 조회수 1증가시킴
+        return post.toDetailDto(redisTemplate, redisServiceForViewCount.getViewCount(id));
 
     }
 
@@ -224,7 +228,7 @@ public class PostService {
 //  7. 특정게시판 조회
     public Page<PostListDto> selectedBoard(Long id,Pageable pageable){
         Page<Post> postsOfBoard = postRepository.findAllByCategory_IdAndDelYN(id,DelYN.N,pageable);
-        return postsOfBoard.map(p->p.toListDto(redisTemplate));
+        return postsOfBoard.map(p->p.toListDto(redisTemplate, redisServiceForViewCount.getViewCount(p.getId())));
     }
 
 
@@ -267,7 +271,7 @@ public class PostService {
 //    9.게시글 전체 중에 상위 10개 인기순으로 조회
     public List<PostListDto> popularPost(){
       List<Post> top10List =  postRepository.findTop10ByOrderByLikesCountDesc();
-     return top10List.stream().map(p->p.toListDto(redisTemplate)).toList();
+     return top10List.stream().map(p->p.toListDto(redisTemplate, redisServiceForViewCount.getViewCount(p.getId()))).toList();
     }
 
 }
