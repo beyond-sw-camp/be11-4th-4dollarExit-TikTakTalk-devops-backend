@@ -2,11 +2,10 @@ package com.TTT.TTT.ListTap.projectList.service;
 
 import com.TTT.TTT.ListTap.projectList.domain.PrimaryFeature;
 import com.TTT.TTT.ListTap.projectList.domain.Project;
-import com.TTT.TTT.ListTap.projectList.dtos.ProjectListRes;
-import com.TTT.TTT.ListTap.projectList.dtos.ProjectSaveReq;
-import com.TTT.TTT.ListTap.projectList.dtos.ProjectSearchDto;
+import com.TTT.TTT.ListTap.projectList.dtos.*;
 import com.TTT.TTT.ListTap.projectList.repository.PrimaryFeatureRepository;
 import com.TTT.TTT.ListTap.projectList.repository.ProjectRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.jpa.domain.Specification;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
@@ -88,8 +87,46 @@ public class ProjectService {
                 return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
             }
         };
-
         Page<Project> projects = projectRepository.findAll(specification, pageable);
         return projects.map(Project::toListResFromEntity);
+    }
+    // ✅ 프로젝트 수정
+    public void updateProject(Long id, ProjectUpdateDto updateDto) {
+        Project project = projectRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 프로젝트가 존재하지 않습니다."));
+
+        // 프로젝트 기본 정보 업데이트
+        project.setBatch(updateDto.getBatch());
+        project.setProjectType(updateDto.getProjectType());
+        project.setTeamName(updateDto.getTeamName());
+        project.setServiceName(updateDto.getServiceName());
+        project.setLink(updateDto.getLink());
+        project.setDomain(updateDto.getDomain());
+
+        // ✅ 기능 리스트 업데이트 (삭제 후 새로 추가)
+        primaryFeatureRepository.deleteAllByProject(project);
+
+        if (updateDto.getPrimaryFeatureSaveReqList() != null && !updateDto.getPrimaryFeatureSaveReqList().isEmpty()) {
+            List<PrimaryFeature> primaryFeatureList = updateDto.getPrimaryFeatureSaveReqList()
+                    .stream()
+                    .map(req -> req.toEntity(project))
+                    .toList();
+            primaryFeatureRepository.saveAll(primaryFeatureList);
+        }
+
+        projectRepository.save(project);
+    }
+
+    // ✅ 프로젝트 삭제
+    public void deleteProject(Long id) {
+        Project project = projectRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 프로젝트가 존재하지 않습니다."));
+        projectRepository.delete(project);
+    }
+
+    public ProjectDetailRes getProjectDetail(Long id) {
+        Project project = projectRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("해당 프로젝트가 존재하지 않습니다."));
+        return project.toDetailRes();
     }
 }

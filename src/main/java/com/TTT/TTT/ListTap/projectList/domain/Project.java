@@ -2,6 +2,7 @@ package com.TTT.TTT.ListTap.projectList.domain;
 
 import com.TTT.TTT.Common.domain.BaseTimeEntity;
 import com.TTT.TTT.ListTap.projectList.dtos.PrimaryFeatureRes;
+import com.TTT.TTT.ListTap.projectList.dtos.ProjectDetailRes;
 import com.TTT.TTT.ListTap.projectList.dtos.ProjectListRes;
 import com.TTT.TTT.ListTap.projectList.dtos.ProjectSaveReq;
 import jakarta.persistence.*;
@@ -9,6 +10,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @AllArgsConstructor
@@ -64,6 +66,7 @@ public class Project extends BaseTimeEntity {
                 .toList();
 
         return ProjectListRes.builder()
+                .id(this.id)
                 .batch(this.batch)
                 .teamName(this.teamName)
                 .serviceName(this.serviceName)
@@ -73,6 +76,22 @@ public class Project extends BaseTimeEntity {
                 .projectType(this.projectType)
                 .build();
     }
+    public ProjectDetailRes toDetailRes() {
+        return ProjectDetailRes.builder()
+                .id(this.id)
+                .batch(this.batch)
+                .projectType(this.projectType)
+                .teamName(this.teamName)
+                .serviceName(this.serviceName)
+                .link(this.link)
+                .domain(this.domain)
+                .primaryFeatureList(
+                        // PrimaryFeature의 utilityName들을 콤마로 연결 (필요에 따라 수정)
+                        this.primaryFeatureList.stream()
+                                .map(feature -> feature.getUtilityName())
+                                .collect(Collectors.joining(", "))
+                )
+                .build();
 
-
+    }
 }
