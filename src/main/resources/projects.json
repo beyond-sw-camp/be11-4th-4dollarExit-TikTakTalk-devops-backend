@@ -1,0 +1,666 @@
+[
+  {
+    "batch": 1,
+    "projectType": "DB",
+    "teamName": "1팀(1stTeam)",
+    "serviceName": "OTT서비스",
+    "link": "",
+    "domain": "OTT서비스",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 2,
+    "projectType": "DB",
+    "teamName": "제임스(James)",
+    "serviceName": "mVolPcomm",
+    "link": "",
+    "domain": "인터넷 음성통화",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 2,
+    "projectType": "DB",
+    "teamName": "D.P(Developer Passion)",
+    "serviceName": "LONUA",
+    "link": "",
+    "domain": "의류 쇼핑 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 2,
+    "projectType": "DB",
+    "teamName": "hihg",
+    "serviceName": "BOOKSPEDIA",
+    "link": "",
+    "domain": "웹툰/웹소설 커뮤니티 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 2,
+    "projectType": "DB",
+    "teamName": "팜팜(pampam)",
+    "serviceName": "ecomerce",
+    "link": "",
+    "domain": "공동구매 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 2,
+    "projectType": "DB",
+    "teamName": "devcafe",
+    "serviceName": "sirenorder",
+    "link": "",
+    "domain": "카페 온라인 주문 시스템",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 2,
+    "projectType": "DB",
+    "teamName": "MTM",
+    "serviceName": "campingOnTop",
+    "link": "",
+    "domain": "도심 캠핑 장소 중개 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 1,
+    "projectType": "DB",
+    "teamName": "3Team",
+    "serviceName": "호텔예약시스템",
+    "link": "",
+    "domain": "호텔 예약 시스템",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 1,
+    "projectType": "DB",
+    "teamName": "2Team",
+    "serviceName": "Delivery-active",
+    "link": "",
+    "domain": "배달 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 3,
+    "projectType": "DB",
+    "teamName": "6Team",
+    "serviceName": "Muse",
+    "link": "",
+    "domain": "음악 공유/스트리밍 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 3,
+    "projectType": "DB",
+    "teamName": "2Team",
+    "serviceName": "Beyond Edu Management System",
+    "link": "",
+    "domain": "학생관리시스템",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 3,
+    "projectType": "DB",
+    "teamName": "ONETEAM",
+    "serviceName": "ONETT",
+    "link": "",
+    "domain": "OTT추천 프로그램",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 3,
+    "projectType": "DB",
+    "teamName": "3Team",
+    "serviceName": "모두의 크아",
+    "link": "",
+    "domain": "게임",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 3,
+    "projectType": "DB",
+    "teamName": "4Team",
+    "serviceName": "BetaMart(베타마트)",
+    "link": "",
+    "domain": "마트 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 3,
+    "projectType": "DB",
+    "teamName": "5Team",
+    "serviceName": "OutHome",
+    "link": "",
+    "domain": "아파트 커뮤니티 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 2,
+    "projectType": "DB",
+    "teamName": "1Team",
+    "serviceName": "Woof",
+    "link": "",
+    "domain": "반려동물 케어 서비스",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 4,
+    "projectType": "DB",
+    "teamName": "Early&Far",
+    "serviceName": "멀리카아(Faaar-Car)",
+    "link": "",
+    "domain": "중고차 데이터 관리 시스템",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 4,
+    "projectType": "DB",
+    "teamName": "IamDeveloper",
+    "serviceName": "WLOP(We Love Our Pet)",
+    "link": "https://github.com/beyond-sw-camp/be04-1st-IamDeveloper-WLOP",
+    "domain": "반려동물 커뮤니티",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 4,
+    "projectType": "DB",
+    "teamName": "NaN_NULL_joahae",
+    "serviceName": "Koongya Acadamey",
+    "link": "https://github.com/beyond-sw-camp/be04-1st-yeonbong_1Jo_NaN_NULL_joahaeTeam-koongya_academy",
+    "domain": "어학학원 운영관리 시스템",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 4,
+    "projectType": "DB",
+    "teamName": "CLOUDY",
+    "serviceName": "UniVerse",
+    "link": "https://github.com/beyond-sw-camp/be04-1st-CLOUDY-UniVerse",
+    "domain": "대학 통합관리 시스템",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 1,
+    "projectType": "FINAL",
+    "teamName": "3Team",
+    "serviceName": "BookRealm",
+    "link": "https://github.com/beyond-sw-camp/be01-2nd-3Team-BookRealm",
+    "domain": "온라인 서점 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 1,
+    "projectType": "FINAL",
+    "teamName": "1Team",
+    "serviceName": "NomadLog",
+    "link": "https://github.com/beyond-sw-camp/be01-2nd-1Team-NomadLog",
+    "domain": "여행 커뮤니티",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 5,
+    "projectType": "DB",
+    "teamName": "6Team",
+    "serviceName": "PAWSITIVE",
+    "link": "https://github.com/beyond-sw-camp/be05-1st-6team-pawsitive",
+    "domain": "애견용품 판매 및 유기동물 입양 사이트",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 5,
+    "projectType": "DB",
+    "teamName": "TEAMFINE",
+    "serviceName": "Fine(Fire Infromation)",
+    "link": "https://github.com/beyond-sw-camp/be05-1st-2Team-Fine",
+    "domain": "소방정보종합제공사이트",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 5,
+    "projectType": "DB",
+    "teamName": "1Team",
+    "serviceName": "DBDB DEEP",
+    "link": "https://github.com/beyond-sw-camp/be05-1st-1team-dbdbdeep",
+    "domain": "한화시스템 BEYOND SW캠프 DB관리 웹 서비스",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 5,
+    "projectType": "DB",
+    "teamName": "Park_HereRo",
+    "serviceName": "Park_HereRo",
+    "link": "https://github.com/beyond-sw-camp/be05-1st-5team-Park_HereRo",
+    "domain": "주차장 검색 사이트",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 5,
+    "projectType": "DB",
+    "teamName": "4goda(사고뭉치)",
+    "serviceName": "VITE",
+    "link": "https://github.com/beyond-sw-camp/be04-1st-4goda-vite",
+    "domain": "초대장 발송 서비스",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 2,
+    "projectType": "BACKEND",
+    "teamName": "hihg",
+    "serviceName": "BOOKSPEDIA",
+    "link": "https://github.com/beyond-sw-camp/be02-2nd-hjhgteam-book?tab=readme-ov-file",
+    "domain": "웹툰/웹소설 커뮤니티 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 2,
+    "projectType": "BACKEND",
+    "teamName": "MTM",
+    "serviceName": "campingOnTop",
+    "link": "https://github.com/beyond-sw-camp/be02-2nd-MTM-cityCamp",
+    "domain": "도심 캠핑 장소 중개 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 2,
+    "projectType": "FINAL",
+    "teamName": "팜팜(pampam)",
+    "serviceName": "ecomerce",
+    "link": "https://github.com/beyond-sw-camp/be02-3rd-pampam-ecomerce",
+    "domain": "공동구매 플랫폼",
+    "primaryFeatureSaveReqList": [
+      { "utilityName": "카카오페이 결제" }
+    ]
+  },
+  {
+    "batch": 1,
+    "projectType": "FINAL",
+    "teamName": "4Team",
+    "serviceName": "WorkFlowEase",
+    "link": "https://github.com/beyond-sw-camp/be01_3nd_4team",
+    "domain": "인사관리시스템",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 1,
+    "projectType": "FINAL",
+    "teamName": "RamenSyndrome",
+    "serviceName": "무인 컵라면 매장 영업관리시스템",
+    "link": "https://github.com/beyond-sw-camp/be01_3nd_Ramen-Syndrome",
+    "domain": "",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 2,
+    "projectType": "BACKEND",
+    "teamName": "1Team",
+    "serviceName": "Woof",
+    "link": "https://github.com/beyond-sw-camp/be02-2nd-woof-animal_careservice",
+    "domain": "반려동물 케어 서비스",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 1,
+    "projectType": "FINAL",
+    "teamName": "2Team",
+    "serviceName": "Knowledge Nexus",
+    "link": "https://github.com/beyond-sw-camp/be01_3nd_2team?tab=readme-ov-file",
+    "domain": "지식 공유 사이트",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 2,
+    "projectType": "FINAL",
+    "teamName": "D.P(Developer Passion)",
+    "serviceName": "LONUA",
+    "link": "https://github.com/beyond-sw-camp/be02-3rd-developer_passion-fashion?tab=readme-ov-file",
+    "domain": "의류 쇼핑 플랫폼",
+    "primaryFeatureSaveReqList": [
+      { "utilityName": "카카오 로그인" }
+    ]
+  },
+  {
+    "batch": 3,
+    "projectType": "BACKEND",
+    "teamName": "5Team",
+    "serviceName": "The-FIT",
+    "link": "",
+    "domain": "PT 회원관리 플랫폼",
+    "primaryFeatureSaveReqList": [
+      { "utilityName": "구글 로그인" }
+    ]
+  },
+  {
+    "batch": 3,
+    "projectType": "BACKEND",
+    "teamName": "4Team",
+    "serviceName": "encoreSPAce",
+    "link": "https://github.com/beyond-sw-camp/be03-2nd-4team-encoreSPACE?tab=readme-ov-file",
+    "domain": "엔코아 부트캠프 수강생 활동기록 관리 서비스",
+    "primaryFeatureSaveReqList": [
+      { "utilityName": "구글 로그인" },
+      { "utilityName": "깃 로그인" },
+      { "utilityName": "SMTP" },
+      { "utilityName": "채팅" },
+      { "utilityName": "단체채팅" }
+    ]
+  },
+  {
+    "batch": 3,
+    "projectType": "FRONTEND",
+    "teamName": "4Team",
+    "serviceName": "encoreSPAce",
+    "link": "https://github.com/beyond-sw-camp/be03-3rd-4team-encoreSPACE",
+    "domain": "엔코아 부트캠프 수강생 활동기록 관리 서비스",
+    "primaryFeatureSaveReqList": [
+      { "utilityName": "구글 로그인" },
+      { "utilityName": "깃 로그인" },
+      { "utilityName": "SMTP" },
+      { "utilityName": "채팅" },
+      { "utilityName": "단체채팅" }
+    ]
+  },
+  {
+    "batch": 3,
+    "projectType": "FINAL",
+    "teamName": "6Team",
+    "serviceName": "Sound of Mind(SOM)",
+    "link": "https://github.com/beyond-sw-camp/be03-3rd-6team-SoundOfMind",
+    "domain": "익명 커뮤니티 서비스",
+    "primaryFeatureSaveReqList": [
+      { "utilityName": "회원랭킹" },
+      { "utilityName": "욕 필터링" }
+    ]
+  },
+  {
+    "batch": 3,
+    "projectType": "BACKEND",
+    "teamName": "2Team",
+    "serviceName": "Logeat",
+    "link": "https://github.com/beyond-sw-camp/be03-2nd-2team-Logeat-backend?tab=readme-ov-file",
+    "domain": "점심메뉴 공유 커뮤니티",
+    "primaryFeatureSaveReqList": [
+      { "utilityName": "실시간 알림" },
+      { "utilityName": "팔로우" },
+      { "utilityName": "SMTP" }
+    ]
+  },
+  {
+    "batch": 3,
+    "projectType": "FRONTEND",
+    "teamName": "2Team",
+    "serviceName": "Logeat",
+    "link": "https://github.com/beyond-sw-camp/be03-3rd-2team-Logeat-frontend",
+    "domain": "점심메뉴 공유 커뮤니티",
+    "primaryFeatureSaveReqList": [
+      { "utilityName": "실시간 알림" },
+      { "utilityName": "팔로우" },
+      { "utilityName": "SMTP" }
+    ]
+  },
+  {
+    "batch": 2,
+    "projectType": "FINAL",
+    "teamName": "MTM",
+    "serviceName": "campingOnTop",
+    "link": "https://github.com/beyond-sw-camp/be02-4th-MTM-cityCamp",
+    "domain": "도심 캠핑 장소 중개 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 2,
+    "projectType": "FINAL",
+    "teamName": "팜팜(pampam)",
+    "serviceName": "ecomerce",
+    "link": "https://github.com/beyond-sw-camp/be02-4th-pampam-ecomerce",
+    "domain": "공동구매 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 2,
+    "projectType": "FINAL",
+    "teamName": "hihg",
+    "serviceName": "BOOKSPEDIA",
+    "link": "https://github.com/beyond-sw-camp/be02-4th-hjhgteam-book",
+    "domain": "웹툰/웹소설 커뮤니티 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 2,
+    "projectType": "FINAL",
+    "teamName": "D.P(Developer Passion)",
+    "serviceName": "LONUA",
+    "link": "https://github.com/beyond-sw-camp/be02-4th-developer_passion-fashion",
+    "domain": "의류 쇼핑 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 2,
+    "projectType": "FRONTEND",
+    "teamName": "1Team",
+    "serviceName": "Woof",
+    "link": "https://github.com/beyond-sw-camp/be02-3rd-woof-animal_careservice",
+    "domain": "반려동물 케어 서비스",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 1,
+    "projectType": "FINAL",
+    "teamName": "2Team",
+    "serviceName": "Private Stay",
+    "link": "https://github.com/beyond-sw-camp/be01-2nd-2Team-PrivateStay",
+    "domain": "개인 숙박시설 예약 프로그램",
+    "primaryFeatureSaveReqList": [
+      { "utilityName": "숙박 예약 캘린더" }
+    ]
+  },
+  {
+    "batch": 3,
+    "projectType": "BACKEND",
+    "teamName": "1Team",
+    "serviceName": "Well Com",
+    "link": "https://github.com/beyond-sw-camp/be03-2nd-1team-WellCom?tab=readme-ov-file",
+    "domain": "공용공간테이블예약시스템+나눔서비스 커뮤니티",
+    "primaryFeatureSaveReqList": [
+      { "utilityName": "테이블 예약 캘린더" },
+      { "utilityName": "구글 로그인" },
+      { "utilityName": "미니게임(누가 더 큰 숫자를 입력하는지)" }
+    ]
+  },
+  {
+    "batch": 3,
+    "projectType": "FRONTEND",
+    "teamName": "1Team",
+    "serviceName": "Well Com",
+    "link": "https://github.com/beyond-sw-camp/be03-3rd-1team-WellCom",
+    "domain": "공용공간테이블예약시스템+나눔서비스 커뮤니티",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 3,
+    "projectType": "FINAL",
+    "teamName": "5Team",
+    "serviceName": "The-FIT",
+    "link": "https://github.com/beyond-sw-camp/be03-4th-5team-The-FIT-devops-front",
+    "domain": "PT 회원관리 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 3,
+    "projectType": "FINAL",
+    "teamName": "1Team",
+    "serviceName": "Well Com",
+    "link": "https://github.com/beyond-sw-camp/be03-4th-1team-wellcom-backend",
+    "domain": "공용공간테이블예약시스템+나눔서비스 커뮤니티",
+    "primaryFeatureSaveReqList": [
+      { "utilityName": "테이블 예약 캘린더" },
+      { "utilityName": "구글 로그인" },
+      { "utilityName": "미니게임(누가 더 큰 숫자를 입력하는지)" }
+    ]
+  },
+  {
+    "batch": 3,
+    "projectType": "BACKEND",
+    "teamName": "5Team",
+    "serviceName": "The-FIT",
+    "link": "https://github.com/beyond-sw-camp/be03-4th-5team-The-FIT-devops-back",
+    "domain": "PT 회원관리 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 3,
+    "projectType": "FRONTEND",
+    "teamName": "2Team",
+    "serviceName": "Logeat",
+    "link": "https://github.com/beyond-sw-camp/be03-4th-2team-logeat-frontend",
+    "domain": "점심메뉴 공유 커뮤니티",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 1,
+    "projectType": "BACKEND",
+    "teamName": "4Team",
+    "serviceName": "TeamToDo",
+    "link": "https://github.com/beyond-sw-camp/be01-2nd-4Team-TeamToDo",
+    "domain": "개인 및 팀 공유 투두리스트",
+    "primaryFeatureSaveReqList": [
+      { "utilityName": "세션로그인" }
+    ]
+  },
+  {
+    "batch": 3,
+    "projectType": "BACKEND",
+    "teamName": "3Team",
+    "serviceName": "포장의 민족",
+    "link": "https://github.com/beyond-sw-camp/be03-2nd-3team-SNS",
+    "domain": "포장 주문 플랫폼",
+    "primaryFeatureSaveReqList": [
+      { "utilityName": "JWT로그인" }
+    ]
+  },
+  {
+    "batch": 3,
+    "projectType": "FRONTEND",
+    "teamName": "3Team",
+    "serviceName": "포장의 민족",
+    "link": "https://github.com/beyond-sw-camp/be03-3rd-3team-SNS",
+    "domain": "포장 주문 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 4,
+    "projectType": "BACKEND",
+    "teamName": "ThisDotE",
+    "serviceName": "InnerJoin-Us",
+    "link": "https://github.com/beyond-sw-camp/be04-2nd-ThisDotE-InnerJoin-Us",
+    "domain": "개발자 커뮤니티",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 2,
+    "projectType": "FRONTEND",
+    "teamName": "MTM",
+    "serviceName": "campingOnTop",
+    "link": "https://github.com/beyond-sw-camp/be02-3rd-MTM-cityCamp",
+    "domain": "도심 캠핑 장소 중개 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 1,
+    "projectType": "DB",
+    "teamName": "5름차순",
+    "serviceName": "Movie-reservation",
+    "link": "https://github.com/beyond-sw-camp/be01-1st-5Team-Movie-reservation-service",
+    "domain": "영화 예매 시스템",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 1,
+    "projectType": "BACKEND",
+    "teamName": "5Team",
+    "serviceName": "Tdodo",
+    "link": "https://github.com/beyond-sw-camp/be01-2nd-5Team-To-Do-List",
+    "domain": "개인 및 팀 공유 투두리스트",
+    "primaryFeatureSaveReqList": [
+      { "utilityName": "JWT로그인" }
+    ]
+  },
+  {
+    "batch": 1,
+    "projectType": "DB",
+    "teamName": "4Team",
+    "serviceName": "Comprehensive-travel-services",
+    "link": "https://github.com/beyond-sw-camp/be01-1st-4Team-Comprehensive-travel-services",
+    "domain": "여행예약종합서비스",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 4,
+    "projectType": "BACKEND",
+    "teamName": "TEAM if(1=1)",
+    "serviceName": "Tempository",
+    "link": "https://github.com/beyond-sw-camp/be04-2nd-if-1OR1-Tempository",
+    "domain": "프로젝트 관리 및 문서작성서비스 제공 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 4,
+    "projectType": "BACKEND",
+    "teamName": "OmokNoonE",
+    "serviceName": "Omokhub",
+    "link": "https://github.com/beyond-sw-camp/be04-2nd-OmokNoonE-Omokhub",
+    "domain": "개발자 프로젝트 팀 모집 및 프로젝트 일정관리 사이트",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 5,
+    "projectType": "BACKEND",
+    "teamName": "6Team",
+    "serviceName": "wePT",
+    "link": "https://github.com/beyond-sw-camp/be05-2nd-6team-wePT?tab=readme-ov-file",
+    "domain": "모바일 아파트 커뮤니티 플랫폼",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 5,
+    "projectType": "BACKEND",
+    "teamName": "2Team",
+    "serviceName": "moamoa",
+    "link": "https://github.com/beyond-sw-camp/be05-2nd-2team-moamoa?tab=readme-ov-file",
+    "domain": "공동구매 펀딩 플랫폼",
+    "primaryFeatureSaveReqList": [
+      { "utilityName": "공동구매 참여" }
+    ]
+  },
+  {
+    "batch": 5,
+    "projectType": "BACKEND",
+    "teamName": "6candoit",
+    "serviceName": "plrecipe",
+    "link": "https://github.com/beyond-sw-camp/be04-2nd-6candoit-plrecipe",
+    "domain": "놀거리 코스 제공 커뮤니티",
+    "primaryFeatureSaveReqList": [
+      { "utilityName": "유레카서버" }
+    ]
+  },
+  {
+    "batch": 5,
+    "projectType": "FRONTEND",
+    "teamName": "6candoit",
+    "serviceName": "plrecipe",
+    "link": "https://github.com/beyond-sw-camp/be04-3rd-6candoit-plrecipe",
+    "domain": "놀거리 코스 제공 커뮤니티",
+    "primaryFeatureSaveReqList": []
+  },
+  {
+    "batch": 4,
+    "projectType": "BACKEND",
+    "teamName": "3Team",
+    "serviceName": "itAbility",
+    "link": "https://github.com/beyond-sw-camp/be04-2nd-3team-itAbility?tab=readme-ov-file",
+    "domain": "개발자 커뮤니티",
+    "primaryFeatureSaveReqList": [
+      { "utilityName": "카카오 로그인" },
+      { "utilityName": "구글 로그인" }
+    ]
+  }
+]

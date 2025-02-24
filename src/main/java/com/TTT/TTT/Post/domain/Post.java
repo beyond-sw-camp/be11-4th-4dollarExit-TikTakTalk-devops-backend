@@ -107,6 +107,8 @@ public class Post extends BaseTimeEntity {
                 .countOfComment(this.commentList.size())
                 .likesCount(likesCount)
                 .viewCount(viewCount)
+                .contents(this.contents)
+                .AuthorRankingPoint(this.user.getRankingPoint())
                 .build();
     }
 

@@ -16,7 +16,6 @@ public class InitialDataLoader implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final PostCategoryRepository postCategoryRepository;
-
     public InitialDataLoader(UserRepository userRepository, PasswordEncoder passwordEncoder, PostCategoryRepository postCategoryRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -28,7 +27,9 @@ public class InitialDataLoader implements CommandLineRunner {
         createAdminAccount();
         craeteUserAccount();
         createCategories();
+
     }
+
 
     private void createAdminAccount() {
 //        이메일만 체크하는 이유는 서버가 실행될때 바로 DB에 저장되므로,
@@ -86,6 +87,5 @@ public class InitialDataLoader implements CommandLineRunner {
                     .build();
             postCategoryRepository.save(information);
         }
-
     }
 }
