@@ -12,7 +12,7 @@ spring :
     database-platform: org.hibernate.dialect.MariaDBDialect
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show_sql: true
   redis:
     host: localhost
@@ -50,9 +50,9 @@ cloud:
 
 # 휴대폰 API 관련설정
 coolsms:
-  apiKey: "NCS9W7GKQC51EHQD"
-  apiSecret: "BL3VUKTVBAZX1PIQPCHXVP2HKKYOBEIN"
-  fromNumber: "01076084578" # 발신번호
+  apiKey: "NCSFBPNCDNGAMQAW"
+  apiSecret: "UHFIXQ58FGPRNBAAMCDFB0JSVEQTXOSA"
+  fromNumber: "01057105689" # 발신번호
 
 # oauth 로그인 설정
 oauth:

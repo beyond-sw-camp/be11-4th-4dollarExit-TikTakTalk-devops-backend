@@ -203,7 +203,7 @@ public class UserController {
 
         User user = userService.getUserByOauthId(googleProfile.getSub());
         if (user == null) {
-            user = userService.userOauthCreate(googleProfile.getSub(), SocialType.GOOGLE, googleProfile.getEmail());
+            return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "user not found", googleProfile),HttpStatus.OK);
         }
 
         String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString(), user.getNickName());
@@ -216,7 +216,7 @@ public class UserController {
         loginInfo.put("token", jwtToken);
         loginInfo.put("refreshToken", refreshToken);
 //            로그인 처리
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "oauth login success", loginInfo),HttpStatus.OK);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "google oauth login success", loginInfo),HttpStatus.OK);
     }
 
 //    kakao oauth 로그인 (Oauth 로그인시 Role은 USER로 고정)
@@ -239,7 +239,7 @@ public class UserController {
         loginInfo.put("token", jwtToken);
         loginInfo.put("refreshToken", refreshToken);
 //            로그인 처리
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "google oauth login success", loginInfo), HttpStatus.OK);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "kakao oauth login success", loginInfo), HttpStatus.OK);
     }
 
 //    채팅에 뿌려줄 프로필이미지 조회 엔드포인트.
@@ -248,5 +248,6 @@ public class UserController {
         String imageUrl = userService.getProfileImage(userId);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "url found successfully", imageUrl), HttpStatus.OK);
     }
+
 
 }
