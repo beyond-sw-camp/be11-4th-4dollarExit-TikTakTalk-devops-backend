@@ -81,8 +81,10 @@ public class User extends BaseTimeEntity {
 
     private String socialId;
 
-    //프로필 사진
-    private String profileImagePath;
+    //프로필 사진 디폴트
+    @Builder.Default
+    private String profileImagePath = "https://ttt-image.s3.ap-northeast-2.amazonaws.com/기본이미지.png";
+
 
     public UserDetailDto detailFromEntity(){
         return UserDetailDto.builder()
