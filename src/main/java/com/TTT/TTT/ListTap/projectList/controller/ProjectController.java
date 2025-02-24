@@ -31,20 +31,6 @@ public class ProjectController {
         this.projectService = projectService;
         this.userService = userService;
     }
-
-    @GetMapping("/role")
-    public ResponseEntity<?> getUserRole() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String loginId = authentication.getName(); // 현재 로그인한 사용자의 ID 가져오기
-
-        User user =  userService.findByLoginId(loginId);
-
-        Map<String, String> response = new HashMap<>();
-        response.put("role", user.getRole().toString());
-
-        return ResponseEntity.ok(response);
-    }
-
     //    전체 프로젝트 목록 조회
     @GetMapping("/list")
     public ResponseEntity<?> findByAll(@PageableDefault(size = 20, sort = "batch", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -73,25 +59,27 @@ public class ProjectController {
     }
 //  프로젝트유형선택 유형 불러오기
     @GetMapping("/types")
-    public ResponseEntity<List<String>> getProjectTypes() {
+//    맞아요 딜리트 할 경우에는 딱히 리턴으로 줄게 없으니 그냥 "delete" 이런거 문자열 주심될듯!
+    public ResponseEntity<?> getProjectTypes() {
         List<String> projectTypes = Arrays.stream(ProjectType.values())
                 .map(Enum::name)
                 .toList();
-        return ResponseEntity.ok(projectTypes);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "success", projectTypes), HttpStatus.OK);
     }
-
+//    네네 위랑같이 맞울게여 업데이트도 코드 맞출게여
+//    넵 좋아요!
     @DeleteMapping("delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")  // ✅ ADMIN 권한만 삭제 가능
-    public ResponseEntity<String> deleteProject(@PathVariable Long id) {
+    public ResponseEntity<?> deleteProject(@PathVariable Long id) {
         projectService.deleteProject(id);
-        return ResponseEntity.ok("삭제 완료");
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "success", "success"), HttpStatus.OK);
     }
 
     @PutMapping("update/{id}")
-    @PreAuthorize("hasRole('ADMIN')")  // ✅ ADMIN 권한만 수정 가능
-    public ResponseEntity<String> updateProject(@PathVariable Long id, @RequestBody ProjectUpdateDto updateDto) {
+    @PreAuthorize("hasRole('ADMIN')")  // ADMIN 권한만 수정 가능
+    public ResponseEntity<?> updateProject(@PathVariable Long id, @RequestBody ProjectUpdateDto updateDto) {
         projectService.updateProject(id, updateDto);
-        return ResponseEntity.ok("수정 완료");
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "수정 완료", "success"), HttpStatus.OK);
     }
 
     @GetMapping("/detail/{id}")

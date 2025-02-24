@@ -11,4 +11,5 @@ public class ProjectSearchDto {
     private Integer batch; //기수검색
     private String teamName; //팀명검색
     private String ServiceName; //서비스명 검색
+    private String projectType; //서비스명 검색
 }

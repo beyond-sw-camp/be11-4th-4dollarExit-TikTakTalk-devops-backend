@@ -24,8 +24,10 @@ public class Project extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private int batch;
+    // null 허용
+    @Setter
+    @Column(nullable = true)
+    private Integer batch;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -37,7 +39,7 @@ public class Project extends BaseTimeEntity {
     @Column(nullable = false, length = 30)
     private String serviceName;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String link;
 
     @Column(nullable = false)
@@ -45,7 +47,7 @@ public class Project extends BaseTimeEntity {
 //    @Builder.Default// 빌더패턴에서 필드를 초기화할때 @Builder.Default를 붙이지 않으면 무시된다.
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PrimaryFeature> primaryFeatureList= new ArrayList<>();
+    private List<PrimaryFeature> primaryFeatureList;
 
     // 🔥 ✅ ProjectSaveReq -> Project 변환 메서드 추가
     public static Project from(ProjectSaveReq req) {
@@ -61,9 +63,10 @@ public class Project extends BaseTimeEntity {
 
     //엔티티->목록조회용 Dto로 변환하는 메서드
     public ProjectListRes toListResFromEntity() {
-        List<PrimaryFeatureRes> featureList = primaryFeatureList.stream()
-                .map(f -> new PrimaryFeatureRes(f.getUtilityName())) // ✅ 새로운 DTO로 변환
-                .toList();
+        List<PrimaryFeatureRes> featureList = primaryFeatureList != null && !primaryFeatureList.isEmpty() ?
+                primaryFeatureList.stream()
+                        .map(f -> new PrimaryFeatureRes(f.getUtilityName()))
+                        .toList() : new ArrayList<>();
 
         return ProjectListRes.builder()
                 .id(this.id)
@@ -86,12 +89,18 @@ public class Project extends BaseTimeEntity {
                 .link(this.link)
                 .domain(this.domain)
                 .primaryFeatureList(
+                        primaryFeatureList != null && !primaryFeatureList.isEmpty() ?
                         // PrimaryFeature의 utilityName들을 콤마로 연결 (필요에 따라 수정)
                         this.primaryFeatureList.stream()
                                 .map(feature -> feature.getUtilityName())
-                                .collect(Collectors.joining(", "))
+                                .collect(Collectors.joining(", ")) :""
                 )
                 .build();
-
+    }
+    public void setLink(String link) {
+        this.link = link != null && !link.trim().isEmpty() ? link.trim() : null; // 빈 문자열이면 null로 설정
+    }
+    public void setBatch(Integer batch) {
+        this.batch = batch; // null 허용
     }
 }

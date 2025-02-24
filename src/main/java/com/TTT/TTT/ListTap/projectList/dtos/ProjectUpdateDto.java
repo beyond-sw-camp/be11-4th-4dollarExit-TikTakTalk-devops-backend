@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ProjectUpdateDto {
     @NotNull(message = "batch는 필수 입력값입니다.")
-    private int batch;
+    private Integer batch; // null 허용
 
     @NotNull(message = "프로젝트 유형은 필수 입력값입니다.")
     private ProjectType projectType;
@@ -25,12 +25,10 @@ public class ProjectUpdateDto {
     @NotBlank(message = "서비스명은 필수 입력값입니다.")
     private String serviceName;
 
-    @NotBlank(message = "링크는 필수 입력값입니다.")
-    private String link;
+    private String link; // null 허용, @NotBlank 제거
 
     @NotBlank(message = "프로젝트 주제는 필수 입력값입니다.")
     private String domain;
 
-    // 기능 리스트도 수정 가능하도록 추가
     private List<PrimaryFeatureSaveReq> primaryFeatureSaveReqList;
 }
