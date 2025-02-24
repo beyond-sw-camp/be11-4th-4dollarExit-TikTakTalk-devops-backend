@@ -106,10 +106,18 @@ public class UserController {
     }
 
     //    6.프로필 이미지 수정
-    @PatchMapping("/changeProfileImage")
-    public ResponseEntity<?> updateProfileImage(MultipartFile image) {
-        userService.updateProfileImage(image);
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "profile image is changed successfully", "success"), HttpStatus.OK);
+    @PostMapping("/changeProfileImage")
+    public ResponseEntity<?> updateProfileImage(@RequestParam("image") MultipartFile image) {
+        // ✅ 변경된 프로필 이미지 URL을 반환하도록 수정
+        String updatedImageUrl = userService.updateProfileImage(image);
+
+        // ✅ 응답 데이터에 변경된 이미지 URL 포함
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", HttpStatus.OK.value());
+        response.put("message", "Profile image updated successfully");
+        response.put("imageUrl", updatedImageUrl); // 변경된 이미지 URL 반환
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //    7.회원 목록 조회
