@@ -123,7 +123,8 @@ public class PostService {
 
 //    2.게시글 조회
  public Page<PostAllListDto> findAll(Pageable pageable){
-     Page<Post> originalPostList =  postRepository.findAllByDelYN(DelYN.N,pageable);
+//     Page<Post> originalPostList =  postRepository.findAllByDelYN(DelYN.N,pageable);
+     Page<Post> originalPostList = postRepository.findAllWithUser(DelYN.N,pageable);
      return originalPostList.map(p->p.toAllListDto(redisTemplate, redisServiceForViewCount.getViewCount(p.getId())));
     }
 
