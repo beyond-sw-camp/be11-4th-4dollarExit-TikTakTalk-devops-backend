@@ -4,7 +4,7 @@ spring :
       on-profile: prod
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/TTT
+    url: jdbc:mariadb://localhost:3307/TTT
     username: root
     password: 1234
   jpa:
@@ -12,7 +12,7 @@ spring :
     database-platform: org.hibernate.dialect.MariaDBDialect
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show_sql: true
   redis:
     host: localhost
@@ -50,9 +50,9 @@ cloud:
 
 # 휴대폰 API 관련설정
 coolsms:
-  apiKey: "NCSCSP7I4XPD9MBJ"
-  apiSecret: "G2M6XS65E22ZUMTRNISYQ3QXZFGRIRCT"
-  fromNumber: "01024982285" # 발신번호
+  apiKey: "NCS9W7GKQC51EHQD"
+  apiSecret: "BL3VUKTVBAZX1PIQPCHXVP2HKKYOBEIN"
+  fromNumber: "01076084578" # 발신번호
 
 # oauth 로그인 설정
 oauth:
