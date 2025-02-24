@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class PostListDto {
     private Long postId;
     private String title;
+    private String contents;
     private LocalDateTime createdTime;
     private String AuthorNickName;
     private String AuthorImage;
@@ -21,4 +22,5 @@ public class PostListDto {
     private int countOfComment;
     private int likesCount;
     private int viewCount;
+    private int AuthorRankingPoint;
 }
