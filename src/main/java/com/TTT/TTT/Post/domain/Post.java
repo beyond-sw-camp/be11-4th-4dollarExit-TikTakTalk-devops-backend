@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Formula;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
@@ -49,8 +50,9 @@ public class Post extends BaseTimeEntity {
     @Builder.Default
     private List<Attachment> attachmentList = new ArrayList<>();
     //  댓글(//eager설정은 원댓글 삭제처리시 대댓글들은 여전히 보이게 설정하려는데, 원댓글의 삭제칼럼이 y로 변경이 되면 이걸 늦게 반영이 되어 대댓글도 삭제처리된 것처럼 한동안 보이게 되어 eager설정으로 두었습니다)
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
+    @BatchSize(size = 20) // n+1문제를 해결하기 위해 단 어노테이션.연관 관계에 적용가능한 것으로 jpa가 in 절을 활용하여 한꺼번에 데이터를 가져오도록하는 개념, Batchsize는 many-to-one관계에서는 사용할 수 없다.
     private List<Comment> commentList = new ArrayList<>();
     //  게시판 카테고리
     @ManyToOne(fetch = FetchType.LAZY)
@@ -122,6 +124,7 @@ public class Post extends BaseTimeEntity {
                 .AuthorNickName(this.user.getNickName())
                 .AuthorImage(this.user.getProfileImagePath())
                 .countOfComment(this.commentList.size())
+                .AuthorRankingPoint(this.user.getRankingPoint())
                 .LikesCount(likeCount)
                 .viewCount(viewCount)
                 .build();

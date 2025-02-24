@@ -19,6 +19,12 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post, Long>{
 //전체게시판 글 조회
     Page<Post> findAllByDelYN(DelYN delYN,Pageable pageable);
+//전체게시글
+//    value
+    @Query(value = "SELECT p FROM Post p JOIN FETCH p.user WHERE p.delYN = :delYN",
+            countQuery = "SELECT COUNT(p) FROM Post p WHERE p.delYN = :delYN")
+    Page<Post> findAllWithUser(@Param("delYN") DelYN delYN, Pageable pageable);
+
 //검색용. delYN은 기본적으로 삭제되지 않은 것 중에 검색되게 specification으로 구현
     Page<Post> findAll(Specification<Post> specification, Pageable pageable);
 
@@ -26,6 +32,10 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 
 //자유게시판 글 조회
     Page<Post> findAllByCategory_IdAndDelYN(Long id,DelYN delYN,Pageable pageable);
+
+//
+//    @Query("SELECT p FROM Post p  JOIN FETCH p.user WHERE p.category = :id AND p.delYN = :delYN")
+//    Page<Post> findAllwithUser(@Param("category")Long id, @Param("delYN")DelYN delYN, Pageable pageable);
 
 //전체게시글 중에 인기게시글 조회
     List<Post> findTop10ByOrderByLikesCountDesc();
