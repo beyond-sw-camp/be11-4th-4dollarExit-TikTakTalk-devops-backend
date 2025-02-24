@@ -13,6 +13,7 @@ import java.util.List;
 @Data
 @Builder
 public class ProjectListRes {
+     private Long id;
      private int batch;
      private ProjectType projectType;
      private String teamName;
