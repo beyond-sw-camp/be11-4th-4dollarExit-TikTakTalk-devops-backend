@@ -21,5 +21,6 @@ public class PostAllListDto {
     //  댓글 안달리면 0개 초기값 주기 위해 int로 설정
     private int countOfComment;
     private int LikesCount;
+    private int viewCount;
     private String categoryName;
 }

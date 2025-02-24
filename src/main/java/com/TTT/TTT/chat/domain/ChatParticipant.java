@@ -30,7 +30,13 @@ public class ChatParticipant extends BaseTimeEntity {
     @Builder.Default
     private ExitYN exitYN = ExitYN.N;
 
+    private boolean isConnected;
+
     public void paticipantExitUpdate(ExitYN exitYN) {
         this.exitYN = exitYN;
+    }
+
+    public void updateConnectionStatus(boolean isConnected) {
+        this.isConnected = isConnected;
     }
 }

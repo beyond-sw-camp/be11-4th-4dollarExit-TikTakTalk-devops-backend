@@ -7,6 +7,7 @@ import com.TTT.TTT.Post.domain.Post;
 import com.TTT.TTT.Post.dtos.PostAllListDto;
 import com.TTT.TTT.Post.dtos.PostDetailDto;
 import com.TTT.TTT.Post.repository.PostRepository;
+import com.TTT.TTT.Post.service.RedisServiceForViewCount;
 import com.TTT.TTT.User.UserRepository.UserRepository;
 import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.User.domain.Role;
@@ -43,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 @Service
@@ -53,17 +55,20 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final S3Client s3Client;
     private final SmsService smsService;
-    @Qualifier("likes")
     private final RedisTemplate<String,String> redisTemplate;
+    private final RedisTemplate<String, Object> chatRedisTemplate;
+    private final RedisServiceForViewCount redisServiceForViewCount;
 
     public UserService(UserRepository userRepository, PostRepository postRepository, PasswordEncoder passwordEncoder, S3Client s3Client, SmsService smsService,
-                       @Qualifier("likes") RedisTemplate<String, String> redisTemplate) {
+                       @Qualifier("likes") RedisTemplate<String, String> redisTemplate, @Qualifier("chatProfileImage") RedisTemplate<String, Object> chatRedisTemplate, RedisServiceForViewCount redisServiceForViewCount) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.passwordEncoder = passwordEncoder;
         this.s3Client = s3Client;
         this.smsService = smsService;
         this.redisTemplate = redisTemplate;
+        this.chatRedisTemplate = chatRedisTemplate;
+        this.redisServiceForViewCount = redisServiceForViewCount;
     }
   
     @Value("${cloud.aws.s3.bucket}")
@@ -119,7 +124,7 @@ public class UserService {
       String userLogin =  SecurityContextHolder.getContext().getAuthentication().getName();
       User user = userRepository.findByLoginIdAndDelYN(userLogin,DelYN.N).orElseThrow(()-> new EntityNotFoundException("없는 아이디입니다"));
       List<Post> originalPostList = user.getMyPostList();
-      return originalPostList.stream().map(p->p.toDetailDto(redisTemplate)).toList();
+      return originalPostList.stream().map(p->p.toDetailDto(redisTemplate, redisServiceForViewCount.getViewCount(p.getId()))).toList();
     }
 
 //  5. 내 정보 수정
@@ -207,7 +212,7 @@ public String updateProfileImage(MultipartFile image) {
 
             for(String s : myLikeListInRedis){
                 Post post = postRepository.findById(Long.parseLong(s)).orElseThrow(()->new EntityNotFoundException("없는 게시글입니다"));
-                PostAllListDto postAllListDto = post.toAllListDto(redisTemplate);
+                PostAllListDto postAllListDto = post.toAllListDto(redisTemplate, redisServiceForViewCount.getViewCount(post.getId()));
                 myLikeListOfList.add(postAllListDto);
             }
 
@@ -267,6 +272,22 @@ public String updateProfileImage(MultipartFile image) {
         return user;
     }
 
+    public String getProfileImage(Long userId) {
+//        레디스의 키값.
+        String key = "profile:" + userId;
+//        키값으로 레디스 밸류값 조회
+        String profileUrl = (String) chatRedisTemplate.opsForValue().get(key);
 
+//        만약 레디스에 조회했을때 이미지가 남아있다면 바로 이미지url 리턴
+        if (profileUrl != null) {
+            return profileUrl;
+        }
+
+//        만약 레디스에 값이 없다면 다시 조회후 레디스에 5분동안 캐싱되도록 세팅 후 이미지url 리턴
+        profileUrl = userRepository.findByIdAndDelYN(userId, DelYN.N).orElseThrow(()->new EntityNotFoundException("user is not found")).getProfileImagePath();
+        chatRedisTemplate.opsForValue().set(key, profileUrl, 5, TimeUnit.MINUTES);
+
+        return profileUrl;
+    }
 
 }

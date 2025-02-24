@@ -15,11 +15,13 @@ public class PrimaryFeature {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
-    private String utilityName;
+
     @JoinColumn(name = "project_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
+
+    @Column(nullable = false)
+    private String utilityName;
 
     @Override
     public String toString() {

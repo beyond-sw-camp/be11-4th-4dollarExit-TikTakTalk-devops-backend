@@ -11,7 +11,6 @@ public class JacksonConfig {
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        System.out.println("자바모듈 등록했당!");
         return objectMapper;
     }
 }

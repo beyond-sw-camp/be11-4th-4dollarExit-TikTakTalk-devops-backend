@@ -61,5 +61,5 @@ oauth:
     client-secret : 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
     redirect-url: http://localhost:3000/oauth/google/redirect
   kakao:
-    client-id: 3936661ae7c540405661ec086c416c16
+    client-id: d4582d3d057eb4fcd270886537698cd9
     redirect-url: http://localhost:3000/oauth/kakao/redirect

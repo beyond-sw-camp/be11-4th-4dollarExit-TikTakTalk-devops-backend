@@ -1,5 +1,6 @@
 package com.TTT.TTT.chat.service;
 
+import com.TTT.TTT.chat.controller.SseController;
 import com.TTT.TTT.chat.dto.ChatMessageDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,11 +18,13 @@ public class RedisPubSubService implements MessageListener {
     private final StringRedisTemplate stringRedisTemplate;
     private final SimpMessageSendingOperations messageTemplate;
     private final ObjectMapper objectMapper;
+    private final SseController sseController;
 
-    public RedisPubSubService(@Qualifier("chatPubSub") StringRedisTemplate stringRedisTemplate, SimpMessageSendingOperations messageTemplate, ObjectMapper objectMapper) {
+    public RedisPubSubService(@Qualifier("PubSub") StringRedisTemplate stringRedisTemplate, SimpMessageSendingOperations messageTemplate, ObjectMapper objectMapper, SseController sseController) {
         this.stringRedisTemplate = stringRedisTemplate;
         this.messageTemplate = messageTemplate;
         this.objectMapper = objectMapper;
+        this.sseController = sseController;
         this.objectMapper.registerModule(new JavaTimeModule());
     }
 
@@ -33,9 +36,18 @@ public class RedisPubSubService implements MessageListener {
 //    pattern에는 topic의 이름의 패턴이 담겨있고, 이 패턴을 기반으로 다이나믹한 코딩
     public void onMessage(Message message, byte[] pattern) {
         String payload = new String(message.getBody());
+        String channel = new String(pattern);
         try {
             ChatMessageDto chatMessageDto = objectMapper.readValue(payload, ChatMessageDto.class);
-            messageTemplate.convertAndSend("/topic/"+chatMessageDto.getRoomId(), chatMessageDto);
+
+            if ("chat".equals(channel)) {
+                messageTemplate.convertAndSend("/topic/" + chatMessageDto.getRoomId(), chatMessageDto);
+            }
+
+            if ("sse-chat".equals(channel)) {
+                sseController.publishMessage(chatMessageDto, chatMessageDto.getRoomId());
+            }
+
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             throw new RuntimeException(e);

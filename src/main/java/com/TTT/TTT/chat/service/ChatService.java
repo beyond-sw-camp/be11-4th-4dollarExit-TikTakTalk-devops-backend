@@ -4,6 +4,7 @@ import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.Common.domain.ExitYN;
 import com.TTT.TTT.User.UserRepository.UserRepository;
 import com.TTT.TTT.User.domain.User;
+import com.TTT.TTT.chat.controller.SseController;
 import com.TTT.TTT.chat.domain.ChatMessage;
 import com.TTT.TTT.chat.domain.ChatParticipant;
 import com.TTT.TTT.chat.domain.ChatRoom;
@@ -60,6 +61,10 @@ public class ChatService {
                 .content(chatMessageReqDto.getMessage())
                 .build();
         chatMessageRepository.save(chatMessage);
+
+        String profileUrl = sender.getProfileImagePath();
+        chatMessageReqDto.setSenderImagePath(profileUrl);
+
 //        사용자별로 읽음여부 저장
 //        보낸 사람은 보내자마자 바로 읽음처리.
         List<ChatParticipant> chatParticipants = chatParticipantRepository.findByChatRoomAndExitYN(chatRoom,ExitYN.N);
@@ -192,6 +197,7 @@ public class ChatService {
 //                    ChatMessage에 메세지를 보낸 User의 정보에서 닉네임을 꺼내 senderNickname에 세팅.
                     .senderNickName(c.getUser().getNickName())
                     .sendTime(c.getCreatedTime())
+                    .senderImagePath(c.getUser().getProfileImagePath())
                     .build();
             chatMessageDtos.add(chatMessageDto);
         }
@@ -288,6 +294,20 @@ public class ChatService {
         addParticipantToRoom(newRoom, otherUser);
 
         return newRoom.getId();
+    }
+
+//    채팅방 커넥션 여부 업데이트
+    public void updateUserConnectionStatus(boolean isConnected, String nickName, Long chatRoomId) {
+        User user = userRepository.findByNickNameAndDelYN(nickName, DelYN.N).orElseThrow(()-> new EntityNotFoundException("user is not found"));
+        ChatRoom chatRoom = chatRoomRepository.findByIdAndExitYN(chatRoomId, ExitYN.N).orElseThrow(()->new EntityNotFoundException("chat room is not found"));
+        ChatParticipant chatParticipant = chatParticipantRepository.findByUserAndExitYNAndChatRoom(user, ExitYN.N, chatRoom).orElseThrow(()->new EntityNotFoundException("participant is not found"));
+        chatParticipant.updateConnectionStatus(isConnected);
+    }
+
+//    채팅방에 참여하고있지 않는 사람만 조회
+    public List<ChatParticipant> findUnConnectioned(Long chatRoomId) {
+        List<ChatParticipant> unConnectioned = chatParticipantRepository.findByChatRoomIdAndIsConnectedFalse(chatRoomId);
+        return unConnectioned;
     }
 }
 
