@@ -32,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 
 import java.io.IOException;
@@ -138,35 +139,48 @@ public class UserService {
     }
 
 //    6.내 프로필 이미지 수정
-    public void updateProfileImage(MultipartFile image){
-       try {
-           Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-           User user = userRepository.findByLoginIdAndDelYN(authentication.getName(), DelYN.N).orElseThrow(() -> new EntityNotFoundException("없는 아이디입니다"));
-           //이미지 일단 로컬에 저장하기 위해  이미지를 바이트배열로 바꿈
-//          MultipartFile image = dto.getImage();
-           byte[] bytes = image.getBytes();
-           String fileName = user.getId() + "_" + image.getOriginalFilename();
-           //로컬에 저장. 수업시간때 썼던 폴더 경로라 다들 같으실 겁니다.
-           Path path = Paths.get("C:/Users/Playdata/Desktop/tmp/", fileName);
-           Files.write(path, bytes, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-            //aws에 저장
-           PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                   .bucket(bucket)
-                   .key(fileName)
-                   .build();
-           s3Client.putObject(putObjectRequest, RequestBody.fromFile(path));
-           //aws로 부터 url경로 받아옴
-           String s3Url = s3Client.utilities().getUrl(a -> a.bucket(bucket).key(fileName)).toExternalForm();
-           user.updateProfileImage(s3Url);
+public String updateProfileImage(MultipartFile image) {
+    try {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByLoginIdAndDelYN(authentication.getName(), DelYN.N)
+                .orElseThrow(() -> new EntityNotFoundException("없는 아이디입니다"));
 
-//           chatting 이미지 캐싱을 위해 코드 추가
-//           프로필 이미지를 수정한다면 redis에도 프로필 이미지 업데이트.
-           String key = "profile:" + user.getId();
-           chatRedisTemplate.opsForValue().set(key, s3Url, 5, TimeUnit.MINUTES);
-       } catch (IOException e){
-           throw new RuntimeException("이미지 저장 실패"); //
-       }
+        // 📌 1. 폴더 존재 여부 확인 후 생성
+        Path dir = Paths.get("C:/Users/Playdata/Desktop/tmp/");
+        if (!Files.exists(dir)) {
+            Files.createDirectories(dir);
+        }
+
+        // 📌 2. 파일명 설정
+        String fileName = user.getId() + "_" + image.getOriginalFilename();
+        Path path = dir.resolve(fileName);
+
+        // 📌 3. 파일 저장
+        Files.write(path, image.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+
+        // AWS S3에 저장
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(bucket)
+                .key(fileName)
+                .build();
+        s3Client.putObject(putObjectRequest, RequestBody.fromFile(path));
+
+        // AWS로부터 URL 경로 받아오기
+        String s3Url = s3Client.utilities().getUrl(a -> a.bucket(bucket).key(fileName)).toExternalForm();
+
+        // DB에 변경된 프로필 이미지 저장
+        user.updateProfileImage(s3Url);
+        userRepository.save(user); // ✅ 변경 사항 DB에 저장
+
+        return s3Url; // ✅ 변경된 이미지 URL 반환
+    } catch (IOException e) {
+        e.printStackTrace();
+        throw new RuntimeException("이미지 저장 실패: " + e.getMessage());
+    } catch (S3Exception e) {
+        e.printStackTrace();
+        throw new RuntimeException("S3 업로드 실패: " + e.awsErrorDetails().errorMessage());
     }
+}
 
 //    7.회원 목록 조회
     public Page<UserListDto> findAll(Pageable pageable){
