@@ -22,7 +22,7 @@ public class BlogLink {
     private String name; // 유저 이름 (검색 용)
 
     @Column
-    private String nickName;// 유저 닉네임
+    private String phoneNumber;// 유저 전화번호
 
     @Column(nullable = false, length = 255)
     private String blogUrl;

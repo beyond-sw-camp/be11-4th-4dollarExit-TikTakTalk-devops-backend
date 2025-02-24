@@ -13,7 +13,7 @@ public class BlogLinkResponseDto {
     private Long blogId;
     private Long userId;
     private String name;
-    private String nickName;
+    private String phoneNumber;
     private Integer batch;
     private String blogUrl;
 }

@@ -26,8 +26,6 @@ public class ProjectSaveReq {
     private String link;
     @NotEmpty
     private String domain;
-
-//    주요 구현 기능 리스트로 받기
     private List<PrimaryFeatureSaveReq> primaryFeatureSaveReqList = new ArrayList<>();
 
 

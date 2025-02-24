@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ProjectDetailRes {
+    private Long id;
     private int batch;
     private ProjectType projectType;
     private String teamName;
