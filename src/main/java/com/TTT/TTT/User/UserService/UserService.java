@@ -16,13 +16,9 @@ import com.TTT.TTT.User.domain.User;
 import com.TTT.TTT.User.dtos.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,11 +37,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 
 @Service
 @Transactional
@@ -290,4 +284,11 @@ public String updateProfileImage(MultipartFile image) {
         return profileUrl;
     }
 
+    public List<BatchRankDto> getTop5Batch() {
+//        jpql에서는 limit로 최대 몇개까지만 가져오게끔 설정할 수 없으므로,
+//        Pageable을 사용하여 첫번째 페이지 즉 0번째,
+//        페이지사이즈는 3으로 해서 limit와 같은 효과를 냄.
+        Pageable topFive = PageRequest.of(0, 5);
+        return userRepository.findTopBatchesWithAvgRankingPoint(topFive).getContent();
+    }
 }
