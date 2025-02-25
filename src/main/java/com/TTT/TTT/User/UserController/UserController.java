@@ -203,7 +203,7 @@ public class UserController {
 
         User user = userService.getUserByOauthId(googleProfile.getSub());
         if (user == null) {
-            user = userService.userOauthCreate(googleProfile.getSub(), SocialType.GOOGLE, googleProfile.getEmail());
+            return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "user not found", googleProfile),HttpStatus.OK);
         }
 
         String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString(), user.getNickName());
@@ -227,7 +227,7 @@ public class UserController {
 
         User user = userService.getUserByOauthId(kakaoProfile.getId());
         if(user == null) {
-            user = userService.userOauthCreate(kakaoProfile.getId(), SocialType.KAKAO, kakaoProfile.getKakao_account().getEmail());
+            return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "user not found", kakaoProfile),HttpStatus.OK);
         }
         String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString(), user.getNickName());
         //        refresh 토큰도 발행
@@ -239,7 +239,7 @@ public class UserController {
         loginInfo.put("token", jwtToken);
         loginInfo.put("refreshToken", refreshToken);
 //            로그인 처리
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "google oauth login success", loginInfo), HttpStatus.OK);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "kakao oauth login success", loginInfo), HttpStatus.OK);
     }
 
 //    채팅에 뿌려줄 프로필이미지 조회 엔드포인트.
@@ -257,4 +257,9 @@ public class UserController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "top 5 found successful", top5s), HttpStatus.OK);
     }
 
+    @PostMapping("/oauth/create")
+    public ResponseEntity<?> oauthUserCreate(@RequestBody @Valid OauthUserCreateDto dto) {
+        userService.oauthUserCreate(dto);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.CREATED.value(), "user create successful", "OK"), HttpStatus.CREATED);
+    }
 }

@@ -30,7 +30,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     List<User> findTop5ByOrderByRankingPointDesc();
 
-    Optional<User> findBySocialId(String socialId);
+    Optional<User> findBySocialIdAndDelYN(String socialId, Enum delYN);
 
 //    jpql new키워드를 사용하여 jpql에서 직접 DTO 객체를 생성
 //    batchRankDto의 생성자를 호출하여 데이터를 DTO로 매핑시킴.
