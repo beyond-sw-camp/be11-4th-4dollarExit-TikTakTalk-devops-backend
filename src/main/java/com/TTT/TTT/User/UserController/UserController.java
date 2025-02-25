@@ -262,4 +262,11 @@ public class UserController {
         userService.oauthUserCreate(dto);
         return new ResponseEntity<>(new CommonDto(HttpStatus.CREATED.value(), "user create successful", "OK"), HttpStatus.CREATED);
     }
+
+//    전체 유저의 숫자 조회하는 엔드포인트
+    @GetMapping("/total/user")
+    public ResponseEntity<?> userCount() {
+        Long userCount = userService.userCount();
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "total user count", userCount), HttpStatus.OK);
+    }
 }

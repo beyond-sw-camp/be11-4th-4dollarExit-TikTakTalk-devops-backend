@@ -93,6 +93,11 @@ public class PostController {
               return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "populat list is uploaded successfully",popularPost),HttpStatus.OK);
     }
 
-
+//    전체게시글 수 조회하는 엔드포인트
+    @GetMapping("/total/count")
+    public ResponseEntity<?> postCount() {
+        Long postTotalCount = postService.totalCount();
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "post count found", postTotalCount), HttpStatus.OK);
+    }
 
 }

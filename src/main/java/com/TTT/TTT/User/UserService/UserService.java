@@ -309,4 +309,9 @@ public String updateProfileImage(MultipartFile image) {
         userRepository.save(oauthUserCreateDto.toEntity(oauthUserCreateDto.getPassword()));
 
     }
+
+    public Long userCount() {
+        Long userCount = userRepository.count();
+        return userCount;
+    }
 }

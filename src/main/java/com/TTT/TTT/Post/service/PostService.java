@@ -275,4 +275,10 @@ public class PostService {
      return top10List.stream().map(p->p.toListDto(redisTemplate, redisServiceForViewCount.getViewCount(p.getId()))).toList();
     }
 
+
+//    post 전체개수 조회
+    public Long totalCount() {
+        Long postTotalCount = postRepository.count();
+        return postTotalCount;
+    }
 }
