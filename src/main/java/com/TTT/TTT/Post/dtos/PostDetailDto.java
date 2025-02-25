@@ -18,7 +18,7 @@ public class PostDetailDto {
     private Long postUserId;
     private String authorId;
     private String authorNickName;
-    private String profileImageOfAuthor;
+    private String AuthorImage;
     private int rankingPointOfAuthor;
     private String title;
     private String contents;

@@ -169,7 +169,7 @@ public class Post extends BaseTimeEntity {
                 .contents(this.contents)
                 .authorId(this.user.getLoginId())
                 .authorNickName(this.user.getNickName())
-                .profileImageOfAuthor(this.user.getProfileImagePath())
+                .AuthorImage(this.user.getProfileImagePath())
                 .rankingPointOfAuthor(this.user.getRankingPoint())
                 .likesCount(likesCount)
                 .liked(liked)
