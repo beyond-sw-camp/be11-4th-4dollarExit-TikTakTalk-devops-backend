@@ -227,7 +227,7 @@ public class UserController {
 
         User user = userService.getUserByOauthId(kakaoProfile.getId());
         if(user == null) {
-            user = userService.userOauthCreate(kakaoProfile.getId(), SocialType.KAKAO, kakaoProfile.getKakao_account().getEmail());
+            return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "user not found", kakaoProfile),HttpStatus.OK);
         }
         String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString(), user.getNickName());
         //        refresh 토큰도 발행
@@ -257,4 +257,9 @@ public class UserController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "top 5 found successful", top5s), HttpStatus.OK);
     }
 
+    @PostMapping("/oauth/create")
+    public ResponseEntity<?> oauthUserCreate(@RequestBody @Valid OauthUserCreateDto dto) {
+        userService.oauthUserCreate(dto);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.CREATED.value(), "user create successful", "OK"), HttpStatus.CREATED);
+    }
 }

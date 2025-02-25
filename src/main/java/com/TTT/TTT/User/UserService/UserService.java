@@ -85,15 +85,9 @@ public class UserService {
         //휴대폰검증로직
         String phoneNumder = userCreateDto.getPhoneNumber();
         String authCode = userCreateDto.getAuthCode();
-        smsService.sendAuthCode(phoneNumder);
         smsService.verifyAuthCode(phoneNumder,authCode);
 
         userRepository.save(userCreateDto.toEntity(passwordEncoder.encode(userCreateDto.getPassword())));
-
-
-//
-//        User user = new User(userCreateDto.getLoginId(),userCreateDto.getName())
-
     }
 // 2.로그인
     public User userLogin(UserLoginDto userLoginDto){
@@ -109,6 +103,7 @@ public class UserService {
 // 3. 내 정보 조회
     public UserMyPageDto myInfo(){
        String userLogin =  SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println(userLogin);
        User user = userRepository.findByLoginIdAndDelYN(userLogin,DelYN.N).orElseThrow(()->new EntityNotFoundException("없는 아이디입니다"));
        return user.myPageFromEntity();
     }
@@ -262,7 +257,7 @@ public String updateProfileImage(MultipartFile image) {
     }
 
     public User getUserByOauthId(String socialId) {
-        User user = userRepository.findBySocialId(socialId).orElse(null);
+        User user = userRepository.findBySocialIdAndDelYN(socialId, DelYN.N).orElse(null);
         return user;
     }
 
@@ -290,5 +285,28 @@ public String updateProfileImage(MultipartFile image) {
 //        페이지사이즈는 3으로 해서 limit와 같은 효과를 냄.
         Pageable topFive = PageRequest.of(0, 5);
         return userRepository.findTopBatchesWithAvgRankingPoint(topFive).getContent();
+    }
+
+    public void oauthUserCreate(OauthUserCreateDto oauthUserCreateDto) throws IllegalArgumentException {
+        if (!smsService.verifyAuthCode(oauthUserCreateDto.getPhoneNumber(), oauthUserCreateDto.getAuthCode())) {
+            throw new IllegalArgumentException("휴대폰 인증이 완료되지 않았습니다.");
+        }
+        if (userRepository.findByLoginIdAndDelYN(oauthUserCreateDto.getLoginId(), DelYN.N).isPresent()) {
+            throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
+        }
+        if (userRepository.findByNickNameAndDelYN(oauthUserCreateDto.getNickName(), DelYN.N).isPresent()) {
+            throw new IllegalArgumentException("이미 사용중인 닉네임입니다.");
+        }
+        if (userRepository.findByEmailAndDelYN(oauthUserCreateDto.getEmail(), DelYN.N).isPresent()) {
+            throw new IllegalArgumentException("이미 사용중인 이메일입니다.");
+        }
+        //휴대폰검증로직
+        String phoneNumder = oauthUserCreateDto.getPhoneNumber();
+        String authCode = oauthUserCreateDto.getAuthCode();
+        smsService.sendAuthCode(phoneNumder);
+        smsService.verifyAuthCode(phoneNumder,authCode);
+
+        userRepository.save(oauthUserCreateDto.toEntity(oauthUserCreateDto.getPassword()));
+
     }
 }
