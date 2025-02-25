@@ -162,6 +162,7 @@ public class Post extends BaseTimeEntity {
         boolean liked = redisTemplate.opsForSet().isMember(likeUserKey,userId);
 
         return PostDetailDto.builder()
+                .postId(this.id)
                 .postUserId(this.user.getId())
                 .title(this.title)
                 .contents(this.contents)
@@ -175,6 +176,7 @@ public class Post extends BaseTimeEntity {
                 .attachmentsUrl(attachmentUrls)
                 .commentList(topLevelComments)
                 .createdTime(this.getCreatedTime())
+                .categoryName(this.category.getCategoryName())
                 .build();
     }
 
