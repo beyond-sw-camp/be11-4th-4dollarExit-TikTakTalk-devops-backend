@@ -109,6 +109,7 @@ public class Post extends BaseTimeEntity {
                 .viewCount(viewCount)
                 .contents(this.contents)
                 .AuthorRankingPoint(this.user.getRankingPoint())
+                .categoryName(this.category.getCategoryName())
                 .build();
     }
 
