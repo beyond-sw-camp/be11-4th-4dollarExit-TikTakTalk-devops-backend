@@ -243,6 +243,7 @@ public class ChatService {
                     .roomName(c.getChatRoom().getName())
                     .isGroupChat(c.getChatRoom().getIsGroupChat())
                     .unReadCount(count)
+                    .chatPaticipantCount(c.getChatRoom().getChatParticipants().size())
                     .build();
             chatListResDtos.add(dto);
         }
