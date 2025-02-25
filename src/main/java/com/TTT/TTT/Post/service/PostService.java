@@ -37,6 +37,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -280,5 +283,16 @@ public class PostService {
     public Long totalCount() {
         Long postTotalCount = postRepository.count();
         return postTotalCount;
+    }
+
+    public List<PostListDto> likePost() {
+//        현재날짜
+        LocalDate today = LocalDate.now();
+//        현재날짜 00시 00분
+        LocalDateTime startOfDay = today.atStartOfDay();
+//        현재날짜 23시59분 59초
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+        List<Post> top12 = postRepository.findTop12ByCreatedTimeBetweenOrderByLikesCountDescCreatedTimeAsc(startOfDay, endOfDay);
+        return top12.stream().map(p->p.toListDto(redisTemplate, redisServiceForViewCount.getViewCount(p.getId()))).toList();
     }
 }
