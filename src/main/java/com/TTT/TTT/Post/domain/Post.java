@@ -106,6 +106,9 @@ public class Post extends BaseTimeEntity {
                 .countOfComment(this.commentList.size())
                 .likesCount(likesCount)
                 .viewCount(viewCount)
+                .contents(this.contents)
+                .AuthorRankingPoint(this.user.getRankingPoint())
+                .categoryName(this.category.getCategoryName())
                 .build();
     }
 
@@ -159,12 +162,13 @@ public class Post extends BaseTimeEntity {
         boolean liked = redisTemplate.opsForSet().isMember(likeUserKey,userId);
 
         return PostDetailDto.builder()
+                .postId(this.id)
                 .postUserId(this.user.getId())
                 .title(this.title)
                 .contents(this.contents)
                 .authorId(this.user.getLoginId())
                 .authorNickName(this.user.getNickName())
-                .profileImageOfAuthor(this.user.getProfileImagePath())
+                .AuthorImage(this.user.getProfileImagePath())
                 .rankingPointOfAuthor(this.user.getRankingPoint())
                 .likesCount(likesCount)
                 .liked(liked)
@@ -172,6 +176,7 @@ public class Post extends BaseTimeEntity {
                 .attachmentsUrl(attachmentUrls)
                 .commentList(topLevelComments)
                 .createdTime(this.getCreatedTime())
+                .categoryName(this.category.getCategoryName())
                 .build();
     }
 

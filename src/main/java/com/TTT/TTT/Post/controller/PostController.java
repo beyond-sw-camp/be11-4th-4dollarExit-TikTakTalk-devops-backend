@@ -93,6 +93,18 @@ public class PostController {
               return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "populat list is uploaded successfully",popularPost),HttpStatus.OK);
     }
 
+//    전체게시글 수 조회하는 엔드포인트
+    @GetMapping("/total/count")
+    public ResponseEntity<?> postCount() {
+        Long postTotalCount = postService.totalCount();
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "post count found", postTotalCount), HttpStatus.OK);
+    }
 
+//    당일 가장 좋아요가 많은 12개 조회하는 엔드포인트(좋아요 수가 같다면 생성시간이 빠른 순으로 정렬.)
+    @GetMapping("/popular/like")
+    public ResponseEntity<?> popularLike() {
+        List<PostListDto> popularDtos = postService.likePost();
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "popular is found", popularDtos), HttpStatus.OK);
+    }
 
 }
