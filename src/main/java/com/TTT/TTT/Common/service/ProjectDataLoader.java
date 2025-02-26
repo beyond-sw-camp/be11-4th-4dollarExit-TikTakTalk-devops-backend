@@ -31,6 +31,7 @@ public class ProjectDataLoader implements CommandLineRunner {
             System.out.println("프로젝트 데이터가 이미 존재합니다. 초기 데이터를 로드하지 않습니다.");
             return;
         }
+
         InputStream is = getClass().getResourceAsStream("/projects.json");
         if (is != null) {
             List<ProjectSeedDto> projectSeedDtos = objectMapper.readValue(is, new TypeReference<List<ProjectSeedDto>>() {});

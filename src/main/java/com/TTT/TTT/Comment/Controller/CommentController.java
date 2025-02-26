@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import retrofit2.http.HTTP;
 
 @RestController
 @RequestMapping("ttt/comment")
@@ -26,12 +27,20 @@ public class CommentController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.CREATED.value(), "comment is created successfully", "sucess"), HttpStatus.CREATED);
     }
 
+    // 1-1.프로젝트에 댓글 달기
+    @PostMapping("createforp")
+    public ResponseEntity<?> saveForP(@RequestBody @Valid CommentCreateDto commentCreateDto){
+        commentService.saveForP(commentCreateDto);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.CREATED.value(), "comment is created successfully","sucess"),HttpStatus.CREATED);
+    }
+
     //  2.댓글 수정
     @PatchMapping("update/{id}")
     public ResponseEntity<?> update(@RequestBody @Valid CommentUpdateDto commentUpdateDto, @PathVariable Long id) {
         commentService.update(commentUpdateDto, id);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "comment update is done successfully", "sucess"), HttpStatus.OK);
     }
+
 
     //  3.댓글 삭제
     @DeleteMapping("delete/{id}")

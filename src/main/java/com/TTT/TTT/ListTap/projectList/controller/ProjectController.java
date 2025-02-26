@@ -38,6 +38,13 @@ public class ProjectController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "success", pages), HttpStatus.OK);
     }
 
+// 페이지 내 데이터 말고 모든 데이터 요청
+    @GetMapping("/listAll")
+    public ResponseEntity<?> findAllAll() {
+        List<ProjectListRes> pages = projectService.findAllAll();
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "success", pages), HttpStatus.OK);
+    }
+
     //   프로젝트 추가
     @PostMapping("/create")
     public ResponseEntity<?> save(@RequestBody @Valid ProjectSaveReq projectSaveReq) {
@@ -50,6 +57,7 @@ public class ProjectController {
         projectService.save(projectSaveReq);
         return new ResponseEntity<>(new CommonDto(HttpStatus.CREATED.value(), "success", "success"), HttpStatus.CREATED);
     }
+
 
     //    검색
     @GetMapping("/find")
@@ -69,14 +77,12 @@ public class ProjectController {
 //    네네 위랑같이 맞울게여 업데이트도 코드 맞출게여
 //    넵 좋아요!
     @DeleteMapping("delete/{id}")
-    @PreAuthorize("hasRole('ADMIN')")  // ✅ ADMIN 권한만 삭제 가능
     public ResponseEntity<?> deleteProject(@PathVariable Long id) {
         projectService.deleteProject(id);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "success", "success"), HttpStatus.OK);
     }
 
     @PutMapping("update/{id}")
-    @PreAuthorize("hasRole('ADMIN')")  // ADMIN 권한만 수정 가능
     public ResponseEntity<?> updateProject(@PathVariable Long id, @RequestBody ProjectUpdateDto updateDto) {
         projectService.updateProject(id, updateDto);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "수정 완료", "success"), HttpStatus.OK);
@@ -86,6 +92,19 @@ public class ProjectController {
     public ResponseEntity<?> getProjectDetail(@PathVariable Long id) {
         ProjectDetailRes detailRes = projectService.getProjectDetail(id);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "프로젝트 상세 조회 성공", detailRes), HttpStatus.OK);
+    }
+
+//    진영추가
+    @GetMapping("detailsee/{id}")
+    public ResponseEntity<?> projectDetailSee(@PathVariable Long id){
+        ProjectDetailDto2 projectDetailDto2 = projectService.projectDetailSee(id);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"프로젝트 상세보기 성공",projectDetailDto2),HttpStatus.OK);
+    }
+
+    @GetMapping("/findByFeature")
+    public ResponseEntity<?> findByFeature(@RequestParam String featureName) {
+        List<ProjectListRes> projects = projectService.findByFeature(featureName);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "success", projects), HttpStatus.OK);
     }
 
 }

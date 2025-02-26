@@ -1,6 +1,7 @@
 package com.TTT.TTT.Likes.domain;
 
 import com.TTT.TTT.Common.domain.BaseTimeEntity;
+import com.TTT.TTT.ListTap.projectList.domain.Project;
 import com.TTT.TTT.Post.domain.Post;
 import com.TTT.TTT.User.domain.User;
 import jakarta.persistence.*;
@@ -23,6 +24,8 @@ public class Likes extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     User user;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "projectId")
+    Project project;
 
 }

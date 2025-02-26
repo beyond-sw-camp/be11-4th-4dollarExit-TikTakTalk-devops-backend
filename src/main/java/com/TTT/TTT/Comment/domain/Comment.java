@@ -4,6 +4,7 @@ import com.TTT.TTT.Comment.Dtos.CommentDetailDto;
 
 import com.TTT.TTT.Common.domain.BaseTimeEntity;
 import com.TTT.TTT.Common.domain.DelYN;
+import com.TTT.TTT.ListTap.projectList.domain.Project;
 import com.TTT.TTT.Post.domain.Post;
 
 import com.TTT.TTT.User.domain.User;
@@ -43,6 +44,9 @@ public class Comment extends BaseTimeEntity {
     @OneToMany(mappedBy = "parent" , cascade = CascadeType.ALL)
     @Builder.Default
     private List<Comment> childs= new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
 
 
 

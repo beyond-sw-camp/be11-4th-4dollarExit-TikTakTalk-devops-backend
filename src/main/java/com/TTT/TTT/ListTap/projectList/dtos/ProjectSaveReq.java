@@ -26,7 +26,8 @@ public class ProjectSaveReq {
     private String link;
     @NotEmpty
     private String domain;
+    private String contents;
+    private String userId;
     private List<PrimaryFeatureSaveReq> primaryFeatureSaveReqList = new ArrayList<>();
-
 
 }

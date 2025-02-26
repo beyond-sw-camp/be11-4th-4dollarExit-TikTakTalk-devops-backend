@@ -21,7 +21,7 @@ public class PostCreateDto {
     private String title;
 
     @NotNull(message = "최소 5자 이상은 입력해야합니다")
-    @Size(min = 5, max= 10000, message = "최대 10000자를 넘길 수 없습니다")
+    @Size(min = 5)
     private String contents;
 //  화면에서 사용자가 라디오버튼으로 글을 쓸 게시판을 선택하면 해당 게시판의 id값이 넘어오게
     private Long postCategoryId;

@@ -28,4 +28,11 @@ public class LikesController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"toggle succeed",likeStatus),HttpStatus.OK);
 
     }
+
+//  2.좋아요 누르기(한번 누르면 좋아요, 다시 누르면 좋아요 해제)
+    @PostMapping("/projectLike/{id}")
+    public ResponseEntity<?> addLikeForProject(@PathVariable Long id){
+        Map<String,Object> likeStatusOfProject = likesService.toggleLikeForProject(id);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"toggle success",likeStatusOfProject),HttpStatus.OK);
+    }
 }
