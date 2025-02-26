@@ -323,5 +323,14 @@ public String updateProfileImage(MultipartFile image) {
         System.out.println("LoginId Available? " + isAvailable);
         return isAvailable;
     }
+    // 닉네임 중복 확인 메서드 추가
+    public boolean checkNickNameAvailability(String nickName) {
+        System.out.println("Checking nickName availability for: " + nickName);
+
+        boolean isAvailable = userRepository.findByNickNameAndDelYN(nickName, DelYN.N).isEmpty();
+
+        System.out.println("NickName Available? " + isAvailable);
+        return isAvailable;
+    }
 
 }
