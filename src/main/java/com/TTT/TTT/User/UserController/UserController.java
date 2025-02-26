@@ -269,4 +269,26 @@ public class UserController {
         Long userCount = userService.userCount();
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "total user count", userCount), HttpStatus.OK);
     }
+    // loginId 검증 API 추가
+    @GetMapping("/checkLoginId")
+    public ResponseEntity<?> checkLoginIdAvailability(@RequestParam String loginId) {
+        boolean isAvailable = userService.checkLoginIdAvailability(loginId);
+        if (isAvailable) {
+            return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "사용 가능한 아이디입니다.", true), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new CommonDto(HttpStatus.CONFLICT.value(), "이미 사용 중인 아이디입니다.", false), HttpStatus.CONFLICT);
+        }
+    }
+    // 닉네임 검증 API 추가
+    @GetMapping("/checkNickName")
+    public ResponseEntity<?> checkNickNameAvailability(@RequestParam String nickName) {
+        boolean isAvailable = userService.checkNickNameAvailability(nickName);
+        if (isAvailable) {
+            return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "사용 가능한 닉네임입니다.", true), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new CommonDto(HttpStatus.CONFLICT.value(), "이미 사용 중인 닉네임입니다.", false), HttpStatus.CONFLICT);
+        }
+    }
+
+
 }
