@@ -314,4 +314,14 @@ public String updateProfileImage(MultipartFile image) {
         Long userCount = userRepository.count();
         return userCount;
     }
+    // 추가된 메서드: loginId 중복 확인
+    public boolean checkLoginIdAvailability(String loginId) {
+        System.out.println("Checking loginId availability for: " + loginId);
+
+        boolean isAvailable = userRepository.findByLoginIdAndDelYN(loginId, DelYN.N).isEmpty();
+
+        System.out.println("LoginId Available? " + isAvailable);
+        return isAvailable;
+    }
+
 }
