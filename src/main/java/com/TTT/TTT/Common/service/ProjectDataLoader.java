@@ -26,6 +26,7 @@ public class ProjectDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
         InputStream is = getClass().getResourceAsStream("/projects.json");
         if (is != null) {
             List<ProjectSeedDto> projectSeedDtos = objectMapper.readValue(is, new TypeReference<List<ProjectSeedDto>>() {});

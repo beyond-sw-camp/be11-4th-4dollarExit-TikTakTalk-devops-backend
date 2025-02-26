@@ -19,6 +19,5 @@ public class PostUpdateDto {
     private String title;
 
     @NotNull(message = "최소 5자 이상은 입력해야합니다")
-    @Size(min = 5, max= 10000, message = "최대 10000자를 넘길 수 없습니다")
     private String contents;
 }

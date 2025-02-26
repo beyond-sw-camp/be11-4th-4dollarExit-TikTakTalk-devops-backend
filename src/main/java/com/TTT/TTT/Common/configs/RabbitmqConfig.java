@@ -31,6 +31,8 @@ public class RabbitmqConfig {
 
     public static final String BACKUP_QUEUE_AL="backupAddLike";
     public static final String BACKUP_QUEUE_ML="backupMinusLike";
+    public static final String BACKUP_QUEUE_ALFORP="backupAddLikeForProject";
+    public static final String BACKUP_QUEUE_MLFORP="backupMinusLikeForProject";
 
     @Bean
     public Queue AddlikeQueue(){
@@ -39,6 +41,15 @@ public class RabbitmqConfig {
     @Bean
     public Queue MinuslikeQueue(){
         return new Queue(BACKUP_QUEUE_ML,true);
+    }
+
+    @Bean
+    public Queue AddlikeQueueForProject(){
+        return new Queue(BACKUP_QUEUE_ALFORP,true);
+    }
+    @Bean
+    public Queue MinuslikeQueueForProject(){
+        return new Queue(BACKUP_QUEUE_MLFORP,true);
     }
 
 

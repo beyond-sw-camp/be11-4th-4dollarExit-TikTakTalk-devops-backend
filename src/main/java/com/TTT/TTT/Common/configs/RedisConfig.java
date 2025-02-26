@@ -177,5 +177,25 @@ public class RedisConfig {
         return redisTemplate;
     }
 
+   //프로젝트에 하는 좋아요 관련
+   @Bean
+   @Qualifier("project")
+   public RedisConnectionFactory redisConnectionFactoryForProject(){
+       RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
+       configuration.setHostName(host);
+       configuration.setPort(port);
+       configuration.setDatabase(5);
+       return new LettuceConnectionFactory(configuration);
+   }
+
+    @Bean
+    @Qualifier("project")
+    public RedisTemplate<String,String> redisTemplateforProject(@Qualifier("project") RedisConnectionFactory redisConnectionFactoryForLikes){
+        RedisTemplate<String,String> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        redisTemplate.setConnectionFactory(redisConnectionFactoryForLikes);
+        return redisTemplate;
+    }
 
 }
