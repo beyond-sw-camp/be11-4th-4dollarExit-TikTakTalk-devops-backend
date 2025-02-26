@@ -14,10 +14,11 @@ import java.util.List;
 @Data
 @Builder
 public class PostDetailDto {
+    private Long postId;
     private Long postUserId;
     private String authorId;
     private String authorNickName;
-    private String profileImageOfAuthor;
+    private String AuthorImage;
     private int rankingPointOfAuthor;
     private String title;
     private String contents;
@@ -25,6 +26,7 @@ public class PostDetailDto {
     private int likesCount;
     private int viewCount;
     private boolean liked;
+    private String categoryName;
     private List<CommentDetailDto> commentList;
     private List<String> attachmentsUrl;
 }
