@@ -1,5 +1,6 @@
 package com.TTT.TTT.chat.repository;
 
+import com.TTT.TTT.Common.domain.ExitYN;
 import com.TTT.TTT.User.domain.User;
 import com.TTT.TTT.chat.domain.ChatParticipant;
 import com.TTT.TTT.chat.domain.ChatRoom;
@@ -23,5 +24,12 @@ public interface ChatParticipantRepository extends JpaRepository<ChatParticipant
     @Query("SELECT cp FROM ChatParticipant cp JOIN FETCH cp.user WHERE cp.chatRoom.id = :chatRoomId AND cp.isConnected = false")
     List<ChatParticipant> findByChatRoomIdAndIsConnectedFalse(@Param("chatRoomId") Long chatRoomId);
 
-
+    @Query("SELECT cp FROM ChatParticipant cp " +
+            "LEFT JOIN FETCH cp.chatRoom cr " +
+            "LEFT JOIN FETCH cr.chatParticipants " +
+            "WHERE cp.user.id = :userId AND cp.exitYN = :exitYN")
+    List<ChatParticipant> findAllByUserWithRoomAndParticipants(
+            @Param("userId") Long userId,
+            @Param("exitYN") ExitYN exitYN
+    );
 }
