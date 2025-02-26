@@ -25,6 +25,8 @@ public class ProjectUpdateDto {
     @NotBlank(message = "서비스명은 필수 입력값입니다.")
     private String serviceName;
 
+    private String contents;
+
     private String link; // null 허용, @NotBlank 제거
 
     @NotBlank(message = "프로젝트 주제는 필수 입력값입니다.")

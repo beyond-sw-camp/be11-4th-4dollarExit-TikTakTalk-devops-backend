@@ -23,4 +23,5 @@ public class PostListDto {
     private int likesCount;
     private int viewCount;
     private int AuthorRankingPoint;
+    private String categoryName;
 }

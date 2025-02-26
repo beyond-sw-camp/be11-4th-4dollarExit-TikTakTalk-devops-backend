@@ -310,5 +310,10 @@ public class ChatService {
         List<ChatParticipant> unConnectioned = chatParticipantRepository.findByChatRoomIdAndIsConnectedFalse(chatRoomId);
         return unConnectioned;
     }
+
+    public Long totalRooms() {
+        Long totalRooms = chatRoomRepository.count();
+        return totalRooms;
+    }
 }
 

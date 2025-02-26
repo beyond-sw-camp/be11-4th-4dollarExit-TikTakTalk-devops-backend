@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class BackupForLikesDto {
     private String UserId;
     private Long PostId;
+    private Long projectId;
 }

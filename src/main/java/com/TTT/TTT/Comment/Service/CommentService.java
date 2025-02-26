@@ -5,6 +5,8 @@ import com.TTT.TTT.Comment.Dtos.CommentUpdateDto;
 import com.TTT.TTT.Comment.Repository.CommentRepository;
 import com.TTT.TTT.Comment.domain.Comment;
 import com.TTT.TTT.Common.domain.DelYN;
+import com.TTT.TTT.ListTap.projectList.domain.Project;
+import com.TTT.TTT.ListTap.projectList.repository.ProjectRepository;
 import com.TTT.TTT.Post.domain.Post;
 import com.TTT.TTT.Post.repository.PostRepository;
 import com.TTT.TTT.User.UserRepository.UserRepository;
@@ -24,11 +26,13 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final ProjectRepository projectRepository;
 
-    public CommentService(CommentRepository commentRepository, UserRepository userRepository, PostRepository postRepository) {
+    public CommentService(CommentRepository commentRepository, UserRepository userRepository, PostRepository postRepository, ProjectRepository projectRepository) {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.postRepository = postRepository;
+        this.projectRepository = projectRepository;
     }
 //        1.댓글달기
         public void save(CommentCreateDto commentCreateDto){
@@ -65,6 +69,34 @@ public class CommentService {
             }
     }
 
+//   2.프로젝트에 댓글 달기
+    public void saveForP(CommentCreateDto commentCreateDto){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByLoginIdAndDelYN(authentication.getName(), DelYN.N).orElseThrow(()->new EntityNotFoundException("없는 아이디입니다"));
+        Project project = projectRepository.findById(commentCreateDto.getProjectId()).orElseThrow(()->new EntityNotFoundException("없는 프로젝트입니다"));
+        //부모댓글값이 없으면 원댓글로 저장
+        if(commentCreateDto.getParentId()==null){
+            Comment comment = Comment.builder()
+                    .contents(commentCreateDto.getContents())
+                    .user(user)
+                    .project(project)
+                    .build();
+            commentRepository.save(comment);
+            //부모댓글값이 있으면 대댓글로 저장
+        } else{
+            Comment parentComment = commentRepository.findById(commentCreateDto.getParentId()).orElseThrow(()->new EntityNotFoundException("원댓글이 없습니다"));
+
+
+            Comment comment = Comment.builder()
+                    .contents(commentCreateDto.getContents())
+                    .user(user)
+                    .project(project)
+                    .parent(parentComment)
+                    .build();
+            commentRepository.save(comment);
+        }
+
+    }
 //    2.댓글 수정
     public void update(CommentUpdateDto commentUpdateDto,Long id){
             String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -75,6 +107,7 @@ public class CommentService {
             }
             comment.update(commentUpdateDto.getContents());
         }
+
 
 //    3.댓글 삭제
     public void delete(Long id){

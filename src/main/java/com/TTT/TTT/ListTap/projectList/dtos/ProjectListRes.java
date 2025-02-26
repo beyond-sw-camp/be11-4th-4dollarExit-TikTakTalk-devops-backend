@@ -20,6 +20,9 @@ public class ProjectListRes {
      private String serviceName;
      private String link;
      private String domain;
+     private int commentCounts;
+     private int likesCounts;
+     private int viewCount;
      private List<PrimaryFeatureRes> primaryFeatureList;
     }
 

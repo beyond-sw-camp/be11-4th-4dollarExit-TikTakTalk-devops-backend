@@ -44,6 +44,7 @@ public class Post extends BaseTimeEntity {
     @Column(nullable = false, length = 100)
     private String title;
     //  글 내용
+    @Column(columnDefinition = "TEXT")
     private String contents;
     //  이미지(첨부파일)
     @OneToMany(mappedBy = "post", orphanRemoval = true)
@@ -68,8 +69,6 @@ public class Post extends BaseTimeEntity {
     //좋아요 개수(각 게시글의 좋아요 개수를 계산 하는 서브 쿼리)
     @Formula("(SELECT COUNT(*) FROM likes l WHERE l.post_id = id )")
     private int likesCount;
-
-
 
     public void deletePost() {
         this.delYN = DelYN.Y;
@@ -109,6 +108,7 @@ public class Post extends BaseTimeEntity {
                 .viewCount(viewCount)
                 .contents(this.contents)
                 .AuthorRankingPoint(this.user.getRankingPoint())
+                .categoryName(this.category.getCategoryName())
                 .build();
     }
 
@@ -168,7 +168,7 @@ public class Post extends BaseTimeEntity {
                 .contents(this.contents)
                 .authorId(this.user.getLoginId())
                 .authorNickName(this.user.getNickName())
-                .profileImageOfAuthor(this.user.getProfileImagePath())
+                .AuthorImage(this.user.getProfileImagePath())
                 .rankingPointOfAuthor(this.user.getRankingPoint())
                 .likesCount(likesCount)
                 .liked(liked)

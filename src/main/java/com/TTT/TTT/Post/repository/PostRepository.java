@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,5 +46,9 @@ public interface PostRepository extends JpaRepository<Post, Long>{
     @Transactional
 //    여기서 Param은 쿼리 내의 :postId와 :increment와 매핑되기 위해 사용한다.
     public void increaseViewCountByValue(@Param("postId")Long postId, @Param("newview")Integer newview);
+
+//    오늘 날짜의 좋아요가 가장 많은 12개 게시글을 가져옴
+    List<Post> findTop12ByCreatedTimeBetweenOrderByLikesCountDescCreatedTimeAsc(LocalDateTime startOfDay, LocalDateTime endOfDay);
+
 
 }

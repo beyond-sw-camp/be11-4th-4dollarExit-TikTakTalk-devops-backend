@@ -85,4 +85,10 @@ public class ChatController {
         chatService.leaveGroupChatRoom(roomId);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "room leave is successful", "leave"), HttpStatus.OK);
     }
+
+    @GetMapping("/total/rooms")
+    public ResponseEntity<?> totalRooms() {
+        Long totalRooms = chatService.totalRooms();
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "total room count", totalRooms), HttpStatus.OK);
+    }
 }
