@@ -38,8 +38,11 @@ public class SecurityConfigs {
                         "/sms/**","/ttt/user/"
                         , "/ttt/user/create", "/ttt/user/login","ttt/user/refresh-token"
                         ,"ttt/category/all","/connect/**", "/ttt/user/google/doLogin",
-                        "/ttt/user/kakao/doLogin", "ttt/user/oauth/create"
-                        ,"/ttt/user/checkLoginId","/ttt/user/checkNickName").permitAll().anyRequest().authenticated())
+                        "/ttt/user/kakao/doLogin", "ttt/user/oauth/create","/ttt/user/checkLoginId",
+                        "/ttt/chat/total/rooms", "/ttt/post/popular/like", "/ttt/post/findAll",
+                        "/ttt/post/category/**", "/ttt/user/batchRank", "/ttt/user/rankingfive",
+                        "/ttt/chat/room/group/list", "/ttt/post/total/count", "/ttt/user/total/user")
+                        .permitAll().anyRequest().authenticated())
                 .sessionManagement(s-> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //세션방식을 사용하지 않겠다라는 의미
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
