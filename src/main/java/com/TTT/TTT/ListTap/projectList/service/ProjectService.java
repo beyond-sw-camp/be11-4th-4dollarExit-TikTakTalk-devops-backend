@@ -214,6 +214,16 @@ public class ProjectService {
                 .collect(Collectors.toList());
     }
 
+    // 특정 유저가 작성한 프로젝트 조회
+    public List<ProjectListRes> getUserProjects(String nickName) {
+        User user = userRepository.findByNickNameAndDelYN(nickName, DelYN.N)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 닉네임입니다."));
+
+        List<Project> projects = projectRepository.findByUser(user);
+        return projects.stream()
+                .map(p -> p.toListResFromEntity(redisTemplate, redisServiceForViewCount.getViewCountForProject(p.getId())))
+                .collect(Collectors.toList());
+    }
 
 
 }

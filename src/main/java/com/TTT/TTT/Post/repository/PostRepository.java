@@ -2,6 +2,7 @@ package com.TTT.TTT.Post.repository;
 
 import com.TTT.TTT.Common.domain.DelYN;
 import com.TTT.TTT.Post.domain.Post;
+import com.TTT.TTT.User.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -50,5 +51,6 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 //    오늘 날짜의 좋아요가 가장 많은 12개 게시글을 가져옴
     List<Post> findTop12ByCreatedTimeBetweenOrderByLikesCountDescCreatedTimeAsc(LocalDateTime startOfDay, LocalDateTime endOfDay);
 
+    List<Post> findAllByUserOrderByCreatedTimeDesc(User user);
 
 }

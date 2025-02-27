@@ -8,6 +8,7 @@ import com.TTT.TTT.Oauth.Service.KakaoService;
 import com.TTT.TTT.Oauth.dtos.GoogleProfile;
 import com.TTT.TTT.Oauth.dtos.KakaoProfile;
 import com.TTT.TTT.Oauth.dtos.OAuthToken;
+import com.TTT.TTT.Post.dtos.PostListDto;
 import com.TTT.TTT.User.dtos.RedirectCode;
 import com.TTT.TTT.Post.dtos.PostAllListDto;
 import com.TTT.TTT.Post.dtos.PostDetailDto;
@@ -289,7 +290,19 @@ public class UserController {
             return new ResponseEntity<>(new CommonDto(HttpStatus.CONFLICT.value(), "이미 사용 중인 닉네임입니다.", false), HttpStatus.CONFLICT);
         }
     }
-
+    // 닉네임으로 프로필 조회 API
+    @GetMapping("/yourpage/{nickName}")
+    public ResponseEntity<?> getUserProfileByNickName(@PathVariable String nickName) {
+        System.out.println(nickName);
+        UserRankDto userProfile = userService.getUserProfileByNickName(nickName);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "프로필 조회 성공", userProfile), HttpStatus.OK);
+    }
+    // ✅ 특정 사용자의 게시글 리스트 조회 API 추가
+    @GetMapping("/posts/{nickName}")
+    public ResponseEntity<?> getUserPostsByNickName(@PathVariable String nickName) {
+        List<PostListDto> userPosts = userService.getUserPostsByNickName(nickName);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "유저 게시글 조회 성공", userPosts), HttpStatus.OK);
+    }
 
 
     // User 닉네임 찾기
