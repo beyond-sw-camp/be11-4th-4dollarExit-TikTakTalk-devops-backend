@@ -280,12 +280,12 @@ public String updateProfileImage(MultipartFile image) {
         return profileUrl;
     }
 
-    public List<BatchRankDto> getTop5Batch() {
+    public List<BatchRankDto> getTop3Batch() {
 //        jpql에서는 limit로 최대 몇개까지만 가져오게끔 설정할 수 없으므로,
 //        Pageable을 사용하여 첫번째 페이지 즉 0번째,
 //        페이지사이즈는 3으로 해서 limit와 같은 효과를 냄.
-        Pageable topFive = PageRequest.of(0, 5);
-        return userRepository.findTopBatchesWithAvgRankingPoint(topFive).getContent();
+        Pageable topThree = PageRequest.of(0, 3);
+        return userRepository.findTopBatchesWithAvgRankingPoint(topThree).getContent();
     }
 
     public void oauthUserCreate(OauthUserCreateDto oauthUserCreateDto) throws IllegalArgumentException {
