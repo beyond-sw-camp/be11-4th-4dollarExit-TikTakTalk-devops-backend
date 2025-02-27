@@ -106,5 +106,12 @@ public class ProjectController {
         List<ProjectListRes> projects = projectService.findByFeature(featureName);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "success", projects), HttpStatus.OK);
     }
+    // 특정 닉네임의 프로젝트 목록 조회 API
+    @GetMapping("/user/{nickName}")
+    public ResponseEntity<?> getUserProjects(@PathVariable String nickName) {
+        List<ProjectListRes> userProjects = projectService.getUserProjects(nickName);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "유저 프로젝트 목록 조회 성공", userProjects), HttpStatus.OK);
+    }
+
 
 }

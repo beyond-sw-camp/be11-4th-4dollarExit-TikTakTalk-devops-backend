@@ -1,6 +1,7 @@
 package com.TTT.TTT.User.UserRepository;
 
 
+import com.TTT.TTT.Post.domain.Post;
 import com.TTT.TTT.User.domain.User;
 import com.TTT.TTT.User.dtos.BatchRankDto;
 import org.springframework.data.domain.Page;

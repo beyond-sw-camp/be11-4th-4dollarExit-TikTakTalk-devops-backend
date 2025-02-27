@@ -6,6 +6,7 @@ import com.TTT.TTT.Post.domain.Post;
 //import com.TTT.TTT.Common.smsService.SmsService;
 import com.TTT.TTT.Post.dtos.PostAllListDto;
 import com.TTT.TTT.Post.dtos.PostDetailDto;
+import com.TTT.TTT.Post.dtos.PostListDto;
 import com.TTT.TTT.Post.repository.PostRepository;
 import com.TTT.TTT.Post.service.RedisServiceForViewCount;
 import com.TTT.TTT.User.UserRepository.UserRepository;
@@ -331,6 +332,29 @@ public String updateProfileImage(MultipartFile image) {
 
         System.out.println("NickName Available? " + isAvailable);
         return isAvailable;
+    }
+    // 닉네임으로 프로필 정보 조회
+    public UserRankDto getUserProfileByNickName(String nickName) {
+        User user = userRepository.findByNickNameAndDelYN(nickName, DelYN.N)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 닉네임입니다."));
+
+        return UserRankDto.builder()
+                .nickName(user.getNickName())
+                .batch(user.getBatch())
+                .rankingPoint(user.getRankingPoint())
+                .profileImagePath(user.getProfileImagePath()) // 프로필 이미지 경로 반환
+                .build();
+    }
+    // ✅ 닉네임을 기반으로 해당 사용자의 게시글 조회 메서드
+    public List<PostListDto> getUserPostsByNickName(String nickName) {
+        User user = userRepository.findByNickNameAndDelYN(nickName, DelYN.N)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
+
+        List<Post> postList = postRepository.findAllByUserOrderByCreatedTimeDesc(user);
+
+        return postList.stream()
+                .map(post -> post.toListDto(redisTemplate, redisServiceForViewCount.getViewCount(post.getId())))
+                .toList();
     }
 
 }
