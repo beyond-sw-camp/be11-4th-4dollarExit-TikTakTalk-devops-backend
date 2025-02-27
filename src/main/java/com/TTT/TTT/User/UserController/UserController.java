@@ -250,12 +250,12 @@ public class UserController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "url found successfully", imageUrl), HttpStatus.OK);
     }
 
-//    상위 기수랭킹 5등까지만 조회하는 엔드포인트
+//    상위 기수랭킹 3등까지만 조회하는 엔드포인트
     @GetMapping("/batchRank")
     public ResponseEntity<?> getTop5Batch() {
-        List<BatchRankDto> top5s = userService.getTop5Batch();
-        System.out.println(top5s);
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "top 5 found successful", top5s), HttpStatus.OK);
+        List<BatchRankDto> top3s = userService.getTop3Batch();
+        System.out.println(top3s);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "top 3 found successful", top3s), HttpStatus.OK);
     }
 
     @PostMapping("/oauth/create")
