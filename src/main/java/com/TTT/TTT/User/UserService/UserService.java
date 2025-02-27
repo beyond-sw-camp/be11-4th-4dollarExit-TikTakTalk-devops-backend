@@ -356,5 +356,28 @@ public String updateProfileImage(MultipartFile image) {
                 .map(post -> post.toListDto(redisTemplate, redisServiceForViewCount.getViewCount(post.getId())))
                 .toList();
     }
+    // 닉네임 호출 메서드
+    public Page<UserListDto> findAllByNickName(String nickName, Pageable pageable) {
+        Page<User> userPage = userRepository.findByNickNameContainingAndDelYN(nickName, DelYN.N, pageable);
+        return userPage.map(User::ListDtoFromEntity);
+    }
+
+    public void deleteSelectedUsers(List<String> loginIds) {
+        // 선택된 모든 사용자에 대해 반복 처리
+        for (String loginId : loginIds) {
+            // DelYN.N인 사용자만 찾아서 삭제 처리(soft delete)
+            User user = userRepository.findByLoginIdAndDelYN(loginId, DelYN.N)
+                    .orElseThrow(() -> new EntityNotFoundException("없는 사용자입니다: " + loginId));
+            user.userDelete();
+            userRepository.save(user);
+        }
+    }
+
+    public Page<UserListDto> findAllActiveUsers(Pageable pageable) {
+        Page<User> activeUsers = userRepository.findByDelYN(DelYN.N, pageable);
+        return activeUsers.map(User::ListDtoFromEntity);
+    }
+
+
 
 }

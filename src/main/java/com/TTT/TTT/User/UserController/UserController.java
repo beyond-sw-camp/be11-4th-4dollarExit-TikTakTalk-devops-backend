@@ -304,4 +304,38 @@ public class UserController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "유저 게시글 조회 성공", userPosts), HttpStatus.OK);
     }
 
+
+    // User 닉네임 찾기
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/list/search")
+    public ResponseEntity<?> findAllUser(
+            @PageableDefault(size = 20) Pageable pageable,
+            @RequestParam(required = false) String nickName) {
+        Page<UserListDto> list;
+        if (nickName != null && !nickName.trim().isEmpty()) {
+            list = userService.findAllByNickName(nickName, pageable);
+        } else {
+            list = userService.findAll(pageable);
+        }
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "userList is uploaded successfully", list), HttpStatus.OK);
+    }
+
+    //회원목록 선택 삭제
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/delete")
+    public ResponseEntity<?> deleteSelectedUsers(@RequestBody Map<String, List<String>> payload) {
+        // 프론트엔드에서 {"loginIds": ["id1", "id2", ...]} 형식으로 전달된다고 가정
+        List<String> loginIds = payload.get("loginIds");
+        userService.deleteSelectedUsers(loginIds);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "선택된 사용자가 삭제되었습니다.", "success"), HttpStatus.OK);
+    }
+
+    //delYN 활성화된 User
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/list/active")
+    public ResponseEntity<?> findAllActiveUsers(@PageableDefault(size = 20) Pageable pageable) {
+        Page<UserListDto> list = userService.findAllActiveUsers(pageable);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "active userList is uploaded successfully", list), HttpStatus.OK);
+    }
+
 }

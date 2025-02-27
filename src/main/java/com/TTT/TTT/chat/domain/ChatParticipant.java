@@ -3,11 +3,15 @@ package com.TTT.TTT.chat.domain;
 import com.TTT.TTT.Common.domain.BaseTimeEntity;
 import com.TTT.TTT.Common.domain.ExitYN;
 import com.TTT.TTT.User.domain.User;
+import io.lettuce.core.dynamic.annotation.Param;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
