@@ -57,7 +57,9 @@ public class StompHandler implements ChannelInterceptor {
             if (!chatService.isRoomPaticipant(nickName, Long.parseLong(roomId))) {
                 throw new AuthenticationServiceException("해당 room에 권한이 없습니다.");
             }
-            chatService.updateUserConnectionStatus(true, nickName, Long.parseLong(roomId));
+            if (!chatService.getIsconnected(nickName, Long.parseLong(roomId))) {
+                chatService.updateUserConnectionStatus(true, nickName, Long.parseLong(roomId));
+            }
         }
 
         if (StompCommand.DISCONNECT == accessor.getCommand()) {

@@ -12,11 +12,11 @@ spring :
     database-platform: org.hibernate.dialect.MariaDBDialect
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show_sql: true
   redis:
     host: localhost
-    port: 6380
+    port: 6379
   rabbitmq:
     host: localhost
     port: 5672
@@ -52,7 +52,7 @@ cloud:
     region:
       static: ap-northeast-2
     s3:
-      bucket: ttt-image
+      bucket: tiktaktok-images
 
 # 휴대폰 API 관련설정
 coolsms:
@@ -65,7 +65,7 @@ oauth:
   google:
     client-id: 906300369324-bj1gkpi8ltlkr4jjq40pq8orl90ulvbg.apps.googleusercontent.com
     client-secret : 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
-    redirect-url: http://localhost:3000/oauth/google/redirect
+    redirect-url: https://www.tiktaktok.site/oauth/google/redirect
   kakao:
     client-id: d4582d3d057eb4fcd270886537698cd9
-    redirect-url: http://localhost:3000/oauth/kakao/redirect
+    redirect-url: https://www.tiktaktok.site/oauth/kakao/redirect
