@@ -4,9 +4,9 @@ spring :
       on-profile: prod
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/TTT
-    username: root
-    password: 1234
+    url: jdbc:mariadb://${DB_HOST}:3306/TTT
+    username: admin
+    password: ${DB_PW}
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MariaDBDialect
@@ -15,10 +15,10 @@ spring :
       ddl-auto: create
     show_sql: true
   redis:
-    host: localhost
+    host: redis-service
     port: 6379
   rabbitmq:
-    host: localhost
+    host: rabbitmq-service
     port: 5672
     username: guest
     password: guest
@@ -36,10 +36,10 @@ logging:
 
 jwt:
   #  be11-2nd-4dollorExit-TikTakTalkbe11-2nd-4dollorExit-TikTakTalkbe11-2nd-4dollorExit-TikTakTalk
-  secretKey: YmUxMS0ybmQtNGRvbGxvckV4aXQtVGlrVGFrVGFsa2JlMTEtMm5kLTRkb2xsb3JFeGl0LVRpa1Rha1RhbGtiZTExLTJuZC00ZG9sbG9yRXhpdC1UaWtUYWtUYWxr
+  secretKey: ${JWT_KEY}
   expiration: 3000 #3000?
 #  tttisthecommunitysiteforstudentofhanhwatttisthecommunitysiteforstudentofhanhwatttisthecommunitysiteforstudentofhanhwa
-  secretKeyRt: dHR0aXN0aGVjb21tdW5pdHlzaXRlZm9yc3R1ZGVudG9maGFuaHdhdHR0aXN0aGVjb21tdW5pdHlzaXRlZm9yc3R1ZGVudG9maGFuaHdhdHR0aXN0aGVjb21tdW5pdHlzaXRlZm9yc3R1ZGVudG9maGFuaHdh
+  secretKeyRt: ${JWT_KEYRT}
 #  200일
   expirationRt: 288000
 
@@ -47,8 +47,8 @@ jwt:
 cloud:
   aws:
     credentials:
-      access-key: AKIATCKAR5PYZEBTXKJM
-      secret-key: 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
+      access-key: ${AWS_KEY}
+      secret-key: ${AWS_SECRET}
     region:
       static: ap-northeast-2
     s3:
@@ -56,16 +56,16 @@ cloud:
 
 # 휴대폰 API 관련설정
 coolsms:
-  apiKey: "NCSFBPNCDNGAMQAW"
-  apiSecret: "UHFIXQ58FGPRNBAAMCDFB0JSVEQTXOSA"
-  fromNumber: "01057105689" # 발신번호
+  apiKey: ${COOL_API}
+  apiSecret: ${COOL_SECRET}
+  fromNumber: ${COOL_NUMBER}
 
 # oauth 로그인 설정
 oauth:
   google:
-    client-id: 906300369324-bj1gkpi8ltlkr4jjq40pq8orl90ulvbg.apps.googleusercontent.com
-    client-secret : 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
+    client-id: ${GOOGLE_ID}
+    client-secret : ${GOOGLE_SECRET}
     redirect-url: https://www.tiktaktok.site/oauth/google/redirect
   kakao:
-    client-id: d4582d3d057eb4fcd270886537698cd9
+    client-id: ${KAKAO_ID}
     redirect-url: https://www.tiktaktok.site/oauth/kakao/redirect
