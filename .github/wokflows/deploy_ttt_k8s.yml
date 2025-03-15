@@ -45,5 +45,6 @@ jobs:
 
       - name: eks kubectl apply
         run: |
+          kubectl apply -f ./k8s/hpa.yml
           kubectl apply -f ./k8s/depl_svc.yml
           kubectl rollout restart deployment ttt-backend
