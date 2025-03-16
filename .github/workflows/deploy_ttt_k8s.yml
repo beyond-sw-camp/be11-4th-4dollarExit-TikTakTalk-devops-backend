@@ -3,7 +3,7 @@ name: deploy ttt-backend
 on:
   push:
     branches:
-      - main
+      - Refactor/ForDeploy
 
 jobs:
   build-and-deploy:
@@ -26,7 +26,7 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: update cluster infomation
-        run: aws eks update-kubeconfig --name 1team-cluster --region ap-northeast-2
+        run: aws eks update-kubeconfig --name my-cluster --region ap-northeast-2
 
       - name: Login to ECR
         id: login-ecr
@@ -35,12 +35,11 @@ jobs:
       - name: build and push docker image to ecr
         env:
           REGISTRY: 443370682320.dkr.ecr.ap-northeast-2.amazonaws.com
-          REPOSITORY: ordersystem
+          REPOSITORY: ttt
           IMAGE_TAG: latest
         run: |
           docker build \
-          -t $REGISTRY/$REPOSITORY:$IMAGE_TAG \
-          -f ./order-server-deploy/Dockerfile ./order-server-deploy
+          -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
       - name: eks kubectl apply
