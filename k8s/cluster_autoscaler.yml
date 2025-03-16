@@ -30,14 +30,14 @@ spec:
             - ./cluster-autoscaler
             - --cloud-provider=aws #eks 사용중이므로 aws로 설정
             - --namespace=kube-system #오토스케일러가 동작하는 네임스페이스
-            - --cluster-name=eks-prac #EKS 클러스터 이름
+            - --cluster-name=my-cluster #EKS 클러스터 이름
             - --logtostderr=true #로그출력
             - --stderrthreshold=info #로그레벨 (info와 error 출력)
             - --balance-similar-node-groups #오토밸런싱
             - --skip-nodes-with-system-pods=true #시스템 파드가 떠있는 노드는 제거X         
             - --skip-nodes-with-local-storage=true #로컬 스토리지 사용중인 노드는 제거X
             # /EKS 클러스터 이름
-            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/eks-prac
+            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/my-cluster
             # 위는 노드 그룹 자동 감지. 노드그룹에 붙인 태그를 기준으로 감지한다.
             # 노드그룹 생성할 때 태그를 반드시 붙여야함
             # k8s.io/cluster-autoscaler/enabled = true
