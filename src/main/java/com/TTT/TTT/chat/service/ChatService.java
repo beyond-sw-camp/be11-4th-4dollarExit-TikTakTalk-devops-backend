@@ -320,7 +320,7 @@ public class ChatService {
         User user = userRepository.findByNickNameAndDelYN(nickName, DelYN.N).orElseThrow(()->new EntityNotFoundException("user is not found"));
         ChatRoom chatRoom = chatRoomRepository.findByIdAndExitYN(chatRoomId, ExitYN.N).orElseThrow(()->new EntityNotFoundException("chatroom is not found"));
         Boolean check = chatParticipantRepository.findisConnectedByChatRoomAndUser(chatRoom, user);
-        return true;
+        return check;
     }
 }
 
