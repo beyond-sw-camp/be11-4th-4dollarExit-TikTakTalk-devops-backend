@@ -45,4 +45,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
             "GROUP BY u.batch " +
             "ORDER BY AVG(u.rankingPoint) DESC")
     Page<BatchRankDto> findTopBatchesWithAvgRankingPoint(Pageable pageable);
+
+    Optional<User> findByEmail(String email);
 }
