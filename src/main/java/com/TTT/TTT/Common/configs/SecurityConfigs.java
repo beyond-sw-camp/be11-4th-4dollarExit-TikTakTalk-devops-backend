@@ -36,7 +36,7 @@ public class SecurityConfigs {
 //                특정 url 패턴에 대해서는 Authentication 객체 요구하지 않음 (인증처리 제외)
                 .authorizeHttpRequests(a->a.requestMatchers(
                         "/sms/**","/ttt/user/"
-                        , "/ttt/user/create", "/ttt/user/login","ttt/user/refresh-token"
+                        , "/ttt/user/create", "/ttt/user/login","ttt/user/refresh-token", "ttt/user/checkEmail"
                         ,"ttt/category/all","/connect/**", "/ttt/user/google/doLogin",
                         "/ttt/user/kakao/doLogin", "ttt/user/oauth/create","/ttt/user/checkLoginId","/ttt/user/checkNickName",
                         "/ttt/chat/total/rooms", "/ttt/post/popular/like", "/ttt/post/findAll",
