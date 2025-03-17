@@ -128,49 +128,41 @@ public class UserService {
           user.updateUser(dto,newPw);
     }
 
-//    6.내 프로필 이미지 수정
-public String updateProfileImage(MultipartFile image) {
-    try {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByLoginIdAndDelYN(authentication.getName(), DelYN.N)
-                .orElseThrow(() -> new EntityNotFoundException("없는 아이디입니다"));
+    //    6.내 프로필 이미지 수정
+    public String updateProfileImage(MultipartFile image) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = userRepository.findByLoginIdAndDelYN(authentication.getName(), DelYN.N)
+                    .orElseThrow(() -> new EntityNotFoundException("없는 아이디입니다"));
 
-        // 📌 1. 폴더 존재 여부 확인 후 생성
-        Path dir = Paths.get("C:/Users/Playdata/Desktop/tmp/");
-        if (!Files.exists(dir)) {
-            Files.createDirectories(dir);
+            // 📌 1. 파일명 설정 (사용자 ID + 원본 파일명)
+            String fileName = user.getId() + "_" + image.getOriginalFilename();
+
+            // 📌 2. S3에 직접 업로드
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(fileName)
+                    .contentType(image.getContentType()) // MIME 타입 유지
+                    .build();
+
+            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(image.getBytes()));
+
+            // 📌 3. S3 URL 가져오기
+            String s3Url = s3Client.utilities().getUrl(a -> a.bucket(bucket).key(fileName)).toExternalForm();
+
+            // 📌 4. DB에 변경된 프로필 이미지 저장
+            user.updateProfileImage(s3Url);
+            userRepository.save(user); // ✅ 변경 사항 DB에 저장
+
+            return s3Url; // ✅ 변경된 이미지 URL 반환
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("이미지 저장 실패: " + e.getMessage());
+        } catch (S3Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("S3 업로드 실패: " + e.awsErrorDetails().errorMessage());
         }
-
-        // 📌 2. 파일명 설정
-        String fileName = user.getId() + "_" + image.getOriginalFilename();
-        Path path = dir.resolve(fileName);
-
-        // 📌 3. 파일 저장
-        Files.write(path, image.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-
-        // AWS S3에 저장
-        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(bucket)
-                .key(fileName)
-                .build();
-        s3Client.putObject(putObjectRequest, RequestBody.fromFile(path));
-
-        // AWS로부터 URL 경로 받아오기
-        String s3Url = s3Client.utilities().getUrl(a -> a.bucket(bucket).key(fileName)).toExternalForm();
-
-        // DB에 변경된 프로필 이미지 저장
-        user.updateProfileImage(s3Url);
-        userRepository.save(user); // ✅ 변경 사항 DB에 저장
-
-        return s3Url; // ✅ 변경된 이미지 URL 반환
-    } catch (IOException e) {
-        e.printStackTrace();
-        throw new RuntimeException("이미지 저장 실패: " + e.getMessage());
-    } catch (S3Exception e) {
-        e.printStackTrace();
-        throw new RuntimeException("S3 업로드 실패: " + e.awsErrorDetails().errorMessage());
     }
-}
 
 //    7.회원 목록 조회
     public Page<UserListDto> findAll(Pageable pageable){

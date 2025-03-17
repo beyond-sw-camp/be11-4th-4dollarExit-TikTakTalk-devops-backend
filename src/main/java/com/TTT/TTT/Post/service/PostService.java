@@ -42,6 +42,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -70,13 +71,16 @@ public class PostService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-//  1.게시글 생성
+    //  1.게시글 생성
     public void save(PostCreateDto dto, List<MultipartFile> attachments) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String loginId = authentication.getName();
-        User user = userRepository.findByLoginIdAndDelYN(loginId, DelYN.N).orElseThrow(() -> new EntityNotFoundException("없는 아이디입니다"));
-        PostCategory postCategory = postCategoryRepository.findById(dto.getPostCategoryId()).orElseThrow(()->new EntityNotFoundException("없는 게시판입니다"));
-       //첨부파일 속성없이 일단 포스트 레포지토리에 저장
+        User user = userRepository.findByLoginIdAndDelYN(loginId, DelYN.N)
+                .orElseThrow(() -> new EntityNotFoundException("없는 아이디입니다"));
+        PostCategory postCategory = postCategoryRepository.findById(dto.getPostCategoryId())
+                .orElseThrow(() -> new EntityNotFoundException("없는 게시판입니다"));
+
+        // 첨부파일 속성 없이 먼저 게시글 저장
         Post post = Post.builder()
                 .title(dto.getTitle())
                 .contents(dto.getContents())
@@ -85,29 +89,32 @@ public class PostService {
                 .category(postCategory)
                 .build();
         postRepository.save(post);
-        user.rankingPointUpdate(20); // 게시글 작성시 랭킹점수 20점 상승
-        //다시 게시글 속성에 첨부파일 추가해야 하니 먼저 리스트 만들어 놓음
-        //그런데 첨부파일 없는 게시글은 nullPointerException이 놓으니까 if절
-        if(attachments !=null) {
+
+        user.rankingPointUpdate(20); // 게시글 작성 시 랭킹 점수 20점 상승
+
+        // 첨부파일 업로드 (로컬 저장 없이 S3에 직접 업로드)
+        if (attachments != null) {
             List<Attachment> attachmentsOfPost = post.getAttachmentList();
+            int z = 1; // 한 게시글에 여러 파일이 올라오면 이름 중복 방지
 
             for (MultipartFile f : attachments) {
                 try {
-                    //로컬에 저장
-                    int z = 1;//한 게시글에 여러 글올라오니까 이름중복 막기 위해서 둔 변수
-                    byte[] bytes = f.getBytes();
-                    String fileName = post.getId() + "_" + z + f.getOriginalFilename();
+                    String fileName = post.getId() + "_" + z + "_" + f.getOriginalFilename();
                     z++;
-                    Path path = Paths.get("C:/Users/Playdata/Desktop/tmp/", fileName);
-                    Files.write(path, bytes, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-                    //aws에 저장
+
+                    // S3에 직접 업로드
                     PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                             .bucket(bucket)
                             .key(fileName)
+                            .contentType(f.getContentType()) // MIME 타입 유지
                             .build();
-                    s3Client.putObject(putObjectRequest, RequestBody.fromFile(path));
+
+                    s3Client.putObject(putObjectRequest, RequestBody.fromBytes(f.getBytes()));
+
+                    // S3 URL 생성
                     String s3Url = s3Client.utilities().getUrl(a -> a.bucket(bucket).key(fileName)).toExternalForm();
-                    //attachment 엔티티 생성하여 포스트의 첨부파일리스트 속성에 저장
+
+                    // attachment 엔티티 생성하여 포스트의 첨부파일 리스트 속성에 저장
                     Attachment attachment = Attachment.builder()
                             .fileName(fileName)
                             .urlAdress(s3Url)
@@ -116,12 +123,10 @@ public class PostService {
                     attachmentsOfPost.add(attachment);
                     attachmentRepository.save(attachment);
                 } catch (IOException e) {
-                    throw new RuntimeException("이미지 저장 실패");
-
+                    throw new RuntimeException("이미지 저장 실패", e);
                 }
             }
         }
-
     }
 
 //    2.게시글 조회
@@ -167,35 +172,40 @@ public class PostService {
     }
 
 
-//    5.게시글 수정
+    //    5.게시글 수정
     public void updatePost(Long id, PostUpdateDto postUpdateDto, List<MultipartFile> attachments){
         String idOfAuthor = SecurityContextHolder.getContext().getAuthentication().getName();
-        User author = userRepository.findByLoginIdAndDelYN(idOfAuthor,DelYN.N).orElseThrow(()->new EntityNotFoundException("없는 사용자입니다"));
-        Post originalPost = postRepository.findById(id).orElseThrow(()->new EntityNotFoundException("없는 게시글입니다"));
-        //수정하려는 로그인한 유저가 이 게시글의 글쓴이가 맞는 지 확인
-        if(!originalPost.getUser().equals(author)){
+        User author = userRepository.findByLoginIdAndDelYN(idOfAuthor, DelYN.N)
+                .orElseThrow(() -> new EntityNotFoundException("없는 사용자입니다"));
+        Post originalPost = postRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("없는 게시글입니다"));
+
+        // 수정하려는 로그인한 유저가 이 게시글의 글쓴이가 맞는 지 확인
+        if (!originalPost.getUser().equals(author)) {
             throw new AccessDeniedException("이 게시글의 작성자만 수정할 수 있습니다");
         } else {
-            //일단 먼저 dto에 있는 글과 내용만 먼저 수정.
+            // 글 내용 수정
             originalPost.updateText(postUpdateDto);
-            //게시글에 있는 첨부파일 교체
+
+            // 첨부파일 업로드 (로컬 저장 없이 S3에 바로 업로드)
             if (attachments != null) {
                 try {
-                    List<Attachment> newListOfAttachements = new ArrayList<>();
+                    List<Attachment> newListOfAttachments = new ArrayList<>();
+                    int z = 1; // 파일 순서 관리
+
                     for (MultipartFile f : attachments) {
-                        byte[] bytes = f.getBytes();
-                        int z = 1;
                         String fileName = originalPost.getId() + "수정" + z + "_" + f.getOriginalFilename();
-                        //로컬에 저장
-                        Path path = Paths.get("C:/Users/Playdata/Desktop/tmp/", fileName);
-                        Files.write(path, bytes, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-                        //aws에 저장
+
+                        // S3에 바로 업로드 (InputStream 사용)
                         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                                 .bucket(bucket)
                                 .key(fileName)
+                                .contentType(f.getContentType())  // MIME 타입 지정
                                 .build();
 
-                        s3Client.putObject(putObjectRequest, RequestBody.fromFile(path));
+                        s3Client.putObject(putObjectRequest, RequestBody.fromBytes(f.getBytes()));
+
+                        // S3 URL 생성
                         String s3Url = s3Client.utilities().getUrl(a -> a.bucket(bucket).key(fileName)).toExternalForm();
 
                         Attachment attachment = Attachment.builder()
@@ -203,13 +213,15 @@ public class PostService {
                                 .fileName(fileName)
                                 .post(originalPost)
                                 .build();
-                        newListOfAttachements.add(attachment);
+                        newListOfAttachments.add(attachment);
                         attachmentRepository.save(attachment);
-                    }
-                    originalPost.updateAttachment(newListOfAttachements);
 
+                        z++; // 다음 파일을 위해 증가
+                    }
+
+                    originalPost.updateAttachment(newListOfAttachments);
                 } catch (IOException e) {
-                    throw new RuntimeException("이미지 저장 실패");
+                    throw new RuntimeException("이미지 저장 실패", e);
                 }
             }
         }
@@ -236,40 +248,43 @@ public class PostService {
     }
 
 
-// 8. 이미지 업로드
-    public String dragImages(MultipartFile attachments){
+    // 8. 이미지 업로드
+    public String dragImages(MultipartFile attachments) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String loginId = authentication.getName();
-        User user = userRepository.findByLoginIdAndDelYN(loginId,DelYN.N).orElseThrow(()-> new EntityNotFoundException("없는 아이디입니다"));
-//        Post post = postRepository.findById(postId).orElseThrow(()->new EntityNotFoundException("없는 게시물입니다"));
+        User user = userRepository.findByLoginIdAndDelYN(loginId, DelYN.N)
+                .orElseThrow(() -> new EntityNotFoundException("없는 아이디입니다"));
 
-        String returnUrl="";
+        String returnUrl = "";
 
-        try{
-            byte[] bytes = attachments.getBytes();
-            String fileName = attachments.getOriginalFilename(); // 한 포스트에 동일한 파일네임이 올라온다면? uuid처리가 필요할 듯하다..
-            Path path = Paths.get("C:/Users/Playdata/Desktop/tmp/", fileName);
-            Files.write(path,bytes, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+        try {
+            // 고유한 파일명 생성 (UUID 사용)
+            String fileName = UUID.randomUUID() + "_" + attachments.getOriginalFilename();
 
+            // S3에 직접 업로드 (InputStream 사용)
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucket)
                     .key(fileName)
+                    .contentType(attachments.getContentType()) // 파일 타입 유지
                     .build();
-            s3Client.putObject(putObjectRequest,RequestBody.fromFile(path));
-            returnUrl = s3Client.utilities().getUrl(a->a.bucket(bucket).key(fileName)).toExternalForm();
 
+            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(attachments.getBytes()));
+
+            // S3 URL 생성
+            returnUrl = s3Client.utilities().getUrl(a -> a.bucket(bucket).key(fileName)).toExternalForm();
+
+            // DB에 저장
             Attachment attachment = Attachment.builder()
                     .fileName(fileName)
                     .urlAdress(returnUrl)
-//                    .post(post)
                     .build();
             attachmentRepository.save(attachment);
-        }catch(IOException e){
-            throw new RuntimeException("이미지 저장 실패");
+
+        } catch (IOException e) {
+            throw new RuntimeException("이미지 업로드 실패", e);
         }
 
         return returnUrl;
-
     }
 
 //    9.게시글 전체 중에 상위 10개 인기순으로 조회
