@@ -19,4 +19,4 @@ spec:
     name: ttt-backend
   minReplicas: 2
   maxReplicas: 6
-  targetCPUUtilizationPercentage: 10
+  targetCPUUtilizationPercentage: 70

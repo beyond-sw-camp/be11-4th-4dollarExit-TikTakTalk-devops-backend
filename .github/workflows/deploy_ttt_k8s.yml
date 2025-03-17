@@ -26,7 +26,7 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: update cluster infomation
-        run: aws eks update-kubeconfig --name my-cluster --region ap-northeast-2
+        run: aws eks update-kubeconfig --name ttt-cluster --region ap-northeast-2
 
       - name: Login to ECR
         id: login-ecr
@@ -34,7 +34,7 @@ jobs:
 
       - name: build and push docker image to ecr
         env:
-          REGISTRY: 443370682320.dkr.ecr.ap-northeast-2.amazonaws.com
+          REGISTRY: 346903264902.dkr.ecr.ap-northeast-2.amazonaws.com
           REPOSITORY: ttt
           IMAGE_TAG: latest
         run: |
