@@ -35,10 +35,8 @@ logging:
 
 
 jwt:
-  #  be11-2nd-4dollorExit-TikTakTalkbe11-2nd-4dollorExit-TikTakTalkbe11-2nd-4dollorExit-TikTakTalk
   secretKey: ${JWT_KEY}
-  expiration: 3000 #3000?
-#  tttisthecommunitysiteforstudentofhanhwatttisthecommunitysiteforstudentofhanhwatttisthecommunitysiteforstudentofhanhwa
+  expiration: 3000
   secretKeyRt: ${JWT_KEYRT}
 #  200일
   expirationRt: 288000

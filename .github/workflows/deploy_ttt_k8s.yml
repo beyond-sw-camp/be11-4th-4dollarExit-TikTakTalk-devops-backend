@@ -3,7 +3,7 @@ name: deploy ttt-backend
 on:
   push:
     branches:
-      - Refactor/ForDeploy
+      - main
 
 jobs:
   build-and-deploy:

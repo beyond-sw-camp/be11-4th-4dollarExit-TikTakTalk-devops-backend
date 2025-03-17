@@ -36,10 +36,10 @@ logging:
 
 jwt:
   #  be11-2nd-4dollorExit-TikTakTalkbe11-2nd-4dollorExit-TikTakTalkbe11-2nd-4dollorExit-TikTakTalk
-  secretKey: YmUxMS0ybmQtNGRvbGxvckV4aXQtVGlrVGFrVGFsa2JlMTEtMm5kLTRkb2xsb3JFeGl0LVRpa1Rha1RhbGtiZTExLTJuZC00ZG9sbG9yRXhpdC1UaWtUYWtUYWxr
+  secretKey: xxxxxxxxx
   expiration: 3000 #3000?
   #  tttisthecommunitysiteforstudentofhanhwatttisthecommunitysiteforstudentofhanhwatttisthecommunitysiteforstudentofhanhwa
-  secretKeyRt: dHR0aXN0aGVjb21tdW5pdHlzaXRlZm9yc3R1ZGVudG9maGFuaHdhdHR0aXN0aGVjb21tdW5pdHlzaXRlZm9yc3R1ZGVudG9maGFuaHdhdHR0aXN0aGVjb21tdW5pdHlzaXRlZm9yc3R1ZGVudG9maGFuaHdh
+  secretKeyRt: yyyyyyy
   #  200일
   expirationRt: 288000
 
@@ -47,8 +47,8 @@ jwt:
 cloud:
   aws:
     credentials:
-      access-key: AKIAWOOXTW7IOZGTJCMC
-      secret-key: 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
+      access-key: xxxxx
+      secret-key: yyyyyyyy
     region:
       static: ap-northeast-2
     s3:
@@ -56,16 +56,16 @@ cloud:
 
 # 휴대폰 API 관련설정
 coolsms:
-  apiKey: "NCSFBPNCDNGAMQAW"
-  apiSecret: "UHFIXQ58FGPRNBAAMCDFB0JSVEQTXOSA"
-  fromNumber: "01057105689" # 발신번호
+  apiKey: xxxxx
+  apiSecret: yyyyyy
+  fromNumber: zzzzzzz # 발신번호
 
 # oauth 로그인 설정
 oauth:
   google:
-    client-id: 906300369324-bj1gkpi8ltlkr4jjq40pq8orl90ulvbg.apps.googleusercontent.com
-    client-secret : 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
+    client-id: xxxxxxx
+    client-secret : zzzzzz
     redirect-url: http://localhost:3000/oauth/google/redirect
   kakao:
-    client-id: d4582d3d057eb4fcd270886537698cd9
+    client-id: xxxxxxx
     redirect-url: http://localhost:3000/oauth/kakao/redirect
