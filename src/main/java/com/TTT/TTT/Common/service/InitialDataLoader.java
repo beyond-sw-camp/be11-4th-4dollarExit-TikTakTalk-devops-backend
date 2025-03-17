@@ -42,6 +42,7 @@ public class InitialDataLoader implements CommandLineRunner {
                     .email("admin@naver.com")
                     .phoneNumber("01012341234")
                     .nickName("Ganzi")
+                    .batch(11)
                     .role(Role.ADMIN)
                     .loginId("admin")
                     .build();
