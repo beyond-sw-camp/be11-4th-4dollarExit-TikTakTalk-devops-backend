@@ -3,6 +3,7 @@ package com.TTT.TTT.User.UserController;
 
 import com.TTT.TTT.Common.dtos.CommonDto;
 import com.TTT.TTT.Common.auth.JwtTokenProvider;
+import com.TTT.TTT.Common.dtos.CommonErrorDto;
 import com.TTT.TTT.Oauth.Service.GoogleService;
 import com.TTT.TTT.Oauth.Service.KakaoService;
 import com.TTT.TTT.Oauth.dtos.GoogleProfile;
@@ -342,5 +343,18 @@ public class UserController {
     @GetMapping("check")
     public ResponseEntity<?> check() {
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+//    이메일 중복확인 api
+    @GetMapping("checkEmail")
+    public ResponseEntity<?> emailCheck(@RequestParam String email) {
+        Boolean check = userService.findEmail(email);
+        if (check) {
+            return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "사용가능한 이메일입니다.", "OK"), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.BAD_REQUEST.value(), "중복된 이메일입니다."), HttpStatus.BAD_REQUEST);
+        }
+
+
     }
 }

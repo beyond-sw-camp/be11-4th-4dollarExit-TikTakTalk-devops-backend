@@ -39,6 +39,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -368,6 +369,15 @@ public class UserService {
     public Page<UserListDto> findAllActiveUsers(Pageable pageable) {
         Page<User> activeUsers = userRepository.findByDelYN(DelYN.N, pageable);
         return activeUsers.map(User::ListDtoFromEntity);
+    }
+
+    public Boolean findEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            throw new EntityNotFoundException("user is not found");
+        }
+        return true;
+
     }
 
 
