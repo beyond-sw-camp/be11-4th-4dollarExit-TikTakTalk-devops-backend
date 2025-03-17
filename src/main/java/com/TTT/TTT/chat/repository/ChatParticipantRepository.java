@@ -32,4 +32,7 @@ public interface ChatParticipantRepository extends JpaRepository<ChatParticipant
             @Param("userId") Long userId,
             @Param("exitYN") ExitYN exitYN
     );
+
+    @Query("SELECT cp.isConnected FROM ChatParticipant cp WHERE cp.chatRoom = :chatRoom AND cp.user = :user")
+    Boolean findisConnectedByChatRoomAndUser(@Param("chatRoom") ChatRoom chatRoom, @Param("user") User user);
 }

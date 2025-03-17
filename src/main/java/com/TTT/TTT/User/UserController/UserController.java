@@ -338,4 +338,9 @@ public class UserController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "active userList is uploaded successfully", list), HttpStatus.OK);
     }
 
+    //    헬스체크용
+    @GetMapping("check")
+    public ResponseEntity<?> check() {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

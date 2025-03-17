@@ -315,5 +315,12 @@ public class ChatService {
         Long totalRooms = chatRoomRepository.count();
         return totalRooms;
     }
+
+    public boolean getIsconnected(String nickName, Long chatRoomId) {
+        User user = userRepository.findByNickNameAndDelYN(nickName, DelYN.N).orElseThrow(()->new EntityNotFoundException("user is not found"));
+        ChatRoom chatRoom = chatRoomRepository.findByIdAndExitYN(chatRoomId, ExitYN.N).orElseThrow(()->new EntityNotFoundException("chatroom is not found"));
+        Boolean check = chatParticipantRepository.findisConnectedByChatRoomAndUser(chatRoom, user);
+        return check;
+    }
 }
 
