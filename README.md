@@ -74,6 +74,9 @@
 ## ⚙️ ERD 설계도    
 <img width="1152" alt="image" src=https://github.com/beyond-sw-camp/be11-3rd-ttt-devops-backend/blob/main/ttt%20erd.png>
 
+## ⚙️ 시스템 아키텍처    
+<img width="1152" alt="image" src=https://github.com/beyond-sw-camp/be11-3rd-ttt-devops-backend/blob/main/ttt%20erd.png>
+
 
 ## 🔎 프로젝트 시연
 [프로젝트 시연](https://github.com/beyond-sw-camp/be11-2nd-4dollarExit-TikTakTalk-FE/wiki)
